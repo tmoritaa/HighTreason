@@ -9,7 +9,7 @@ namespace HighTreasonGame
 {
     public class Board
     {
-        private Game game;
+        private int gameId;
 
         private List<EvidenceTrack> evidenceTracks = new List<EvidenceTrack>();
 
@@ -17,8 +17,9 @@ namespace HighTreasonGame
 
         private List<Jury> juries = new List<Jury>();
 
-        public Board(Game game)
+        public Board(int _gameId)
         {
+            gameId = _gameId;
             initTracks();
             initJury();
         }
@@ -52,20 +53,20 @@ namespace HighTreasonGame
 
         private void initTracks()
         {
-            EvidenceTrack insanityTrack = new EvidenceTrack(game, new HashSet<string>() { GameConstants.PROP_INSANITY });
-            EvidenceTrack guiltTrack = new EvidenceTrack(game, new HashSet<string>() { GameConstants.PROP_GUILT });
+            EvidenceTrack insanityTrack = new EvidenceTrack(gameId, Property.Insanity);
+            EvidenceTrack guiltTrack = new EvidenceTrack(gameId, Property.Guilt);
 
             evidenceTracks = new List<EvidenceTrack> { insanityTrack, guiltTrack };
 
-            AspectTrack protestantTrack = new AspectTrack(game, new HashSet<string>() { GameConstants.PROP_RELIGION, GameConstants.PROP_PROTESTANT }, 5);
-            AspectTrack catholicTrack = new AspectTrack(game, new HashSet<string>() { GameConstants.PROP_RELIGION, GameConstants.PROP_CATHOLIC }, 3);
+            AspectTrack protestantTrack = new AspectTrack(5, gameId, Property.Religion, Property.Protestant);
+            AspectTrack catholicTrack = new AspectTrack(3, gameId, Property.Religion, Property.Catholic);
 
-            AspectTrack englishTrack = new AspectTrack(game, new HashSet<string>() { GameConstants.PROP_LANGUAGE, GameConstants.PROP_ENGLISH }, 2);
-            AspectTrack frenchTrack = new AspectTrack(game, new HashSet<string>() { GameConstants.PROP_LANGUAGE, GameConstants.PROP_FRENCH }, 5);
+            AspectTrack englishTrack = new AspectTrack(2, gameId, Property.Language, Property.English);
+            AspectTrack frenchTrack = new AspectTrack(5, gameId, Property.Language, Property.French);
 
-            AspectTrack farmerTrack = new AspectTrack(game, new HashSet<string>() { GameConstants.PROP_OCCUPATION, GameConstants.PROP_FARMER }, 4);
-            AspectTrack merchantTrack = new AspectTrack(game, new HashSet<string>() { GameConstants.PROP_OCCUPATION, GameConstants.PROP_MERCHANT }, 5);
-            AspectTrack govWorkerTrack = new AspectTrack(game, new HashSet<string>() { GameConstants.PROP_OCCUPATION, GameConstants.PROP_GOVWORKER }, 5);
+            AspectTrack farmerTrack = new AspectTrack(4, gameId, Property.Occupation, Property.Farmer);
+            AspectTrack merchantTrack = new AspectTrack(5, gameId, Property.Occupation, Property.Merchant);
+            AspectTrack govWorkerTrack = new AspectTrack(5, gameId, Property.Occupation, Property.GovWorker);
 
             aspectTracks = new List<AspectTrack> { protestantTrack, catholicTrack, englishTrack, frenchTrack, farmerTrack, merchantTrack, govWorkerTrack };
         }
@@ -73,34 +74,34 @@ namespace HighTreasonGame
         private void initJury()
         {
             // Generate list of markers.
-            Dictionary<string, int> aspectToNumMap = new Dictionary<string, int>() {
-                { GameConstants.PROP_PROTESTANT , GameConstants.NUM_PROTESTANT_MARKERS },
-                { GameConstants.PROP_CATHOLIC, GameConstants.NUM_CATHOLIC_MARKERS },
-                { GameConstants.PROP_ENGLISH , GameConstants.NUM_ENGLISH_MARKERS },
-                { GameConstants.PROP_FRENCH , GameConstants.NUM_FRENCH_MARKERS },
-                { GameConstants.PROP_FARMER , GameConstants.NUM_FARMER_MARKERS },
-                { GameConstants.PROP_MERCHANT , GameConstants.NUM_MERCHANT_MARKERS },
-                { GameConstants.PROP_GOVWORKER , GameConstants.NUM_GOVWORKER_MARKERS }
+            Dictionary<Property, int> aspectToNumMap = new Dictionary<Property, int>() {
+                { Property.Protestant , GameConstants.NUM_PROTESTANT_MARKERS },
+                { Property.Catholic, GameConstants.NUM_CATHOLIC_MARKERS },
+                { Property.English , GameConstants.NUM_ENGLISH_MARKERS },
+                { Property.French , GameConstants.NUM_FRENCH_MARKERS },
+                { Property.Farmer , GameConstants.NUM_FARMER_MARKERS },
+                { Property.Merchant , GameConstants.NUM_MERCHANT_MARKERS },
+                { Property.GovWorker , GameConstants.NUM_GOVWORKER_MARKERS }
             };
 
-            List<string> religionAspectMarkers = new List<string>();
-            List<string> languageAspectMarkers = new List<string>();
-            List<string> occupationAspectMarkers = new List<string>();
-            foreach (string aspect in new string[] { GameConstants.PROP_PROTESTANT, GameConstants.PROP_CATHOLIC })
+            List<Property> religionAspectMarkers = new List<Property>();
+            List<Property> languageAspectMarkers = new List<Property>();
+            List<Property> occupationAspectMarkers = new List<Property>();
+            foreach (Property aspect in new Property[] { Property.Protestant, Property.Catholic })
             {
                 for (int i = 0; i < aspectToNumMap[aspect]; ++i)
                 {
                     religionAspectMarkers.Add(aspect);
                 }
             }
-            foreach (string aspect in new string[] { GameConstants.PROP_ENGLISH, GameConstants.PROP_FRENCH })
+            foreach (Property aspect in new Property[] { Property.English, Property.French })
             {
                 for (int i = 0; i < aspectToNumMap[aspect]; ++i)
                 {
                     languageAspectMarkers.Add(aspect);
                 }
             }
-            foreach (string aspect in new string[] { GameConstants.PROP_FARMER, GameConstants.PROP_MERCHANT, GameConstants.PROP_GOVWORKER })
+            foreach (Property aspect in new Property[] { Property.Farmer, Property.Merchant, Property.GovWorker })
             {
                 for (int i = 0; i < aspectToNumMap[aspect]; ++i)
                 {
@@ -118,7 +119,7 @@ namespace HighTreasonGame
                 int languageIdx = rand.Next(0, languageAspectMarkers.Count);
                 int occupationIdx = rand.Next(0, occupationAspectMarkers.Count);
 
-                juries.Add(new Jury(game, swaySpaces, swaySpaces - 3, religionAspectMarkers[religionIdx], languageAspectMarkers[languageIdx], occupationAspectMarkers[occupationIdx]));
+                juries.Add(new Jury(swaySpaces, swaySpaces - 3, gameId, religionAspectMarkers[religionIdx], languageAspectMarkers[languageIdx], occupationAspectMarkers[occupationIdx]));
 
                 religionAspectMarkers.RemoveAt(religionIdx);
                 languageAspectMarkers.RemoveAt(languageIdx);

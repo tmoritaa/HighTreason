@@ -8,13 +8,16 @@ namespace HighTreasonGame
 {
     public class HTGameObject
     {
-        protected Game game;
-        protected HashSet<string> properties;
+        public HashSet<Property> properties;
 
-        public HTGameObject(Game _game, HashSet<string> _properties)
+        protected int gameId;
+
+        public HTGameObject(int _gameId, params Property[] _properties)
         {
-            game = _game;
-            properties = new HashSet<string>(_properties);
+            gameId = _gameId;
+            properties = new HashSet<Property>(_properties);
+
+            Game.GetGameFromId(gameId).AddHTGameObject(this);
         }
     }
 }

@@ -8,10 +8,10 @@ namespace HighTreasonGame
 {
     public class SwayTrack : Track
     {
-        public SwayTrack(Game _game, HashSet<string> _properties, int min, int max)
-            : base(_game, _properties, 0, min, max)
+        public SwayTrack(int min, int max, int _gameId, params Property[] _properties)
+            : base(0, min, max, _gameId, _properties)
         {
-            properties.Add(GameConstants.PROP_SWAY);
+            properties.Add(Property.Sway);
         }
     }
 }

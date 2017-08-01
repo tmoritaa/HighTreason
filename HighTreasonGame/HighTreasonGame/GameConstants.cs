@@ -6,6 +6,27 @@ using System.Threading.Tasks;
 
 namespace HighTreasonGame
 {
+    public enum Property
+    {
+        Religion,
+        Language,
+        Occupation,
+        Protestant,
+        Catholic,
+        English,
+        French,
+        Farmer,
+        Merchant,
+        GovWorker,
+        Insanity,
+        Guilt,
+        Sway,
+        Jury,
+        Aspect,
+        Evidence,
+        Track,
+    }
+
     public static class GameConstants
     {
         #region Number Constants
@@ -23,23 +44,6 @@ namespace HighTreasonGame
         public static int NUM_OCCUPATION_MARKERS = NUM_FARMER_MARKERS + NUM_MERCHANT_MARKERS + NUM_GOVWORKER_MARKERS;
 
         public static int NUM_JURY = 12;
-        #endregion
-
-        #region Property Constants
-        public static string PROP_RELIGION = "religion";
-        public static string PROP_LANGUAGE = "language";
-        public static string PROP_OCCUPATION = "occupation";
-        public static string PROP_PROTESTANT = "protestant";
-        public static string PROP_CATHOLIC = "catholic";
-        public static string PROP_ENGLISH = "english";
-        public static string PROP_FRENCH = "french";
-        public static string PROP_FARMER = "farmer";
-        public static string PROP_MERCHANT = "merchant";
-        public static string PROP_GOVWORKER = "governmentworker";
-        public static string PROP_INSANITY = "insanity";
-        public static string PROP_GUILT = "guilt";
-        public static string PROP_SWAY = "sway";
-        public static string PROP_JURY = "jury";
         #endregion
     }
 }

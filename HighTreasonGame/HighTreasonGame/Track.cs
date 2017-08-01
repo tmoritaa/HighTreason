@@ -17,25 +17,37 @@ namespace HighTreasonGame
         protected int minValue = 0;
         protected int maxValue = 0;
 
-        public Track(Game _game, HashSet<string> _properties, int _value, int _minValue, int _maxValue)
-            : base(_game, _properties)
+        public Track(int _value, int _minValue, int _maxValue, int _gameId, params Property[] _properties)
+            : base(_gameId, _properties)
         {
+            properties.Add(Property.Track);
+
             Value = _value;
             minValue = _minValue;
             maxValue = _maxValue;
         }
 
-        public void addToValue(int value)
+        public void AddToValue(int value)
         {
             Value += value;
             Value = Math.Max(Math.Min(Value, maxValue), minValue);
         }
 
+        public bool CanIncrease()
+        {
+            return Value < maxValue;
+        }
+
+        public bool CanDecrease()
+        {
+            return Value > minValue;
+        }
+
         public override string ToString()
         {
-            string outStr = String.Empty;
+            string outStr = "-";
 
-            foreach (string str in properties)
+            foreach (Property str in properties)
             {
                 outStr += str + " ";
             }

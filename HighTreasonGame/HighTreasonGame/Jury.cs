@@ -8,12 +8,12 @@ namespace HighTreasonGame
 {
     public class Jury : HTGameObject
     {
-        private class JuryAspect
+        public class JuryAspect
         {
             private bool revealed = false;
-            private string property;
+            private Property property;
 
-            public JuryAspect(string _property)
+            public JuryAspect(Property _property)
             {
                 property = _property;
             }
@@ -26,18 +26,18 @@ namespace HighTreasonGame
 
         private SwayTrack track;
         private int actionPoints;
-        private Dictionary<string, JuryAspect> aspects = new Dictionary<string, JuryAspect>();
+        private Dictionary<Property, JuryAspect> aspects = new Dictionary<Property, JuryAspect>();
 
-        public Jury(Game game, int swayMax, int _actionPoints, string religionAspect, string languageAspect, string occupationAspect)
-            : base(game, new HashSet<string>())
+        public Jury(int swayMax, int _actionPoints, int _gameId, Property religionAspect, Property languageAspect, Property occupationAspect)
+            : base(_gameId, Property.Jury, Property.Religion, Property.Language, Property.Occupation)
         {
             actionPoints = _actionPoints;
 
-            track = new SwayTrack(game, new HashSet<string>() { GameConstants.PROP_JURY }, - swayMax, swayMax);
+            track = new SwayTrack(-swayMax, swayMax, _gameId, Property.Jury);
 
-            aspects.Add(GameConstants.PROP_RELIGION, new JuryAspect(religionAspect));
-            aspects.Add(GameConstants.PROP_LANGUAGE, new JuryAspect(languageAspect));
-            aspects.Add(GameConstants.PROP_OCCUPATION, new JuryAspect(occupationAspect));
+            aspects.Add(Property.Religion, new JuryAspect(religionAspect));
+            aspects.Add(Property.Language, new JuryAspect(languageAspect));
+            aspects.Add(Property.Occupation, new JuryAspect(occupationAspect));
         }
 
         public override string ToString()
