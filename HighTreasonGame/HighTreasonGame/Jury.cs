@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HighTreasonGame
 {
-    public class Jury
+    public class Jury : HTGameObject
     {
         private class JuryAspect
         {
@@ -28,11 +28,12 @@ namespace HighTreasonGame
         private int actionPoints;
         private Dictionary<string, JuryAspect> aspects = new Dictionary<string, JuryAspect>();
 
-        public Jury(int swayMax, int _actionPoints, string religionAspect, string languageAspect, string occupationAspect)
+        public Jury(Game game, int swayMax, int _actionPoints, string religionAspect, string languageAspect, string occupationAspect)
+            : base(game, new HashSet<string>())
         {
             actionPoints = _actionPoints;
 
-            track = new SwayTrack(-swayMax, swayMax, new HashSet<string>() { GameConstants.PROP_JURY });
+            track = new SwayTrack(game, new HashSet<string>() { GameConstants.PROP_JURY }, - swayMax, swayMax);
 
             aspects.Add(GameConstants.PROP_RELIGION, new JuryAspect(religionAspect));
             aspects.Add(GameConstants.PROP_LANGUAGE, new JuryAspect(languageAspect));

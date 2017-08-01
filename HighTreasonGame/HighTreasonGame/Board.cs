@@ -9,13 +9,15 @@ namespace HighTreasonGame
 {
     public class Board
     {
+        private Game game;
+
         private List<EvidenceTrack> evidenceTracks = new List<EvidenceTrack>();
 
         private List<AspectTrack> aspectTracks = new List<AspectTrack>();
 
         private List<Jury> juries = new List<Jury>();
 
-        public Board()
+        public Board(Game game)
         {
             initTracks();
             initJury();
@@ -50,20 +52,20 @@ namespace HighTreasonGame
 
         private void initTracks()
         {
-            EvidenceTrack insanityTrack = new EvidenceTrack(new HashSet<string>() { GameConstants.PROP_INSANITY });
-            EvidenceTrack guiltTrack = new EvidenceTrack(new HashSet<string>() { GameConstants.PROP_GUILT });
+            EvidenceTrack insanityTrack = new EvidenceTrack(game, new HashSet<string>() { GameConstants.PROP_INSANITY });
+            EvidenceTrack guiltTrack = new EvidenceTrack(game, new HashSet<string>() { GameConstants.PROP_GUILT });
 
             evidenceTracks = new List<EvidenceTrack> { insanityTrack, guiltTrack };
 
-            AspectTrack protestantTrack = new AspectTrack(5, new HashSet<string>() { GameConstants.PROP_RELIGION, GameConstants.PROP_PROTESTANT });
-            AspectTrack catholicTrack = new AspectTrack(3, new HashSet<string>() { GameConstants.PROP_RELIGION, GameConstants.PROP_CATHOLIC });
+            AspectTrack protestantTrack = new AspectTrack(game, new HashSet<string>() { GameConstants.PROP_RELIGION, GameConstants.PROP_PROTESTANT }, 5);
+            AspectTrack catholicTrack = new AspectTrack(game, new HashSet<string>() { GameConstants.PROP_RELIGION, GameConstants.PROP_CATHOLIC }, 3);
 
-            AspectTrack englishTrack = new AspectTrack(2, new HashSet<string>() { GameConstants.PROP_LANGUAGE, GameConstants.PROP_ENGLISH });
-            AspectTrack frenchTrack = new AspectTrack(5, new HashSet<string>() { GameConstants.PROP_LANGUAGE, GameConstants.PROP_FRENCH });
+            AspectTrack englishTrack = new AspectTrack(game, new HashSet<string>() { GameConstants.PROP_LANGUAGE, GameConstants.PROP_ENGLISH }, 2);
+            AspectTrack frenchTrack = new AspectTrack(game, new HashSet<string>() { GameConstants.PROP_LANGUAGE, GameConstants.PROP_FRENCH }, 5);
 
-            AspectTrack farmerTrack = new AspectTrack(4, new HashSet<string>() { GameConstants.PROP_OCCUPATION, GameConstants.PROP_FARMER });
-            AspectTrack merchantTrack = new AspectTrack(5, new HashSet<string>() { GameConstants.PROP_OCCUPATION, GameConstants.PROP_MERCHANT });
-            AspectTrack govWorkerTrack = new AspectTrack(5, new HashSet<string>() { GameConstants.PROP_OCCUPATION, GameConstants.PROP_GOVWORKER });
+            AspectTrack farmerTrack = new AspectTrack(game, new HashSet<string>() { GameConstants.PROP_OCCUPATION, GameConstants.PROP_FARMER }, 4);
+            AspectTrack merchantTrack = new AspectTrack(game, new HashSet<string>() { GameConstants.PROP_OCCUPATION, GameConstants.PROP_MERCHANT }, 5);
+            AspectTrack govWorkerTrack = new AspectTrack(game, new HashSet<string>() { GameConstants.PROP_OCCUPATION, GameConstants.PROP_GOVWORKER }, 5);
 
             aspectTracks = new List<AspectTrack> { protestantTrack, catholicTrack, englishTrack, frenchTrack, farmerTrack, merchantTrack, govWorkerTrack };
         }
@@ -116,7 +118,7 @@ namespace HighTreasonGame
                 int languageIdx = rand.Next(0, languageAspectMarkers.Count);
                 int occupationIdx = rand.Next(0, occupationAspectMarkers.Count);
 
-                juries.Add(new Jury(swaySpaces, swaySpaces - 3, religionAspectMarkers[religionIdx], languageAspectMarkers[languageIdx], occupationAspectMarkers[occupationIdx]));
+                juries.Add(new Jury(game, swaySpaces, swaySpaces - 3, religionAspectMarkers[religionIdx], languageAspectMarkers[languageIdx], occupationAspectMarkers[occupationIdx]));
 
                 religionAspectMarkers.RemoveAt(religionIdx);
                 languageAspectMarkers.RemoveAt(languageIdx);

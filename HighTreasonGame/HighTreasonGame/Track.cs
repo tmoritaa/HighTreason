@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HighTreasonGame
 {
-    public class Track
+    public class Track : HTGameObject
     {
         public int Value {
             get; protected set;
@@ -17,14 +17,12 @@ namespace HighTreasonGame
         protected int minValue = 0;
         protected int maxValue = 0;
 
-        protected HashSet<string> properties;
-
-        public Track(int _value, int _minValue, int _maxValue, HashSet<string> _properties)
+        public Track(Game _game, HashSet<string> _properties, int _value, int _minValue, int _maxValue)
+            : base(_game, _properties)
         {
             Value = _value;
             minValue = _minValue;
             maxValue = _maxValue;
-            properties = new HashSet<string>(_properties);
         }
 
         public void addToValue(int value)

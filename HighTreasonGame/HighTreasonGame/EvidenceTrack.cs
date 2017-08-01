@@ -8,8 +8,8 @@ namespace HighTreasonGame
 {
     public class EvidenceTrack : Track
     {
-        public EvidenceTrack(HashSet<string> initProperties) 
-            : base(0, 0, 4, initProperties)
+        public EvidenceTrack(Game _game, HashSet<string> _properties) 
+            : base(_game, _properties, 0, 0, 4)
         { }
     }
 }

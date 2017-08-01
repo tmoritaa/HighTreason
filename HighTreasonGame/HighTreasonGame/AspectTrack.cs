@@ -12,11 +12,11 @@ namespace HighTreasonGame
 
         private SwayTrack swayTrack;
 
-        public AspectTrack(int initValue, HashSet<string> _properties) 
-            : base(initValue, 0, 10, _properties)
+        public AspectTrack(Game _game, HashSet<string> _properties, int initValue) 
+            : base(_game, _properties, initValue, 0, 10)
         {
             properties.Add(GameConstants.PROP_SWAY);
-            swayTrack = new SwayTrack(0, 3, properties);
+            swayTrack = new SwayTrack(_game, properties, 0, 3);
         }
 
         public override string ToString()

@@ -12,13 +12,12 @@ namespace HighTreasonGame
 
         public Game()
         {
-            board = new Board();
+            board = new Board(this);
         }
 
         public override string ToString()
         {
             return board.ToString();
         }
-
     }
 }
