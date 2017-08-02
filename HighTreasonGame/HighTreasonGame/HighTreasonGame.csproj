@@ -46,6 +46,8 @@
     <Compile Include="Board.cs" />
     <Compile Include="CardTemplate.cs" />
     <Compile Include="CardTemplateManager.cs" />
+    <Compile Include="CardTemplates\JohnAstleyCardTemplate.cs" />
+    <Compile Include="CardTemplates\PurelyConstitutionalCardTemplate.cs" />
     <Compile Include="IChoiceHandler.cs" />
     <Compile Include="EvidenceTrack.cs" />
     <Compile Include="Game.cs" />

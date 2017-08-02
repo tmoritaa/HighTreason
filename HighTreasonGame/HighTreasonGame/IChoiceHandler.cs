@@ -9,7 +9,8 @@ namespace HighTreasonGame
     public interface IChoiceHandler
     {
         void ChooseCardUsage();
-        AspectTrack ChooseAspectTrack(List<HTGameObject> choices);
+        List<AspectTrack> ChooseAspectTracks(List<HTGameObject> choices, int numChoices);
         Jury.JuryAspect ChooseJuryAspects(List<HTGameObject> choices);
+        string ChooseMomentOfInsightUse();
     }
 }
