@@ -28,9 +28,9 @@ namespace HighTreasonGame
         
         public void Test()
         {
-            CardTemplate template = CardTemplates["John W. Astley"];
-            BoardChoices choices = template.SummationEventChoices[0](0, new TestChoiceHandler());
-            template.SummationEvents[0](0, choices);
+            CardTemplate template = CardTemplates["\"A Purely Constitutional Movement\""];
+            BoardChoices choices = template.SelectionEventChoices[0](0, new TestChoiceHandler());
+            template.SelectionEvents[0](0, choices);
         }
 
         private CardTemplateManager()
@@ -42,6 +42,7 @@ namespace HighTreasonGame
         private void generateCardTemplates()
         {
             addCardTemplate(new JohnAstleyCardTemplate());
+            addCardTemplate(new PurelyConstitutionalCardTemplate());
         }
 
         private void addCardTemplate(CardTemplate template)

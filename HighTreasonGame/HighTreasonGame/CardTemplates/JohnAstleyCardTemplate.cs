@@ -16,46 +16,46 @@ namespace HighTreasonGame.CardTemplates
         {
             SelectionEventChoices.Add(
                 (int gameId, IChoiceHandler choiceHandler) => {
-                    List<HTGameObject> choices = Game.GetGameFromId(gameId).GetHTGOFromCondition(
+                    List<HTGameObject> options = Game.GetGameFromId(gameId).GetHTGOFromCondition(
                         (HTGameObject htgo) =>
                         {
                             return (htgo.properties.Contains(Property.Jury)
+                            && htgo.properties.Contains(Property.Aspect)
                             && htgo.properties.Contains(Property.Religion));
                         });
 
-                    // TODO: implement.
-                    // choose aspect.
+                    BoardChoices choices = new BoardChoices();
+                    choices.juryAspects = choiceHandler.ChooseJuryAspects(options, 2);
 
-                    return null; // Temp.
+                    return choices; // Temp.
                 });
 
             SelectionEvents.Add(
                 (int gameId, BoardChoices choices) => {
-                    // TODO: implement.
+                    choices.juryAspects.ForEach(ja => ja.Revealed());
                 });
 
             SelectionEventChoices.Add(
                 (int gameId, IChoiceHandler IChoiceHandler) =>
                 {
-                    List<HTGameObject> choices = Game.GetGameFromId(gameId).GetHTGOFromCondition(
+                    List<HTGameObject> options = Game.GetGameFromId(gameId).GetHTGOFromCondition(
                         (HTGameObject htgo) =>
                         {
                             return (htgo.properties.Contains(Property.Jury)
+                            && htgo.properties.Contains(Property.Aspect)
                             && htgo.properties.Contains(Property.Occupation));
                         });
 
-                    // TODO: implement.
-                    // choose aspect.
+                    BoardChoices choices = new BoardChoices();
+                    choices.juryAspects = IChoiceHandler.ChooseJuryAspects(options, 3);
 
-                    return null; // temp.
+                    return choices;
                 });
 
             SelectionEvents.Add(
                 (int gameId, BoardChoices choices) => 
                 {
-                    
-
-                    // TODO: implement.
+                    choices.juryAspects.ForEach(ja => ja.Revealed());
                 });
         }
 

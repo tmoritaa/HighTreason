@@ -27,6 +27,12 @@ namespace HighTreasonGame
         Track,
     }
 
+    public enum PlayerSide
+    {
+        Prosecution,
+        Defense
+    }
+
     public static class GameConstants
     {
         #region Number Constants

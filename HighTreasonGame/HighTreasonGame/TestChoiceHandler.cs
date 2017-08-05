@@ -13,11 +13,16 @@ namespace HighTreasonGame
             Console.WriteLine("ChooseCardUsage called");
         }
 
-        public Jury.JuryAspect ChooseJuryAspects(List<HTGameObject> choices)
+        public List<Jury.JuryAspect> ChooseJuryAspects(List<HTGameObject> choices, int numChoices)
         {
-            Console.WriteLine("ChooseJuryAspects called");
+            List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
 
-            return null;
+            for (int i = 0; i < numChoices; ++i)
+            {
+                juryAspects.Add((Jury.JuryAspect)choices[i]);
+            }
+
+            return juryAspects;
         }
 
         public List<AspectTrack> ChooseAspectTracks(List<HTGameObject> choices, int numChoices)

@@ -10,7 +10,7 @@ namespace HighTreasonGame
     {
         void ChooseCardUsage();
         List<AspectTrack> ChooseAspectTracks(List<HTGameObject> choices, int numChoices);
-        Jury.JuryAspect ChooseJuryAspects(List<HTGameObject> choices);
+        List<Jury.JuryAspect> ChooseJuryAspects(List<HTGameObject> choices, int numChoices);
         string ChooseMomentOfInsightUse();
     }
 }
