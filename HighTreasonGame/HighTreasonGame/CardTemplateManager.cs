@@ -28,7 +28,9 @@ namespace HighTreasonGame
         
         public void Test()
         {
-            CardTemplates["John W. Astley"].SummationEvents[0](0, new TestChoiceHandler());
+            CardTemplate template = CardTemplates["John W. Astley"];
+            BoardChoices choices = template.SummationEventChoices[0](0, new TestChoiceHandler());
+            template.SummationEvents[0](0, choices);
         }
 
         private CardTemplateManager()

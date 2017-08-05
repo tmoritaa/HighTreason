@@ -8,7 +8,9 @@ namespace HighTreasonGame
 {
     public abstract class CardTemplate
     {
-        public delegate void CardEvent(int gameId, IChoiceHandler choiceHandler);
+        public delegate void CardEffect(int gameId, BoardChoices choices);
+
+        public delegate BoardChoices CardChoice(int gameId, IChoiceHandler choiceHandler);
 
         public string Name {
             get; private set;
@@ -18,14 +20,27 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        public List<CardEvent> SelectionEvents {
+        public List<CardEffect> SelectionEvents {
             get; private set;
         }
 
-        public List<CardEvent> TrialEvents {
+        public List<CardChoice> SelectionEventChoices {
             get; private set;
         }
-        public List<CardEvent> SummationEvents {
+
+        public List<CardEffect> TrialEvents {
+            get; private set;
+        }
+
+        public List<CardChoice> TrialEventChoices {
+            get; private set;
+        }
+
+        public List<CardEffect> SummationEvents {
+            get; private set;
+        }
+
+        public List<CardChoice> SummationEventChoices {
             get; private set;
         }
 
@@ -34,60 +49,52 @@ namespace HighTreasonGame
             Name = _name;
             ActionPts = _actionPts;
 
-            SelectionEvents = new List<CardEvent>();
-            TrialEvents = new List<CardEvent>();
-            SummationEvents = new List<CardEvent>();
+            SelectionEvents = new List<CardEffect>();
+            TrialEvents = new List<CardEffect>();
+            SummationEvents = new List<CardEffect>();
 
-            addSelectionEvents();
-            addTrialEvents();
-            addSummationEvents();
+            SelectionEventChoices = new List<CardChoice>();
+            TrialEventChoices = new List<CardChoice>();
+            SummationEventChoices = new List<CardChoice>();
+
+            addSelectionEventsAndChoices();
+            addTrialEventsAndChoices();
+            addSummationEventsAndChoices();
         }
 
-        protected abstract void addSelectionEvents();
-        protected abstract void addTrialEvents();
-        protected abstract void addSummationEvents();
+        protected abstract void addSelectionEventsAndChoices();
+        protected abstract void addTrialEventsAndChoices();
+        protected abstract void addSummationEventsAndChoices();
 
-        protected void handleMomentOfInsight()
-        {
-            // TODO: implement.
-        }
-
-        protected void handleGuilt(Game game, int modValue)
-        {
-            List<HTGameObject> guiltTrack = game.GetHTGOFromCondition((HTGameObject htgo) =>
-            {
-                return (htgo.properties.Contains(Property.Guilt));
-            });
-            System.Diagnostics.Debug.Assert(guiltTrack.Count == 1, "Guilt track search failed");
-            ((EvidenceTrack)guiltTrack[0]).AddToValue(modValue);
-        }
-
-        protected void handleInsanity(Game game, int modValue)
+        #region Search Utility
+        protected EvidenceTrack findInsanityTrack(Game game)
         {
             List<HTGameObject> insanityTrack = game.GetHTGOFromCondition((HTGameObject htgo) =>
             {
                 return (htgo.properties.Contains(Property.Insanity));
             });
             System.Diagnostics.Debug.Assert(insanityTrack.Count == 1, "Insanity track search failed");
-            ((EvidenceTrack)insanityTrack[0]).AddToValue(modValue);
+
+            return (EvidenceTrack)insanityTrack[0];
         }
 
-        protected void handleAspectTrackChange(Game game, IChoiceHandler choiceHandler, int numChoices, int modValue, Func<HTGameObject, bool> condition)
+        protected EvidenceTrack findGuiltTrack(Game game)
         {
-            List<HTGameObject> choices = game.GetHTGOFromCondition(condition);
-
-            List<AspectTrack> tracks = new List<AspectTrack>();
-            if (choices.Count > 1)
+            List<HTGameObject> guiltTrack = game.GetHTGOFromCondition((HTGameObject htgo) =>
             {
-                System.Diagnostics.Debug.Assert(numChoices > 0, "Number of choices is not zero");
-                tracks = choiceHandler.ChooseAspectTracks(choices, numChoices);
-            }
-            else
-            {
-                tracks.Add((AspectTrack)choices[0]);
-            }
-
-            tracks.ForEach(t => t.AddToValue(modValue));
+                return (htgo.properties.Contains(Property.Guilt));
+            });
+            System.Diagnostics.Debug.Assert(guiltTrack.Count == 1, "Guilt track search failed");
+            return (EvidenceTrack)guiltTrack[0];
         }
+
+        #endregion
+
+        #region Effect Utility
+        protected void handleMomentOfInsight(Game game)
+        {
+            // TODO: implement.
+        }
+        #endregion
     }
 }

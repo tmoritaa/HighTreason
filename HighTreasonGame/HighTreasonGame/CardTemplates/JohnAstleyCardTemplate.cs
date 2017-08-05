@@ -12,68 +12,109 @@ namespace HighTreasonGame.CardTemplates
             : base("John W. Astley", 2)
         {}
 
-        protected override void addSelectionEvents()
+        protected override void addSelectionEventsAndChoices()
         {
-            SelectionEvents.Add(
-                (int gameId, IChoiceHandler choiceHandler) => 
-                {
+            SelectionEventChoices.Add(
+                (int gameId, IChoiceHandler choiceHandler) => {
                     List<HTGameObject> choices = Game.GetGameFromId(gameId).GetHTGOFromCondition(
-                        (HTGameObject htgo) => 
+                        (HTGameObject htgo) =>
                         {
                             return (htgo.properties.Contains(Property.Jury)
                             && htgo.properties.Contains(Property.Religion));
                         });
 
                     // TODO: implement.
+                    // choose aspect.
+
+                    return null; // Temp.
                 });
 
             SelectionEvents.Add(
-                (int gameId, IChoiceHandler choiceHandler) => 
+                (int gameId, BoardChoices choices) => {
+                    // TODO: implement.
+                });
+
+            SelectionEventChoices.Add(
+                (int gameId, IChoiceHandler IChoiceHandler) =>
                 {
                     List<HTGameObject> choices = Game.GetGameFromId(gameId).GetHTGOFromCondition(
-                        (HTGameObject htgo) => 
+                        (HTGameObject htgo) =>
                         {
                             return (htgo.properties.Contains(Property.Jury)
                             && htgo.properties.Contains(Property.Occupation));
                         });
 
                     // TODO: implement.
+                    // choose aspect.
+
+                    return null; // temp.
+                });
+
+            SelectionEvents.Add(
+                (int gameId, BoardChoices choices) => 
+                {
+                    
+
+                    // TODO: implement.
                 });
         }
 
-        protected override void addTrialEvents()
+        protected override void addTrialEventsAndChoices()
         {
-            TrialEvents.Add(
-                (int gameId, IChoiceHandler choiceHandler) => 
+            TrialEventChoices.Add(
+                (int gameId, IChoiceHandler choiceHandler) =>
                 {
                     Game game = Game.GetGameFromId(gameId);
-                    
-                    handleAspectTrackChange(game, choiceHandler, 1, 1,
-                        (HTGameObject htgo) => 
+
+                    List<HTGameObject> options = game.GetHTGOFromCondition(
+                        (HTGameObject htgo) =>
                         {
                             return (htgo.properties.Contains(Property.Track)
                             && htgo.properties.Contains(Property.Aspect)
                             && ((Track)htgo).CanIncrease());
                         });
 
-                    handleGuilt(game, 1);
+                    BoardChoices choices = new BoardChoices();
+                    choices.evidenceTracks.Add(findGuiltTrack(game));
+                    choices.aspectTracks = choiceHandler.ChooseAspectTracks(options, 1);
+
+                    return choices;
+                });
+
+            TrialEvents.Add(
+                (int gameId, BoardChoices choices) => 
+                {
+                    choices.evidenceTracks[0].AddToValue(1);
+                    choices.aspectTracks.ForEach(t => t.AddToValue(1));
                 });
         }
 
-        protected override void addSummationEvents()
+        protected override void addSummationEventsAndChoices()
         {
-            SummationEvents.Add(
-                (int gameId, IChoiceHandler choiceHandler) => 
+            SummationEventChoices.Add(
+                (int gameId, IChoiceHandler choiceHandler) =>
                 {
                     Game game = Game.GetGameFromId(gameId);
-                    handleAspectTrackChange(game, choiceHandler, 3, 1,
-                        (HTGameObject htgo) => 
+
+                    List<HTGameObject> options = game.GetHTGOFromCondition(
+                        (HTGameObject htgo) =>
                         {
                             return (htgo.properties.Contains(Property.Track)
                             && htgo.properties.Contains(Property.Aspect)
                             && !htgo.properties.Contains(Property.French)
                             && ((Track)htgo).CanIncrease());
                         });
+
+                    BoardChoices choices = new BoardChoices();
+                    choices.aspectTracks = choiceHandler.ChooseAspectTracks(options, 3);
+
+                    return choices;
+                });
+
+            SummationEvents.Add(
+                (int gameId, BoardChoices choices) => 
+                {
+                    choices.aspectTracks.ForEach(t => t.AddToValue(1));
                 });
         }
     }

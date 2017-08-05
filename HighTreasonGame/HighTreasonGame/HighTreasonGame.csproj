@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="AspectTrack.cs" />
     <Compile Include="Board.cs" />
+    <Compile Include="BoardChoices.cs" />
     <Compile Include="CardTemplate.cs" />
     <Compile Include="CardTemplateManager.cs" />
     <Compile Include="CardTemplates\JohnAstleyCardTemplate.cs" />

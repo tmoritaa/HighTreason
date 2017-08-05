@@ -22,11 +22,6 @@ namespace HighTreasonGame
 
         public List<AspectTrack> ChooseAspectTracks(List<HTGameObject> choices, int numChoices)
         {
-            foreach (HTGameObject gameObject in choices)
-            {
-                Console.WriteLine(gameObject);
-            }
-
             List<AspectTrack> tracks = new List<AspectTrack>();
 
             for (int i = 0; i < numChoices; ++i)

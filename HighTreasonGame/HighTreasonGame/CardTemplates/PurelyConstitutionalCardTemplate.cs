@@ -12,58 +12,84 @@ namespace HighTreasonGame.CardTemplates
             : base("\"A Purely Constitutional Movement\"", 3)
         {}
 
-        protected override void addSelectionEvents()
+        protected override void addSelectionEventsAndChoices()
         {
+            SelectionEventChoices.Add(
+                (int gameId, IChoiceHandler choiceHandler) =>
+                {
+                    // TODO: implement
+                    return null;
+                });
+
             SelectionEvents.Add(
-                (int gameId, IChoiceHandler choiceHandler) => 
+                (int gameId, BoardChoices choices) => 
                 {
-
-
-
+                    // TODO: implement.
                 });
         }
 
-        protected override void addTrialEvents()
+        protected override void addTrialEventsAndChoices()
         {
-            TrialEvents.Add(
-                (int gameId, IChoiceHandler choiceHandler) => 
+            TrialEventChoices.Add(
+                (int gameId, IChoiceHandler choiceHandler) =>
                 {
-                    Game game = Game.GetGameFromId(gameId);
-                    handleInsanity(game, 1);
-                    handleMomentOfInsight();
+                    BoardChoices choices = new BoardChoices();
+                    choices.evidenceTracks.Add(findInsanityTrack(Game.GetGameFromId(gameId)));
+                    return null;
                 });
 
             TrialEvents.Add(
-                (int gameId, IChoiceHandler choiceHandler) => 
+                (int gameId, BoardChoices choices) => 
                 {
                     Game game = Game.GetGameFromId(gameId);
-                    handleAspectTrackChange(game, choiceHandler, 0, -2,
-                        (HTGameObject htgo) => 
+                    choices.evidenceTracks[0].AddToValue(1);
+                    handleMomentOfInsight(game);
+                });
+
+            TrialEventChoices.Add(
+                (int gameId, IChoiceHandler choiceHandler) =>
+                {
+                    Game game = Game.GetGameFromId(gameId);
+
+                    BoardChoices choices = new BoardChoices();
+
+                    List<HTGameObject> options = game.GetHTGOFromCondition(
+                        (HTGameObject htgo) =>
                         {
                             return (htgo.properties.Contains(Property.Track)
                             && htgo.properties.Contains(Property.Aspect)
-                            && htgo.properties.Contains(Property.Farmer)
-                            && ((Track)htgo).CanIncrease());
+                            && (htgo.properties.Contains(Property.Farmer) || htgo.properties.Contains(Property.French))
+                            && ((Track)htgo).CanDecrease());
                         });
 
-                    handleAspectTrackChange(game, choiceHandler, 0, -2,
-                        (HTGameObject htgo) => 
-                        {
-                            return (htgo.properties.Contains(Property.Track)
-                            && htgo.properties.Contains(Property.Aspect)
-                            && htgo.properties.Contains(Property.French)
-                            && ((Track)htgo).CanIncrease());
-                        });
+                    choices.aspectTracks = options.Cast<AspectTrack>().ToList();
+
+                    return choices;
+                });
+
+            TrialEvents.Add(
+                (int gameId, BoardChoices choices) => 
+                {
+                    choices.aspectTracks.ForEach(t => t.AddToValue(-2));
                 });
         }
 
-        protected override void addSummationEvents()
+        protected override void addSummationEventsAndChoices()
         {
+            SummationEventChoices.Add(
+                (int gameId, IChoiceHandler choiceHandler) =>
+                {
+                    Game game = Game.GetGameFromId(gameId);
+                    BoardChoices choices = new BoardChoices();
+                    choices.evidenceTracks.Add(findInsanityTrack(game));
+
+                    return choices;
+                });
+
             SummationEvents.Add(
-                (int gameId, IChoiceHandler choiceHandler) => 
+                (int gameId, BoardChoices choices) => 
                 {
-                    Game game = Game.GetGameFromId(gameId);
-                    handleInsanity(game, 1);
+                    choices.evidenceTracks[0].AddToValue(1);
                 });
         }
     }
