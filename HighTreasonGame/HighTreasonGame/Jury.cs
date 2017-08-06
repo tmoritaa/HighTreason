@@ -81,6 +81,17 @@ namespace HighTreasonGame
             aspects.Add(new JuryAspect(gameId, this, Property.Occupation, occupationAspect));
         }
 
+        public override void RemoveChildrenHTGameObjects()
+        {
+            Game game = Game.GetGameFromId(gameId);
+            game.RemoveHTGameObject(track);
+
+            foreach (JuryAspect aspect in aspects)
+            {
+                game.RemoveHTGameObject(aspect);
+            }
+        }
+
         public override string ToString()
         {
             string outStr = string.Empty;

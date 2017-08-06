@@ -101,6 +101,12 @@ namespace HighTreasonGame
             Discards.Clear();
         }
 
+        public void RemoveJury(Jury jury)
+        {
+            Board.Juries.Remove(jury);
+            RemoveHTGameObject(jury);
+        }
+
         public List<Player> GetPlayers()
         {
             return players.Values.ToList();
@@ -111,10 +117,15 @@ namespace HighTreasonGame
             return players[side];
         }
 
-
         public void AddHTGameObject(HTGameObject go)
         {
             htGameObjects.Add(go);
+        }
+
+        public void RemoveHTGameObject(HTGameObject go)
+        {
+            go.RemoveChildrenHTGameObjects();
+            htGameObjects.Remove(go);
         }
 
         public List<HTGameObject> GetHTGOFromCondition(Func<HTGameObject, bool> condition)
@@ -124,7 +135,7 @@ namespace HighTreasonGame
 
         public override string ToString()
         {
-            string outStr = string.Empty;
+            string outStr = "\n";
 
             foreach (Player player in players.Values)
             {
@@ -145,6 +156,7 @@ namespace HighTreasonGame
         private void initStates()
         {
             states.Add(typeof(JurySelectionState), new JurySelectionState(gameId));
+            states.Add(typeof(JuryDismissalState), new JuryDismissalState(gameId));
             states.Add(typeof(TrialInChiefState), new TrialInChiefState(gameId));
         }
     }

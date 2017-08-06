@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HighTreasonGame
 {
@@ -15,11 +14,15 @@ namespace HighTreasonGame
 
         private List<AspectTrack> aspectTracks = new List<AspectTrack>();
 
-        private List<Jury> juries = new List<Jury>();
+        public List<Jury> Juries
+        {
+            get; private set;
+        }
 
         public Board(int _gameId)
         {
             gameId = _gameId;
+            Juries = new List<Jury>();
             initTracks();
             initJury();
         }
@@ -43,7 +46,7 @@ namespace HighTreasonGame
             }
 
             outStr += "Juries:\n";
-            foreach(Jury jury in juries)
+            foreach(Jury jury in Juries)
             {
                 outStr += jury.ToString() + "\n";
                 outStr += "----------------------------------------------------\n";
@@ -112,14 +115,14 @@ namespace HighTreasonGame
 
             // Create juries.
             List<int> jurySwaySpaces = new List<int>() { 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6 }; // Length of action point list will also determine number of juries. Should be 12.
-            Debug.Assert(jurySwaySpaces.Count == GameConstants.NUM_JURY, "");
+            Debug.Assert(jurySwaySpaces.Count == GameConstants.NUM_TOTAL_JURY, "");
             foreach (int swaySpaces in jurySwaySpaces)
             {
                 int religionIdx = GlobalRandom.GetRandomNumber(0, religionAspectMarkers.Count);
                 int languageIdx = GlobalRandom.GetRandomNumber(0, languageAspectMarkers.Count);
                 int occupationIdx = GlobalRandom.GetRandomNumber(0, occupationAspectMarkers.Count);
 
-                juries.Add(new Jury(swaySpaces, swaySpaces - 3, gameId, religionAspectMarkers[religionIdx], languageAspectMarkers[languageIdx], occupationAspectMarkers[occupationIdx]));
+                Juries.Add(new Jury(swaySpaces, swaySpaces - 3, gameId, religionAspectMarkers[religionIdx], languageAspectMarkers[languageIdx], occupationAspectMarkers[occupationIdx]));
 
                 religionAspectMarkers.RemoveAt(religionIdx);
                 languageAspectMarkers.RemoveAt(languageIdx);

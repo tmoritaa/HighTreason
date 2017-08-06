@@ -49,5 +49,10 @@ namespace HighTreasonGame.ChoiceHandlers
             Console.WriteLine("Choose moment of insight use");
             return null;
         }
+
+        public Jury ChooseJuryToDismiss(List<Jury> juries)
+        {
+            return juries[0];
+        }
     }
 }

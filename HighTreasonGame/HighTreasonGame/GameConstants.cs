@@ -43,7 +43,8 @@ namespace HighTreasonGame
         public static int NUM_GOVWORKER_MARKERS = 3;
         public static int NUM_OCCUPATION_MARKERS = NUM_FARMER_MARKERS + NUM_MERCHANT_MARKERS + NUM_GOVWORKER_MARKERS;
 
-        public static int NUM_JURY = 12;
+        public static int NUM_TOTAL_JURY = 12;
+        public static int NUM_JURY_AFTER_DISMISSAL = 6;
 
         public static int NUM_HAND_SIZE = 7;
 

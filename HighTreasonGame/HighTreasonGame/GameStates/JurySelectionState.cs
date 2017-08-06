@@ -14,7 +14,7 @@ namespace HighTreasonGame.GameStates
 
         public override void GotoNextState()
         {
-            Game.GetGameFromId(gameId).GotoStateAndStart(typeof(TrialInChiefState));
+            Game.GetGameFromId(gameId).GotoStateAndStart(typeof(JuryDismissalState));
         }
 
         protected override void loopEndLogic(Game game)

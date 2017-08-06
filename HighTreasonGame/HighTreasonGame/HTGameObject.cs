@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HighTreasonGame
 {
-    public class HTGameObject
+    public abstract class HTGameObject
     {
         public HashSet<Property> properties;
 
@@ -19,5 +19,8 @@ namespace HighTreasonGame
 
             Game.GetGameFromId(gameId).AddHTGameObject(this);
         }
+
+        public virtual void RemoveChildrenHTGameObjects()
+        {}
     }
 }

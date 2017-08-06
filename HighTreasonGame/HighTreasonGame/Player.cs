@@ -70,6 +70,17 @@ namespace HighTreasonGame
             discardCard(cardUsage.card);
         }
 
+        public void DismissJury()
+        {
+            Game game = Game.GetGameFromId(gameId);
+
+            Jury jury = choiceHandler.ChooseJuryToDismiss(game.Board.Juries);
+
+            Console.WriteLine("Dismissed Jury\n" + jury);
+
+            game.RemoveJury(jury);
+        }
+
         public bool MustPass()
         {
             return hand.Count <= 2;

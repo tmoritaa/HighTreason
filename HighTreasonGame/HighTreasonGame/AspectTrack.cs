@@ -19,6 +19,11 @@ namespace HighTreasonGame
             swayTrack = new SwayTrack(0, 3, _gameId, _properties);
         }
 
+        public override void RemoveChildrenHTGameObjects()
+        {
+            Game.GetGameFromId(gameId).RemoveHTGameObject(swayTrack);
+        }
+
         public override string ToString()
         {
             string outStr = "-" + base.ToString() + "\n";

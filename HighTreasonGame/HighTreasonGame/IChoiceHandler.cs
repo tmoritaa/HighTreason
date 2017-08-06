@@ -11,6 +11,7 @@ namespace HighTreasonGame
         Player.CardUsageParams ChooseCardAndUsage(List<CardTemplate> cards);
         List<AspectTrack> ChooseAspectTracks(List<HTGameObject> choices, int numChoices);
         List<Jury.JuryAspect> ChooseJuryAspects(List<HTGameObject> choices, int numChoices);
+        Jury ChooseJuryToDismiss(List<Jury> juries);
         string ChooseMomentOfInsightUse();
     }
 }
