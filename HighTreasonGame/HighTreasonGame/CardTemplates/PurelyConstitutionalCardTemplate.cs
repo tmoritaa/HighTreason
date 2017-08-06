@@ -73,14 +73,18 @@ namespace HighTreasonGame.CardTemplates
                 {
                     BoardChoices choices = new BoardChoices();
                     choices.evidenceTracks.Add(findInsanityTrack(Game.GetGameFromId(gameId)));
-                    return null;
+                    return choices;
                 });
 
             TrialEvents.Add(
                 (int gameId, BoardChoices choices) => 
                 {
                     Game game = Game.GetGameFromId(gameId);
-                    choices.evidenceTracks[0].AddToValue(1);
+
+                    if (choices.evidenceTracks.Count > 0)
+                    {
+                        choices.evidenceTracks[0].AddToValue(1);
+                    }
                     handleMomentOfInsight(game);
                 });
 

@@ -51,6 +51,7 @@
     <Compile Include="CardTemplates\PurelyConstitutionalCardTemplate.cs" />
     <Compile Include="Deck.cs" />
     <Compile Include="GameState.cs" />
+    <Compile Include="GameStates\CardPlayState.cs" />
     <Compile Include="GameStates\JurySelectionState.cs" />
     <Compile Include="GlobalRandom.cs" />
     <Compile Include="IChoiceHandler.cs" />

@@ -75,7 +75,9 @@ namespace HighTreasonGame
 
         public void GotoStateAndStart(Type stateType)
         {
+            System.Console.WriteLine("============================================");
             System.Console.WriteLine("Going to state " + stateType);
+            System.Console.WriteLine("============================================");
             curState = states[stateType];
             curState.StartState();
         }
@@ -135,7 +137,7 @@ namespace HighTreasonGame
                 outStr += card.Name + "\n";
             }
 
-            outStr = Board.ToString();
+            outStr += Board.ToString();
 
             return outStr;
         }
@@ -143,6 +145,7 @@ namespace HighTreasonGame
         private void initStates()
         {
             states.Add(typeof(JurySelectionState), new JurySelectionState(gameId));
+            states.Add(typeof(TrialInChiefState), new TrialInChiefState(gameId));
         }
     }
 }

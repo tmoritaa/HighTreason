@@ -86,7 +86,11 @@ namespace HighTreasonGame.CardTemplates
             TrialEvents.Add(
                 (int gameId, BoardChoices choices) => 
                 {
-                    choices.evidenceTracks[0].AddToValue(1);
+                    if (choices.evidenceTracks.Count > 0)
+                    {
+                        choices.evidenceTracks[0].AddToValue(1);
+                    }
+                    
                     choices.aspectTracks.ForEach(t => t.AddToValue(1));
                 });
         }

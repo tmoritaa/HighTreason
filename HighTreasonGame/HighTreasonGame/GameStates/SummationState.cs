@@ -4,9 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HighTreasonGame
+namespace HighTreasonGame.GameStates
 {
-    class SummationState
+    public class SummationState : CardPlayState
     {
+        public SummationState(int _gameId)
+            : base(_gameId)
+        {}
+
+        public override void GotoNextState()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
