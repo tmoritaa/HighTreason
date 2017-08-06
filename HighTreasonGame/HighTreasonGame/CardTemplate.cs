@@ -4,18 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using HighTreasonGame.GameStates;
+
 namespace HighTreasonGame
 {
     public abstract class CardTemplate
     {
-        public enum EffectType
-        {
-            Selection,
-            Trial,
-            Summation,
-            Invalid,
-        }
-
         public delegate void CardEffect(int gameId, BoardChoices choices);
 
         public delegate BoardChoices CardChoice(int gameId, IChoiceHandler choiceHandler);
@@ -76,24 +70,25 @@ namespace HighTreasonGame
             addSummationEventsAndChoices();
         }
 
-        public void PlayAsEvent(EffectType effectType, int gameId, int idx, IChoiceHandler choiceHandler)
+        public void PlayAsEvent(Type curStateType, int gameId, int idx, IChoiceHandler choiceHandler)
         {
             CardChoice cardChoice = null;
             CardEffect cardEffect = null;
-            switch (effectType)
+
+            if (curStateType == typeof(JurySelectionState))
             {
-                case EffectType.Selection:
-                    cardChoice = SelectionEventChoices[idx];
-                    cardEffect = SelectionEvents[idx];
-                    break;
-                case EffectType.Trial:
-                    cardChoice = TrialEventChoices[idx];
-                    cardEffect = TrialEvents[idx];
-                    break;
-                case EffectType.Summation:
-                    cardChoice = SummationEventChoices[idx];
-                    cardEffect = SummationEvents[idx];
-                    break;
+                cardChoice = SelectionEventChoices[idx];
+                cardEffect = SelectionEvents[idx];
+            }
+            else if (curStateType == typeof(TrialInChiefState))
+            {
+                cardChoice = TrialEventChoices[idx];
+                cardEffect = TrialEvents[idx];
+            }
+            else if (curStateType == typeof(SummationState))
+            {
+                cardChoice = SummationEventChoices[idx];
+                cardEffect = SummationEvents[idx];
             }
 
             System.Diagnostics.Debug.Assert(cardChoice != null && cardEffect != null, "Card choice or card effect is null. Should never happen");

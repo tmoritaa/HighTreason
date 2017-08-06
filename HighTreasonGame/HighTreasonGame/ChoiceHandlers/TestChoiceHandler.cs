@@ -22,7 +22,8 @@ namespace HighTreasonGame.ChoiceHandlers
         {
             List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
 
-            for (int i = 0; i < numChoices; ++i)
+            int uptoIdx = Math.Min(numChoices, choices.Count);
+            for (int i = 0; i < uptoIdx; ++i)
             {
                 juryAspects.Add((Jury.JuryAspect)choices[i]);
             }
@@ -34,7 +35,8 @@ namespace HighTreasonGame.ChoiceHandlers
         {
             List<AspectTrack> tracks = new List<AspectTrack>();
 
-            for (int i = 0; i < numChoices; ++i)
+            int uptoIdx = Math.Min(numChoices, tracks.Count);
+            for (int i = 0; i < uptoIdx; ++i)
             {
                 tracks.Add((AspectTrack)choices[i]);
             }

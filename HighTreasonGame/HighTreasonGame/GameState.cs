@@ -8,14 +8,6 @@ namespace HighTreasonGame
 {
     public abstract class GameState
     {
-        public enum StateType
-        {
-            JurySelection,
-            TrialInChief,
-            Summation,
-            Deliberation,
-        }
-
         protected int gameId;
 
         public GameState(int _gameId)

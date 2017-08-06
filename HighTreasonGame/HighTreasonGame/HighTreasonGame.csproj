@@ -62,10 +62,11 @@
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GameStates\SummationState.cs" />
     <Compile Include="SwayTrack.cs" />
     <Compile Include="ChoiceHandlers\TestChoiceHandler.cs" />
     <Compile Include="Track.cs" />
-    <Compile Include="Utility.cs" />
+    <Compile Include="GameStates\TrialInChiefState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

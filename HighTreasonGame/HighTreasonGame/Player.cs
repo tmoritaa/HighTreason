@@ -36,7 +36,6 @@ namespace HighTreasonGame
         private IChoiceHandler choiceHandler;
 
         List<CardTemplate> hand = new List<CardTemplate>();
-
         List<CardTemplate> cardsForSummation = new List<CardTemplate>();
 
         public Player(PlayerSide _side, IChoiceHandler _choiceHandler, int _gameId)
@@ -51,7 +50,7 @@ namespace HighTreasonGame
             hand = _hand;
         }
 
-        public void PlayCard(GameState.StateType curStateType)
+        public void PlayCard(Type curStateType)
         {
             CardUsageParams cardUsage = choiceHandler.ChooseCardAndUsage(hand);
 
@@ -59,9 +58,9 @@ namespace HighTreasonGame
             {
                 int idx = (int)cardUsage.misc[0];
 
-                CardTemplate.EffectType effectType = Utility.ConvertToEffectTypeFromStateType(curStateType);
+                cardUsage.card.PlayAsEvent(curStateType, gameId, idx, choiceHandler);
 
-                cardUsage.card.PlayAsEvent(effectType, gameId, idx, choiceHandler);
+                System.Console.WriteLine("Player " + Side + " played " + cardUsage.card.Name + " as event at idx " + idx);
             }
             else if (cardUsage.usage == CardUsageParams.UsageType.Action)
             {
@@ -80,6 +79,27 @@ namespace HighTreasonGame
         {
             cardsForSummation.AddRange(hand);
             hand.Clear();
+        }
+
+        public override string ToString()
+        {
+            string outStr = "Player:\n";
+
+            outStr += "Side = " + Side + "\n";
+
+            outStr += "Hand = \n";
+            foreach (CardTemplate card in hand)
+            {
+                outStr += card.Name + "\n";
+            }
+
+            outStr += "Summation = \n";
+            foreach (CardTemplate card in cardsForSummation)
+            {
+                outStr += card.Name + "\n";
+            }
+
+            return outStr;
         }
 
         private void discardCard(CardTemplate card)

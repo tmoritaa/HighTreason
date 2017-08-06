@@ -28,15 +28,18 @@ namespace HighTreasonGame.GameStates
 
         public override void GotoNextState()
         {
-            Game.GetGameFromId(gameId).GotoStateAndStart(StateType.TrialInChief);
+            Game.GetGameFromId(gameId).GotoStateAndStart(typeof(TrialInChiefState));
         }
 
         private void mainLoop()
         {
-            Game game = Game.GetGameFromId(gameId);
+            Game game = Game.GetGameFromId(gameId);            
+
             while (true)
             {
-                game.CurPlayer.PlayCard(StateType.JurySelection);
+                System.Console.WriteLine(game);
+
+                game.CurPlayer.PlayCard(GetType());
 
                 int numPlayersFinished = 0;
                 List<Player> players = game.GetPlayers();
@@ -50,6 +53,9 @@ namespace HighTreasonGame.GameStates
             }
 
             game.GetPlayers().ForEach(p => p.AddHandToSummation());
+
+            // TODO: implement Jury dismissal.
+
             game.ShuffleDiscardBackToDeck();
 
             GotoNextState();

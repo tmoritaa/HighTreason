@@ -40,7 +40,7 @@ namespace HighTreasonGame
 
         private Dictionary<Player.PlayerSide, Player> players = new Dictionary<Player.PlayerSide, Player>();
 
-        private Dictionary<GameState.StateType, GameState> states = new Dictionary<GameState.StateType, GameState>();
+        private Dictionary<Type, GameState> states = new Dictionary<Type, GameState>();
         private GameState curState;
 
         public static Game GetGameFromId(int id)
@@ -70,11 +70,12 @@ namespace HighTreasonGame
 
         public void StartGame()
         {
-            GotoStateAndStart(GameState.StateType.JurySelection);
+            GotoStateAndStart(typeof(JurySelectionState));
         }
 
-        public void GotoStateAndStart(GameState.StateType stateType)
+        public void GotoStateAndStart(Type stateType)
         {
+            System.Console.WriteLine("Going to state " + stateType);
             curState = states[stateType];
             curState.StartState();
         }
@@ -121,14 +122,27 @@ namespace HighTreasonGame
 
         public override string ToString()
         {
-            string outStr = Board.ToString();
+            string outStr = string.Empty;
+
+            foreach (Player player in players.Values)
+            {
+                outStr += player;
+            }
+
+            outStr += "Discard:\n";
+            foreach (CardTemplate card in Discards)
+            {
+                outStr += card.Name + "\n";
+            }
+
+            outStr = Board.ToString();
 
             return outStr;
         }
 
         private void initStates()
         {
-            states.Add(GameState.StateType.JurySelection, new JurySelectionState(gameId));
+            states.Add(typeof(JurySelectionState), new JurySelectionState(gameId));
         }
     }
 }

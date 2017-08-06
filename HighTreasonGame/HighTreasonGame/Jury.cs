@@ -13,6 +13,14 @@ namespace HighTreasonGame
             private Dictionary<Player.PlayerSide, bool> seenStatus = new Dictionary<Player.PlayerSide, bool>();
 
             private Jury owner;
+
+            public bool IsFullyRevealed
+            {
+                get
+                {
+                    return seenStatus[Player.PlayerSide.Prosecution] && seenStatus[Player.PlayerSide.Defense];
+                }
+            }
             
             public JuryAspect(int gameId, Jury _owner, params Property[] _property) 
                 : base(gameId, _property)

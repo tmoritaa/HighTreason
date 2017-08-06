@@ -26,29 +26,30 @@ namespace HighTreasonGame
 
         public override string ToString()
         {
-            string printStr = String.Empty;
+            string outStr = String.Empty;
 
-            List<Track> tracks = new List<Track>();
-            tracks.AddRange(evidenceTracks);
-            tracks.AddRange(aspectTracks);
-
-            printStr += "======================================================\n";
-            printStr += "Tracks:\n";
-            foreach (Track track in tracks)
+            outStr += "Evidence Tracks:\n";
+            foreach (EvidenceTrack track in evidenceTracks)
             {
-                printStr += track.ToString() + "\n";
+                outStr += track.ToString() + "\n";
+                outStr += "----------------------------------------------------\n";
             }
-            printStr += "======================================================\n";
 
-            printStr += "Juries:\n";
+            outStr += "Aspect Tracks:\n";
+            foreach (AspectTrack track in aspectTracks)
+            {
+                outStr += track.ToString() + "\n";
+                outStr += "----------------------------------------------------\n";
+            }
+
+            outStr += "Juries:\n";
             foreach(Jury jury in juries)
             {
-                printStr += jury.ToString() + "\n";
-                printStr += "----------------------------------------------------\n";
+                outStr += jury.ToString() + "\n";
+                outStr += "----------------------------------------------------\n";
             }
-            printStr += "======================================================\n";
 
-            return printStr;
+            return outStr;
         }
 
         private void initTracks()

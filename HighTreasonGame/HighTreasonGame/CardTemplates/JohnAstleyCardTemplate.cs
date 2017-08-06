@@ -21,7 +21,8 @@ namespace HighTreasonGame.CardTemplates
                         {
                             return (htgo.properties.Contains(Property.Jury)
                             && htgo.properties.Contains(Property.Aspect)
-                            && htgo.properties.Contains(Property.Religion));
+                            && htgo.properties.Contains(Property.Religion)
+                            && !((Jury.JuryAspect)htgo).IsFullyRevealed);
                         });
 
                     BoardChoices choices = new BoardChoices();
@@ -43,7 +44,8 @@ namespace HighTreasonGame.CardTemplates
                         {
                             return (htgo.properties.Contains(Property.Jury)
                             && htgo.properties.Contains(Property.Aspect)
-                            && htgo.properties.Contains(Property.Occupation));
+                            && htgo.properties.Contains(Property.Occupation)
+                            && !((Jury.JuryAspect)htgo).IsFullyRevealed);
                         });
 
                     BoardChoices choices = new BoardChoices();
