@@ -36,8 +36,15 @@ namespace HighTreasonGame
         private Dictionary<Type, GameState> states = new Dictionary<Type, GameState>();
         private GameState curState;
 
-        public Game()
+        public EventHandler EventHandler
         {
+            get; private set;
+        }
+
+        public Game(EventHandler _eventHandler)
+        {
+            EventHandler = _eventHandler;
+
             Board = new Board(this);
             Deck = new Deck(this);
             Discards = new List<CardTemplate>();
@@ -57,9 +64,8 @@ namespace HighTreasonGame
 
         public void GotoStateAndStart(Type stateType)
         {
-            System.Console.WriteLine("============================================");
-            System.Console.WriteLine("Going to state " + stateType);
-            System.Console.WriteLine("============================================");
+            EventHandler.GotoNextState(stateType);
+
             curState = states[stateType];
             curState.StartState();
         }
@@ -117,8 +123,9 @@ namespace HighTreasonGame
 
         public override string ToString()
         {
-            string outStr = "\n";
+            string outStr = string.Empty;
 
+            outStr += "Players:\n";
             foreach (Player player in players.Values)
             {
                 outStr += player;

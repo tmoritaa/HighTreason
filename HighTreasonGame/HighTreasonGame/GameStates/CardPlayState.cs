@@ -27,7 +27,7 @@ namespace HighTreasonGame.GameStates
         {
             while (true)
             {
-                System.Console.WriteLine(game);
+                game.EventHandler.StartOfNewTurn(game, this.GetType());
 
                 game.CurPlayer.PlayCard(GetType());
 

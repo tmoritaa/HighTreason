@@ -99,7 +99,7 @@ namespace HighTreasonGame
             }
 
             outStr += track.ToString() + "\n";
-            outStr += "Action Points=" + actionPoints;
+            outStr += "Action Points=" + actionPoints + "\n";
 
             return outStr;
         }

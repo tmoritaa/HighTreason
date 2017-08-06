@@ -55,11 +55,9 @@ namespace HighTreasonGame
 
             if (cardUsage.usage == CardUsageParams.UsageType.Event)
             {
-                int idx = (int)cardUsage.misc[0];
+                cardUsage.card.PlayAsEvent(curStateType, game, (int)cardUsage.misc[0], choiceHandler);
 
-                cardUsage.card.PlayAsEvent(curStateType, game, idx, choiceHandler);
-
-                System.Console.WriteLine("Player " + Side + " played " + cardUsage.card.Name + " as event at idx " + idx);
+                game.EventHandler.PlayedCard(this, cardUsage);
             }
             else if (cardUsage.usage == CardUsageParams.UsageType.Action)
             {
@@ -91,9 +89,7 @@ namespace HighTreasonGame
 
         public override string ToString()
         {
-            string outStr = "Player:\n";
-
-            outStr += "Side = " + Side + "\n";
+            string outStr = Side + " player:\n";
 
             outStr += "Hand = \n";
             foreach (CardTemplate card in hand)

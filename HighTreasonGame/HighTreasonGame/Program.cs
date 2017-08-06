@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
+using HighTreasonGame.EventHandlers;
 
 namespace HighTreasonGame
 {
@@ -9,7 +8,7 @@ namespace HighTreasonGame
     {
         static void Main(string[] args)
         {
-            Game game = new Game();
+            Game game = new Game(new ConsoleEventHandler());
             game.StartGame();
 
             Console.ReadLine();
