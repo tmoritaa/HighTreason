@@ -49,17 +49,23 @@
     <Compile Include="CardTemplateManager.cs" />
     <Compile Include="CardTemplates\JohnAstleyCardTemplate.cs" />
     <Compile Include="CardTemplates\PurelyConstitutionalCardTemplate.cs" />
+    <Compile Include="Deck.cs" />
+    <Compile Include="GameState.cs" />
+    <Compile Include="GameStates\JurySelectionState.cs" />
+    <Compile Include="GlobalRandom.cs" />
     <Compile Include="IChoiceHandler.cs" />
     <Compile Include="EvidenceTrack.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameConstants.cs" />
     <Compile Include="HTGameObject.cs" />
     <Compile Include="Jury.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SwayTrack.cs" />
-    <Compile Include="TestChoiceHandler.cs" />
+    <Compile Include="ChoiceHandlers\TestChoiceHandler.cs" />
     <Compile Include="Track.cs" />
+    <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

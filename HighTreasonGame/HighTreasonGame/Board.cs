@@ -110,14 +110,13 @@ namespace HighTreasonGame
             }
 
             // Create juries.
-            Random rand = new Random();
             List<int> jurySwaySpaces = new List<int>() { 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6 }; // Length of action point list will also determine number of juries. Should be 12.
             Debug.Assert(jurySwaySpaces.Count == GameConstants.NUM_JURY, "");
             foreach (int swaySpaces in jurySwaySpaces)
             {
-                int religionIdx = rand.Next(0, religionAspectMarkers.Count);
-                int languageIdx = rand.Next(0, languageAspectMarkers.Count);
-                int occupationIdx = rand.Next(0, occupationAspectMarkers.Count);
+                int religionIdx = GlobalRandom.GetRandomNumber(0, religionAspectMarkers.Count);
+                int languageIdx = GlobalRandom.GetRandomNumber(0, languageAspectMarkers.Count);
+                int occupationIdx = GlobalRandom.GetRandomNumber(0, occupationAspectMarkers.Count);
 
                 juries.Add(new Jury(swaySpaces, swaySpaces - 3, gameId, religionAspectMarkers[religionIdx], languageAspectMarkers[languageIdx], occupationAspectMarkers[occupationIdx]));
 

@@ -11,10 +11,7 @@ namespace HighTreasonGame
         static void Main(string[] args)
         {
             Game game = new Game();
-
-            CardTemplateManager.Instance.Test();
-
-            Console.WriteLine(game);
+            game.StartGame();
 
             Console.ReadLine();
         }

@@ -27,12 +27,6 @@ namespace HighTreasonGame
         Track,
     }
 
-    public enum PlayerSide
-    {
-        Prosecution,
-        Defense
-    }
-
     public static class GameConstants
     {
         #region Number Constants
@@ -50,6 +44,9 @@ namespace HighTreasonGame
         public static int NUM_OCCUPATION_MARKERS = NUM_FARMER_MARKERS + NUM_MERCHANT_MARKERS + NUM_GOVWORKER_MARKERS;
 
         public static int NUM_JURY = 12;
+
+        public static int NUM_HAND_SIZE = 7;
+
         #endregion
     }
 }

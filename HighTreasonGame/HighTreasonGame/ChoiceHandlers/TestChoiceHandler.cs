@@ -4,13 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HighTreasonGame
+namespace HighTreasonGame.ChoiceHandlers
 {
     public class TestChoiceHandler : IChoiceHandler
     {
-        public void ChooseCardUsage()
+        public Player.CardUsageParams ChooseCardAndUsage(List<CardTemplate> cards)
         {
-            Console.WriteLine("ChooseCardUsage called");
+            Player.CardUsageParams cardUsage = new Player.CardUsageParams();
+            cardUsage.card = cards[0];
+            cardUsage.usage = Player.CardUsageParams.UsageType.Event;
+            cardUsage.misc.Add(0);
+
+            return cardUsage;
         }
 
         public List<Jury.JuryAspect> ChooseJuryAspects(List<HTGameObject> choices, int numChoices)

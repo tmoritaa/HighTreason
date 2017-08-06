@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using HighTreasonGame.CardTemplates;
+using HighTreasonGame.ChoiceHandlers;
 
 namespace HighTreasonGame
 {
@@ -25,7 +27,26 @@ namespace HighTreasonGame
             get;
             private set;
         }
-        
+
+        public List<CardTemplate> GetAllCards()
+        {
+            List<CardTemplate> cards = CardTemplates.Values.ToList();
+
+            // TODO: only for now.
+            while (CardTemplates.Keys.Count < 45)
+            {
+                CardTemplate tmp1 = new JohnAstleyCardTemplate();
+                tmp1.SetName(tmp1.Name + CardTemplates.Keys.Count);
+                CardTemplates.Add(tmp1.Name, tmp1);
+
+                CardTemplate tmp2 = new PurelyConstitutionalCardTemplate();
+                tmp2.SetName(tmp2.Name + CardTemplates.Keys.Count);
+                CardTemplates.Add(tmp2.Name, tmp2);
+            }
+
+            return CardTemplates.Values.ToList();
+        }
+
         public void Test()
         {
             CardTemplate template = CardTemplates["\"A Purely Constitutional Movement\""];

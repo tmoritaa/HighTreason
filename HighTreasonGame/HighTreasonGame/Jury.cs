@@ -10,7 +10,7 @@ namespace HighTreasonGame
     {
         public class JuryAspect : HTGameObject
         {
-            private Dictionary<PlayerSide, bool> seenStatus = new Dictionary<PlayerSide, bool>();
+            private Dictionary<Player.PlayerSide, bool> seenStatus = new Dictionary<Player.PlayerSide, bool>();
 
             private Jury owner;
             
@@ -20,19 +20,19 @@ namespace HighTreasonGame
                 properties.Add(Property.Jury);
                 properties.Add(Property.Aspect);
 
-                seenStatus.Add(PlayerSide.Prosecution, false);
-                seenStatus.Add(PlayerSide.Defense, false);
+                seenStatus.Add(Player.PlayerSide.Prosecution, false);
+                seenStatus.Add(Player.PlayerSide.Defense, false);
 
                 owner = _owner;
             }
 
             public void Revealed()
             {
-                seenStatus[PlayerSide.Prosecution] = true;
-                seenStatus[PlayerSide.Defense] = true;
+                seenStatus[Player.PlayerSide.Prosecution] = true;
+                seenStatus[Player.PlayerSide.Defense] = true;
             }
 
-            public void Peeked(PlayerSide side)
+            public void Peeked(Player.PlayerSide side)
             {
                 seenStatus[side] = true;
             }
@@ -48,7 +48,7 @@ namespace HighTreasonGame
 
                 outStr += "\n";
 
-                foreach (PlayerSide side in seenStatus.Keys)
+                foreach (Player.PlayerSide side in seenStatus.Keys)
                 {
                     outStr += side + " seen=" + seenStatus[side] + "\n";
                 }
