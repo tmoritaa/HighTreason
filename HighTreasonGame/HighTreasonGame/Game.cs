@@ -31,38 +31,22 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        private static ConcurrentDictionary<int, Game> gameInstances = new ConcurrentDictionary<int, Game>();
-
-        private static object syncLock = new object();
         private List<HTGameObject> htGameObjects = new List<HTGameObject>();
-
-        private int gameId;
 
         private Dictionary<Player.PlayerSide, Player> players = new Dictionary<Player.PlayerSide, Player>();
 
         private Dictionary<Type, GameState> states = new Dictionary<Type, GameState>();
         private GameState curState;
 
-        public static Game GetGameFromId(int id)
-        {
-            return gameInstances[id];
-        }
-
         public Game()
         {
-            lock (syncLock)
-            {
-                gameId = gameInstances.Count;
-            }
-            gameInstances.TryAdd(gameId, this);
-
-            Board = new Board(gameId);
-            Deck = new Deck(gameId);
+            Board = new Board(this);
+            Deck = new Deck(this);
             Discards = new List<CardTemplate>();
 
             foreach (Player.PlayerSide side in new Player.PlayerSide[] { Player.PlayerSide.Prosecution, Player.PlayerSide.Defense })
             {
-                players.Add(side, new Player(side, new TestChoiceHandler(), gameId));
+                players.Add(side, new Player(side, new TestChoiceHandler(), this));
             }
 
             initStates();
@@ -155,9 +139,9 @@ namespace HighTreasonGame
 
         private void initStates()
         {
-            states.Add(typeof(JurySelectionState), new JurySelectionState(gameId));
-            states.Add(typeof(JuryDismissalState), new JuryDismissalState(gameId));
-            states.Add(typeof(TrialInChiefState), new TrialInChiefState(gameId));
+            states.Add(typeof(JurySelectionState), new JurySelectionState(this));
+            states.Add(typeof(JuryDismissalState), new JuryDismissalState(this));
+            states.Add(typeof(TrialInChiefState), new TrialInChiefState(this));
         }
     }
 }

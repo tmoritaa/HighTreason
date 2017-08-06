@@ -8,13 +8,13 @@ namespace HighTreasonGame.GameStates
 {
     public class JurySelectionState : CardPlayState
     {
-        public JurySelectionState(int gameId)
-            : base(gameId)
+        public JurySelectionState(Game _game)
+            : base(_game)
         {}
 
         public override void GotoNextState()
         {
-            Game.GetGameFromId(gameId).GotoStateAndStart(typeof(JuryDismissalState));
+            game.GotoStateAndStart(typeof(JuryDismissalState));
         }
 
         protected override void loopEndLogic(Game game)

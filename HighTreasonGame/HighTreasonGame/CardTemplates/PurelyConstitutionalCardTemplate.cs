@@ -15,12 +15,12 @@ namespace HighTreasonGame.CardTemplates
         protected override void addSelectionEventsAndChoices()
         {
             SelectionEventChoices.Add(
-                (int gameId, IChoiceHandler choiceHandler) =>
+                (Game game, IChoiceHandler choiceHandler) =>
                 {
                     List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
 
                     choiceHandler.ChooseJuryAspects(
-                        Game.GetGameFromId(gameId).GetHTGOFromCondition(
+                        game.GetHTGOFromCondition(
                             (HTGameObject htgo) =>
                             {
                                 return (htgo.properties.Contains(Property.Jury)
@@ -31,7 +31,7 @@ namespace HighTreasonGame.CardTemplates
                         1).ForEach(a => juryAspects.Add(a));
 
                     choiceHandler.ChooseJuryAspects(
-                        Game.GetGameFromId(gameId).GetHTGOFromCondition(
+                        game.GetHTGOFromCondition(
                             (HTGameObject htgo) =>
                             {
                                 return (htgo.properties.Contains(Property.Jury)
@@ -42,7 +42,7 @@ namespace HighTreasonGame.CardTemplates
                         1).ForEach(a => juryAspects.Add(a));
 
                     choiceHandler.ChooseJuryAspects(
-                        Game.GetGameFromId(gameId).GetHTGOFromCondition(
+                        game.GetHTGOFromCondition(
                             (HTGameObject htgo) =>
                             {
                                 return (htgo.properties.Contains(Property.Jury)
@@ -60,7 +60,7 @@ namespace HighTreasonGame.CardTemplates
                 });
 
             SelectionEvents.Add(
-                (int gameId, BoardChoices choices) => 
+                (Game game, BoardChoices choices) => 
                 {
                     choices.juryAspects.ForEach(ja => ja.Revealed());
                 });
@@ -69,18 +69,16 @@ namespace HighTreasonGame.CardTemplates
         protected override void addTrialEventsAndChoices()
         {
             TrialEventChoices.Add(
-                (int gameId, IChoiceHandler choiceHandler) =>
+                (Game game, IChoiceHandler choiceHandler) =>
                 {
                     BoardChoices choices = new BoardChoices();
-                    choices.evidenceTracks.Add(findInsanityTrack(Game.GetGameFromId(gameId)));
+                    choices.evidenceTracks.Add(findInsanityTrack(game));
                     return choices;
                 });
 
             TrialEvents.Add(
-                (int gameId, BoardChoices choices) => 
+                (Game game, BoardChoices choices) => 
                 {
-                    Game game = Game.GetGameFromId(gameId);
-
                     if (choices.evidenceTracks.Count > 0)
                     {
                         choices.evidenceTracks[0].AddToValue(1);
@@ -89,10 +87,8 @@ namespace HighTreasonGame.CardTemplates
                 });
 
             TrialEventChoices.Add(
-                (int gameId, IChoiceHandler choiceHandler) =>
+                (Game game, IChoiceHandler choiceHandler) =>
                 {
-                    Game game = Game.GetGameFromId(gameId);
-
                     BoardChoices choices = new BoardChoices();
 
                     List<HTGameObject> options = game.GetHTGOFromCondition(
@@ -110,7 +106,7 @@ namespace HighTreasonGame.CardTemplates
                 });
 
             TrialEvents.Add(
-                (int gameId, BoardChoices choices) => 
+                (Game game, BoardChoices choices) => 
                 {
                     choices.aspectTracks.ForEach(t => t.AddToValue(-2));
                 });
@@ -119,9 +115,8 @@ namespace HighTreasonGame.CardTemplates
         protected override void addSummationEventsAndChoices()
         {
             SummationEventChoices.Add(
-                (int gameId, IChoiceHandler choiceHandler) =>
-                {
-                    Game game = Game.GetGameFromId(gameId);
+                (Game game, IChoiceHandler choiceHandler) =>
+                {                    
                     BoardChoices choices = new BoardChoices();
                     choices.evidenceTracks.Add(findInsanityTrack(game));
 
@@ -129,7 +124,7 @@ namespace HighTreasonGame.CardTemplates
                 });
 
             SummationEvents.Add(
-                (int gameId, BoardChoices choices) => 
+                (Game game, BoardChoices choices) => 
                 {
                     choices.evidenceTracks[0].AddToValue(1);
                 });

@@ -8,11 +8,11 @@ namespace HighTreasonGame
 {
     public abstract class GameState
     {
-        protected int gameId;
+        protected Game game;
 
-        public GameState(int _gameId)
+        public GameState(Game _game)
         {
-            gameId = _gameId;
+            game = _game;
         }
 
         public abstract void StartState();

@@ -8,14 +8,12 @@ namespace HighTreasonGame.GameStates
 {
     public abstract class CardPlayState : GameState
     {
-        public CardPlayState(int _gameId) 
-            : base(_gameId)
+        public CardPlayState(Game _game) 
+            : base(_game)
         {}
 
         public override void StartState()
         {
-            Game game = Game.GetGameFromId(gameId);
-
             foreach (Player.PlayerSide side in new Player.PlayerSide[] { Player.PlayerSide.Prosecution, Player.PlayerSide.Defense })
             {
                 game.GetPlayerOfSide(side).SetupHand(game.Deck.DealCards(GameConstants.NUM_HAND_SIZE));
@@ -28,8 +26,6 @@ namespace HighTreasonGame.GameStates
 
         protected virtual void mainLoop()
         {
-            Game game = Game.GetGameFromId(gameId);
-
             while (true)
             {
                 System.Console.WriteLine(game);

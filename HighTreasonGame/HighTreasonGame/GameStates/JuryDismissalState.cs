@@ -8,13 +8,11 @@ namespace HighTreasonGame.GameStates
 {
     public class JuryDismissalState : GameState
     {
-        public JuryDismissalState(int _gameId) : base(_gameId)
+        public JuryDismissalState(Game _game) : base(_game)
         {}
 
         public override void StartState()
         {
-            Game game = Game.GetGameFromId(gameId);
-
             game.CurPlayer = game.GetPlayerOfSide(Player.PlayerSide.Prosecution);
 
             mainLoop();
@@ -22,8 +20,6 @@ namespace HighTreasonGame.GameStates
 
         private void mainLoop()
         {
-            Game game = Game.GetGameFromId(gameId);
-
             while (true)
             {
                 System.Console.WriteLine(game);
@@ -43,7 +39,7 @@ namespace HighTreasonGame.GameStates
 
         public override void GotoNextState()
         {
-            Game.GetGameFromId(gameId).GotoStateAndStart(typeof(TrialInChiefState));
+            game.GotoStateAndStart(typeof(TrialInChiefState));
         }
     }
 }

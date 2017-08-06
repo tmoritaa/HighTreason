@@ -32,15 +32,15 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        private int gameId;
+        private Game game;
         private IChoiceHandler choiceHandler;
 
         List<CardTemplate> hand = new List<CardTemplate>();
         List<CardTemplate> cardsForSummation = new List<CardTemplate>();
 
-        public Player(PlayerSide _side, IChoiceHandler _choiceHandler, int _gameId)
+        public Player(PlayerSide _side, IChoiceHandler _choiceHandler, Game _game)
         {
-            gameId = _gameId;
+            game = _game;
             Side = _side;
             choiceHandler = _choiceHandler;
         }
@@ -58,7 +58,7 @@ namespace HighTreasonGame
             {
                 int idx = (int)cardUsage.misc[0];
 
-                cardUsage.card.PlayAsEvent(curStateType, gameId, idx, choiceHandler);
+                cardUsage.card.PlayAsEvent(curStateType, game, idx, choiceHandler);
 
                 System.Console.WriteLine("Player " + Side + " played " + cardUsage.card.Name + " as event at idx " + idx);
             }
@@ -72,8 +72,6 @@ namespace HighTreasonGame
 
         public void DismissJury()
         {
-            Game game = Game.GetGameFromId(gameId);
-
             Jury jury = choiceHandler.ChooseJuryToDismiss(game.Board.Juries);
 
             Console.WriteLine("Dismissed Jury\n" + jury);
@@ -116,7 +114,7 @@ namespace HighTreasonGame
         private void discardCard(CardTemplate card)
         {
             hand.Remove(card);
-            Game.GetGameFromId(gameId).Discards.Add(card);
+            game.Discards.Add(card);
         }
     }
 }

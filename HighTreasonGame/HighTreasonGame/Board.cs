@@ -8,7 +8,7 @@ namespace HighTreasonGame
 {
     public class Board
     {
-        private int gameId;
+        private Game game;
 
         private List<EvidenceTrack> evidenceTracks = new List<EvidenceTrack>();
 
@@ -19,9 +19,9 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        public Board(int _gameId)
+        public Board(Game _game)
         {
-            gameId = _gameId;
+            game = _game;
             Juries = new List<Jury>();
             initTracks();
             initJury();
@@ -57,20 +57,20 @@ namespace HighTreasonGame
 
         private void initTracks()
         {
-            EvidenceTrack insanityTrack = new EvidenceTrack(gameId, Property.Insanity);
-            EvidenceTrack guiltTrack = new EvidenceTrack(gameId, Property.Guilt);
+            EvidenceTrack insanityTrack = new EvidenceTrack(game, Property.Insanity);
+            EvidenceTrack guiltTrack = new EvidenceTrack(game, Property.Guilt);
 
             evidenceTracks = new List<EvidenceTrack> { insanityTrack, guiltTrack };
 
-            AspectTrack protestantTrack = new AspectTrack(5, gameId, Property.Religion, Property.Protestant);
-            AspectTrack catholicTrack = new AspectTrack(3, gameId, Property.Religion, Property.Catholic);
+            AspectTrack protestantTrack = new AspectTrack(5, game, Property.Religion, Property.Protestant);
+            AspectTrack catholicTrack = new AspectTrack(3, game, Property.Religion, Property.Catholic);
 
-            AspectTrack englishTrack = new AspectTrack(2, gameId, Property.Language, Property.English);
-            AspectTrack frenchTrack = new AspectTrack(5, gameId, Property.Language, Property.French);
+            AspectTrack englishTrack = new AspectTrack(2, game, Property.Language, Property.English);
+            AspectTrack frenchTrack = new AspectTrack(5, game, Property.Language, Property.French);
 
-            AspectTrack farmerTrack = new AspectTrack(4, gameId, Property.Occupation, Property.Farmer);
-            AspectTrack merchantTrack = new AspectTrack(5, gameId, Property.Occupation, Property.Merchant);
-            AspectTrack govWorkerTrack = new AspectTrack(5, gameId, Property.Occupation, Property.GovWorker);
+            AspectTrack farmerTrack = new AspectTrack(4, game, Property.Occupation, Property.Farmer);
+            AspectTrack merchantTrack = new AspectTrack(5, game, Property.Occupation, Property.Merchant);
+            AspectTrack govWorkerTrack = new AspectTrack(5, game, Property.Occupation, Property.GovWorker);
 
             aspectTracks = new List<AspectTrack> { protestantTrack, catholicTrack, englishTrack, frenchTrack, farmerTrack, merchantTrack, govWorkerTrack };
         }
@@ -122,7 +122,7 @@ namespace HighTreasonGame
                 int languageIdx = GlobalRandom.GetRandomNumber(0, languageAspectMarkers.Count);
                 int occupationIdx = GlobalRandom.GetRandomNumber(0, occupationAspectMarkers.Count);
 
-                Juries.Add(new Jury(swaySpaces, swaySpaces - 3, gameId, religionAspectMarkers[religionIdx], languageAspectMarkers[languageIdx], occupationAspectMarkers[occupationIdx]));
+                Juries.Add(new Jury(swaySpaces, swaySpaces - 3, game, religionAspectMarkers[religionIdx], languageAspectMarkers[languageIdx], occupationAspectMarkers[occupationIdx]));
 
                 religionAspectMarkers.RemoveAt(religionIdx);
                 languageAspectMarkers.RemoveAt(languageIdx);

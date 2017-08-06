@@ -47,11 +47,11 @@ namespace HighTreasonGame
             return CardTemplates.Values.ToList();
         }
 
-        public void Test()
+        public void Test(Game game)
         {
             CardTemplate template = CardTemplates["\"A Purely Constitutional Movement\""];
-            BoardChoices choices = template.SelectionEventChoices[0](0, new TestChoiceHandler());
-            template.SelectionEvents[0](0, choices);
+            BoardChoices choices = template.SelectionEventChoices[0](game, new TestChoiceHandler());
+            template.SelectionEvents[0](game, choices);
         }
 
         private CardTemplateManager()

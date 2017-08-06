@@ -10,9 +10,9 @@ namespace HighTreasonGame
 {
     public abstract class CardTemplate
     {
-        public delegate void CardEffect(int gameId, BoardChoices choices);
+        public delegate void CardEffect(Game game, BoardChoices choices);
 
-        public delegate BoardChoices CardChoice(int gameId, IChoiceHandler choiceHandler);
+        public delegate BoardChoices CardChoice(Game game, IChoiceHandler choiceHandler);
 
         public string Name {
             get; private set;
@@ -70,7 +70,7 @@ namespace HighTreasonGame
             addSummationEventsAndChoices();
         }
 
-        public void PlayAsEvent(Type curStateType, int gameId, int idx, IChoiceHandler choiceHandler)
+        public void PlayAsEvent(Type curStateType, Game game, int idx, IChoiceHandler choiceHandler)
         {
             CardChoice cardChoice = null;
             CardEffect cardEffect = null;
@@ -93,8 +93,8 @@ namespace HighTreasonGame
 
             System.Diagnostics.Debug.Assert(cardChoice != null && cardEffect != null, "Card choice or card effect is null. Should never happen");
 
-            BoardChoices choices = cardChoice(gameId, choiceHandler);
-            cardEffect(gameId, choices);
+            BoardChoices choices = cardChoice(game, choiceHandler);
+            cardEffect(game, choices);
         }
 
         protected abstract void addSelectionEventsAndChoices();

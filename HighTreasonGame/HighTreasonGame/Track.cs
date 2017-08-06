@@ -17,8 +17,8 @@ namespace HighTreasonGame
         protected int minValue = 0;
         protected int maxValue = 0;
 
-        public Track(int _value, int _minValue, int _maxValue, int _gameId, params Property[] _properties)
-            : base(_gameId, _properties)
+        public Track(int _value, int _minValue, int _maxValue, Game _game, params Property[] _properties)
+            : base(_game, _properties)
         {
             properties.Add(Property.Track);
 

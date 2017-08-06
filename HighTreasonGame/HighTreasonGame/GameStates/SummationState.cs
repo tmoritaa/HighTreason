@@ -8,8 +8,8 @@ namespace HighTreasonGame.GameStates
 {
     public class SummationState : CardPlayState
     {
-        public SummationState(int _gameId)
-            : base(_gameId)
+        public SummationState(Game _game)
+            : base(_game)
         {}
 
         public override void GotoNextState()

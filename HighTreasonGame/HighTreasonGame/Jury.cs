@@ -22,8 +22,8 @@ namespace HighTreasonGame
                 }
             }
             
-            public JuryAspect(int gameId, Jury _owner, params Property[] _property) 
-                : base(gameId, _property)
+            public JuryAspect(Game game, Jury _owner, params Property[] _property) 
+                : base(game, _property)
             {
                 properties.Add(Property.Jury);
                 properties.Add(Property.Aspect);
@@ -69,21 +69,20 @@ namespace HighTreasonGame
         private int actionPoints;
         private List<JuryAspect> aspects = new List<JuryAspect>();
 
-        public Jury(int swayMax, int _actionPoints, int _gameId, Property religionAspect, Property languageAspect, Property occupationAspect)
-            : base(_gameId, Property.Jury, Property.Religion, Property.Language, Property.Occupation)
+        public Jury(int swayMax, int _actionPoints, Game game, Property religionAspect, Property languageAspect, Property occupationAspect)
+            : base(game, Property.Jury, Property.Religion, Property.Language, Property.Occupation)
         {
             actionPoints = _actionPoints;
 
-            track = new SwayTrack(-swayMax, swayMax, _gameId, Property.Jury);
+            track = new SwayTrack(-swayMax, swayMax, game, Property.Jury);
 
-            aspects.Add(new JuryAspect(gameId, this, Property.Religion, religionAspect));
-            aspects.Add(new JuryAspect(gameId, this, Property.Language, languageAspect));
-            aspects.Add(new JuryAspect(gameId, this, Property.Occupation, occupationAspect));
+            aspects.Add(new JuryAspect(game, this, Property.Religion, religionAspect));
+            aspects.Add(new JuryAspect(game, this, Property.Language, languageAspect));
+            aspects.Add(new JuryAspect(game, this, Property.Occupation, occupationAspect));
         }
 
         public override void RemoveChildrenHTGameObjects()
         {
-            Game game = Game.GetGameFromId(gameId);
             game.RemoveHTGameObject(track);
 
             foreach (JuryAspect aspect in aspects)

@@ -10,14 +10,14 @@ namespace HighTreasonGame
     {
         public HashSet<Property> properties;
 
-        protected int gameId;
+        protected Game game;
 
-        public HTGameObject(int _gameId, params Property[] _properties)
+        public HTGameObject(Game _game, params Property[] _properties)
         {
-            gameId = _gameId;
+            game = _game;
             properties = new HashSet<Property>(_properties);
 
-            Game.GetGameFromId(gameId).AddHTGameObject(this);
+            game.AddHTGameObject(this);
         }
 
         public virtual void RemoveChildrenHTGameObjects()

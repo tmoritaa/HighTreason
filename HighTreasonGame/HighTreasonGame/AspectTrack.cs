@@ -12,16 +12,16 @@ namespace HighTreasonGame
 
         private SwayTrack swayTrack;
 
-        public AspectTrack(int _value, int _gameId, params Property[] _properties) 
-            : base(_value, 0, 10, _gameId, _properties)
+        public AspectTrack(int _value, Game _game, params Property[] _properties) 
+            : base(_value, 0, 10, _game, _properties)
         {
             properties.Add(Property.Aspect);
-            swayTrack = new SwayTrack(0, 3, _gameId, _properties);
+            swayTrack = new SwayTrack(0, 3, _game, _properties);
         }
 
         public override void RemoveChildrenHTGameObjects()
         {
-            Game.GetGameFromId(gameId).RemoveHTGameObject(swayTrack);
+            game.RemoveHTGameObject(swayTrack);
         }
 
         public override string ToString()

@@ -8,13 +8,13 @@ namespace HighTreasonGame
 {
     public class Deck
     {
-        private int gameId;
+        private Game game;
 
         private List<CardTemplate> cards;
 
-        public Deck(int _gameId)
+        public Deck(Game _game)
         {
-            gameId = _gameId;
+            game = _game;
 
             cards = CardTemplateManager.Instance.GetAllCards();
 
