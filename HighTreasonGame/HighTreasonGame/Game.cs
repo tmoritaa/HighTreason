@@ -34,7 +34,10 @@ namespace HighTreasonGame
         private Dictionary<Player.PlayerSide, Player> players = new Dictionary<Player.PlayerSide, Player>();
 
         private Dictionary<Type, GameState> states = new Dictionary<Type, GameState>();
-        private GameState curState;
+        public GameState CurState
+        {
+            get; private set;
+        }
 
         public EventHandler EventHandler
         {
@@ -51,7 +54,7 @@ namespace HighTreasonGame
 
             foreach (Player.PlayerSide side in new Player.PlayerSide[] { Player.PlayerSide.Prosecution, Player.PlayerSide.Defense })
             {
-                players.Add(side, new Player(side, new TestChoiceHandler(), this));
+                players.Add(side, new Player(side, new ConsolePlayerChoiceHandler(), this));
             }
 
             initStates();
@@ -66,8 +69,8 @@ namespace HighTreasonGame
         {
             EventHandler.GotoNextState(stateType);
 
-            curState = states[stateType];
-            curState.StartState();
+            CurState = states[stateType];
+            CurState.StartState();
         }
 
         public void PassToNextPlayer()

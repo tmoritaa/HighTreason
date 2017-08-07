@@ -10,7 +10,7 @@ namespace HighTreasonGame
         public EvidenceTrack(Game _game, params Property[] _properties) 
             : base(0, 0, 4, _game, _properties)
         {
-            properties.Add(Property.Evidence);
+            Properties.Add(Property.Evidence);
         }
     }
 }

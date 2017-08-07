@@ -7,14 +7,17 @@ namespace HighTreasonGame
 {
     public abstract class HTGameObject
     {
-        public HashSet<Property> properties;
+        public HashSet<Property> Properties
+        {
+            get; private set;
+        }
 
         protected Game game;
 
         public HTGameObject(Game _game, params Property[] _properties)
         {
             game = _game;
-            properties = new HashSet<Property>(_properties);
+            Properties = new HashSet<Property>(_properties);
 
             game.AddHTGameObject(this);
         }

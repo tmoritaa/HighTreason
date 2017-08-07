@@ -33,6 +33,8 @@ namespace HighTreasonGame.GameStates
                 game.PassToNextPlayer();
             }
 
+            game.ShuffleDiscardBackToDeck();
+
             GotoNextState();
         }
 

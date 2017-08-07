@@ -42,14 +42,9 @@ namespace HighTreasonGame.GameStates
                 game.PassToNextPlayer();
             }
 
-            loopEndLogic(game);
+            game.GetPlayers().ForEach(p => p.AddHandToSummation());
 
             GotoNextState();
-        }
-
-        protected virtual void loopEndLogic(Game game)
-        {
-            game.GetPlayers().ForEach(p => p.AddHandToSummation());
         }
     }
 }

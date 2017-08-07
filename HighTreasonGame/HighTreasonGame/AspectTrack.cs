@@ -12,9 +12,9 @@ namespace HighTreasonGame
         private SwayTrack swayTrack;
 
         public AspectTrack(int _value, Game _game, params Property[] _properties) 
-            : base(_value, 0, 10, _game, _properties)
+            : base(_value, 1, 10, _game, _properties)
         {
-            properties.Add(Property.Aspect);
+            Properties.Add(Property.Aspect);
             swayTrack = new SwayTrack(0, 3, _game, _properties);
         }
 

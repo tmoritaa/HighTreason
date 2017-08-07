@@ -22,34 +22,34 @@ namespace HighTreasonGame.CardTemplates
                         game.GetHTGOFromCondition(
                             (HTGameObject htgo) =>
                             {
-                                return (htgo.properties.Contains(Property.Jury)
-                                && htgo.properties.Contains(Property.Aspect)
-                                && htgo.properties.Contains(Property.Religion)
+                                return (htgo.Properties.Contains(Property.Jury)
+                                && htgo.Properties.Contains(Property.Aspect)
+                                && htgo.Properties.Contains(Property.Religion)
                                 && !((Jury.JuryAspect)htgo).IsFullyRevealed);
                             }),
-                        1).ForEach(a => juryAspects.Add(a));
+                        1, game).ForEach(a => juryAspects.Add(a));
 
                     choiceHandler.ChooseJuryAspects(
                         game.GetHTGOFromCondition(
                             (HTGameObject htgo) =>
                             {
-                                return (htgo.properties.Contains(Property.Jury)
-                                && htgo.properties.Contains(Property.Aspect)
-                                && htgo.properties.Contains(Property.Language)
+                                return (htgo.Properties.Contains(Property.Jury)
+                                && htgo.Properties.Contains(Property.Aspect)
+                                && htgo.Properties.Contains(Property.Language)
                                 && !((Jury.JuryAspect)htgo).IsFullyRevealed);
                             }),
-                        1).ForEach(a => juryAspects.Add(a));
+                        1, game).ForEach(a => juryAspects.Add(a));
 
                     choiceHandler.ChooseJuryAspects(
                         game.GetHTGOFromCondition(
                             (HTGameObject htgo) =>
                             {
-                                return (htgo.properties.Contains(Property.Jury)
-                                && htgo.properties.Contains(Property.Aspect)
-                                && htgo.properties.Contains(Property.Occupation)
+                                return (htgo.Properties.Contains(Property.Jury)
+                                && htgo.Properties.Contains(Property.Aspect)
+                                && htgo.Properties.Contains(Property.Occupation)
                                 && !((Jury.JuryAspect)htgo).IsFullyRevealed);
                             }),
-                        1).ForEach(a => juryAspects.Add(a));
+                        1, game).ForEach(a => juryAspects.Add(a));
 
 
                     BoardChoices choices = new BoardChoices();
@@ -93,9 +93,9 @@ namespace HighTreasonGame.CardTemplates
                     List<HTGameObject> options = game.GetHTGOFromCondition(
                         (HTGameObject htgo) =>
                         {
-                            return (htgo.properties.Contains(Property.Track)
-                            && htgo.properties.Contains(Property.Aspect)
-                            && (htgo.properties.Contains(Property.Farmer) || htgo.properties.Contains(Property.French))
+                            return (htgo.Properties.Contains(Property.Track)
+                            && htgo.Properties.Contains(Property.Aspect)
+                            && (htgo.Properties.Contains(Property.Farmer) || htgo.Properties.Contains(Property.French))
                             && ((Track)htgo).CanDecrease());
                         });
 

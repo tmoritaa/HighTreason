@@ -50,6 +50,7 @@
     <Compile Include="CardTemplateManager.cs" />
     <Compile Include="CardTemplates\JohnAstleyCardTemplate.cs" />
     <Compile Include="CardTemplates\PurelyConstitutionalCardTemplate.cs" />
+    <Compile Include="ChoiceHandlers\ConsolePlayerChoiceHandler.cs" />
     <Compile Include="Deck.cs" />
     <Compile Include="EventHandler.cs" />
     <Compile Include="EventHandlers\ConsoleEventHandler.cs" />

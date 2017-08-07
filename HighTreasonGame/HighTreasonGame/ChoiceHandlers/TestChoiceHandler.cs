@@ -7,7 +7,7 @@ namespace HighTreasonGame.ChoiceHandlers
 {
     public class TestChoiceHandler : IChoiceHandler
     {
-        public Player.CardUsageParams ChooseCardAndUsage(List<CardTemplate> cards)
+        public Player.CardUsageParams ChooseCardAndUsage(List<CardTemplate> cards, Game game)
         {
             Player.CardUsageParams cardUsage = new Player.CardUsageParams();
             cardUsage.card = cards[0];
@@ -17,7 +17,7 @@ namespace HighTreasonGame.ChoiceHandlers
             return cardUsage;
         }
 
-        public List<Jury.JuryAspect> ChooseJuryAspects(List<HTGameObject> choices, int numChoices)
+        public List<Jury.JuryAspect> ChooseJuryAspects(List<HTGameObject> choices, int numChoices, Game game)
         {
             List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
 
@@ -30,7 +30,7 @@ namespace HighTreasonGame.ChoiceHandlers
             return juryAspects;
         }
 
-        public List<AspectTrack> ChooseAspectTracks(List<HTGameObject> choices, int numChoices)
+        public List<AspectTrack> ChooseAspectTracks(List<HTGameObject> choices, int numChoices, Game game)
         {
             List<AspectTrack> tracks = new List<AspectTrack>();
 
@@ -43,13 +43,13 @@ namespace HighTreasonGame.ChoiceHandlers
             return tracks;
         }
 
-        public string ChooseMomentOfInsightUse()
+        public string ChooseMomentOfInsightUse(Game game)
         {
             Console.WriteLine("Choose moment of insight use");
             return null;
         }
 
-        public Jury ChooseJuryToDismiss(List<Jury> juries)
+        public Jury ChooseJuryToDismiss(List<Jury> juries, Game game)
         {
             return juries[0];
         }

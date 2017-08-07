@@ -96,6 +96,26 @@ namespace HighTreasonGame
             cardEffect(game, choices);
         }
 
+        public int GetNumberOfEventsInState(Type type)
+        {
+            int num = 0;
+
+            if (type == typeof(JurySelectionState))
+            {
+                num = SelectionEventChoices.Count;
+            }
+            else if (type == typeof(TrialInChiefState))
+            {
+                num = TrialEventChoices.Count;
+            }
+            else if (type == typeof(SummationState))
+            {
+                num = SummationEventChoices.Count;
+            }
+
+            return num;
+        }
+
         protected abstract void addSelectionEventsAndChoices();
         protected abstract void addTrialEventsAndChoices();
         protected abstract void addSummationEventsAndChoices();
@@ -105,7 +125,7 @@ namespace HighTreasonGame
         {
             List<HTGameObject> insanityTrack = game.GetHTGOFromCondition((HTGameObject htgo) =>
             {
-                return (htgo.properties.Contains(Property.Insanity));
+                return (htgo.Properties.Contains(Property.Insanity));
             });
             System.Diagnostics.Debug.Assert(insanityTrack.Count == 1, "Insanity track search failed");
 
@@ -116,7 +136,7 @@ namespace HighTreasonGame
         {
             List<HTGameObject> guiltTrack = game.GetHTGOFromCondition((HTGameObject htgo) =>
             {
-                return (htgo.properties.Contains(Property.Guilt));
+                return (htgo.Properties.Contains(Property.Guilt));
             });
             System.Diagnostics.Debug.Assert(guiltTrack.Count == 1, "Guilt track search failed");
             return (EvidenceTrack)guiltTrack[0];

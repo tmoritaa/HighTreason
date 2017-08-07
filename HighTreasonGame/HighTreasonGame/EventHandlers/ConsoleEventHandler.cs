@@ -36,9 +36,10 @@ namespace HighTreasonGame.EventHandlers
                 List<Jury> juries = game.Board.Juries;
                 foreach(Jury jury in juries)
                 {
+                    outStr += "*************************************************\n";
                     outStr += jury;
-                    outStr += "------------------------------------------------\n";
                 }
+                outStr += "*************************************************\n";
             }
             else
             {

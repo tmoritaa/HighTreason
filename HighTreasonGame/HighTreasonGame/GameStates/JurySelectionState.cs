@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace HighTreasonGame.GameStates
 {
@@ -16,13 +14,31 @@ namespace HighTreasonGame.GameStates
             game.GotoStateAndStart(typeof(JuryDismissalState));
         }
 
-        protected override void loopEndLogic(Game game)
+        protected override void mainLoop()
         {
-            base.loopEndLogic(game);
+            while (true)
+            {
+                game.EventHandler.StartOfNewTurn(game, this.GetType());
 
-            // TODO: implement Jury dismissal.
+                game.CurPlayer.PlayCard(GetType());
 
-            game.ShuffleDiscardBackToDeck();
+                int numPlayersFinished = 0;
+                List<Player> players = game.GetPlayers();
+                players.ForEach(p => numPlayersFinished += p.MustPass() ? 1 : 0);
+                if (numPlayersFinished == players.Count)
+                {
+                    break;
+                }
+
+                if (game.CurPlayer.MustPass())
+                {
+                    game.PassToNextPlayer();
+                }
+            }
+
+            game.GetPlayers().ForEach(p => p.AddHandToSummation());
+
+            GotoNextState();
         }
     }
 }

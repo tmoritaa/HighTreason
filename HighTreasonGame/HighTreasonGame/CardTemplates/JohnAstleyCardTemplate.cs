@@ -14,41 +14,19 @@ namespace HighTreasonGame.CardTemplates
         protected override void addSelectionEventsAndChoices()
         {
             SelectionEventChoices.Add(
-                (Game game, IChoiceHandler choiceHandler) => {
-                    List<HTGameObject> options = game.GetHTGOFromCondition(
-                        (HTGameObject htgo) =>
-                        {
-                            return (htgo.properties.Contains(Property.Jury)
-                            && htgo.properties.Contains(Property.Aspect)
-                            && htgo.properties.Contains(Property.Religion)
-                            && !((Jury.JuryAspect)htgo).IsFullyRevealed);
-                        });
-
-                    BoardChoices choices = new BoardChoices();
-                    choices.juryAspects = choiceHandler.ChooseJuryAspects(options, 2);
-
-                    return choices; // Temp.
-                });
-
-            SelectionEvents.Add(
-                (Game game, BoardChoices choices) => {
-                    choices.juryAspects.ForEach(ja => ja.Revealed());
-                });
-
-            SelectionEventChoices.Add(
                 (Game game, IChoiceHandler IChoiceHandler) =>
                 {
                     List<HTGameObject> options = game.GetHTGOFromCondition(
                         (HTGameObject htgo) =>
                         {
-                            return (htgo.properties.Contains(Property.Jury)
-                            && htgo.properties.Contains(Property.Aspect)
-                            && htgo.properties.Contains(Property.Occupation)
+                            return (htgo.Properties.Contains(Property.Jury)
+                            && htgo.Properties.Contains(Property.Aspect)
+                            && htgo.Properties.Contains(Property.Occupation)
                             && !((Jury.JuryAspect)htgo).IsFullyRevealed);
                         });
 
                     BoardChoices choices = new BoardChoices();
-                    choices.juryAspects = IChoiceHandler.ChooseJuryAspects(options, 3);
+                    choices.juryAspects = IChoiceHandler.ChooseJuryAspects(options, 3, game);
 
                     return choices;
                 });
@@ -56,6 +34,28 @@ namespace HighTreasonGame.CardTemplates
             SelectionEvents.Add(
                 (Game game, BoardChoices choices) => 
                 {
+                    choices.juryAspects.ForEach(ja => ja.Revealed());
+                });
+
+            SelectionEventChoices.Add(
+                (Game game, IChoiceHandler choiceHandler) => {
+                    List<HTGameObject> options = game.GetHTGOFromCondition(
+                        (HTGameObject htgo) =>
+                        {
+                            return (htgo.Properties.Contains(Property.Jury)
+                            && htgo.Properties.Contains(Property.Aspect)
+                            && htgo.Properties.Contains(Property.Religion)
+                            && !((Jury.JuryAspect)htgo).IsFullyRevealed);
+                        });
+
+                    BoardChoices choices = new BoardChoices();
+                    choices.juryAspects = choiceHandler.ChooseJuryAspects(options, 2, game);
+
+                    return choices;
+                });
+
+            SelectionEvents.Add(
+                (Game game, BoardChoices choices) => {
                     choices.juryAspects.ForEach(ja => ja.Revealed());
                 });
         }
@@ -68,14 +68,14 @@ namespace HighTreasonGame.CardTemplates
                     List<HTGameObject> options = game.GetHTGOFromCondition(
                         (HTGameObject htgo) =>
                         {
-                            return (htgo.properties.Contains(Property.Track)
-                            && htgo.properties.Contains(Property.Aspect)
+                            return (htgo.Properties.Contains(Property.Track)
+                            && htgo.Properties.Contains(Property.Aspect)
                             && ((Track)htgo).CanIncrease());
                         });
 
                     BoardChoices choices = new BoardChoices();
                     choices.evidenceTracks.Add(findGuiltTrack(game));
-                    choices.aspectTracks = choiceHandler.ChooseAspectTracks(options, 1);
+                    choices.aspectTracks = choiceHandler.ChooseAspectTracks(options, 1, game);
 
                     return choices;
                 });
@@ -100,14 +100,14 @@ namespace HighTreasonGame.CardTemplates
                     List<HTGameObject> options = game.GetHTGOFromCondition(
                         (HTGameObject htgo) =>
                         {
-                            return (htgo.properties.Contains(Property.Track)
-                            && htgo.properties.Contains(Property.Aspect)
-                            && !htgo.properties.Contains(Property.French)
+                            return (htgo.Properties.Contains(Property.Track)
+                            && htgo.Properties.Contains(Property.Aspect)
+                            && !htgo.Properties.Contains(Property.French)
                             && ((Track)htgo).CanIncrease());
                         });
 
                     BoardChoices choices = new BoardChoices();
-                    choices.aspectTracks = choiceHandler.ChooseAspectTracks(options, 3);
+                    choices.aspectTracks = choiceHandler.ChooseAspectTracks(options, 3, game);
 
                     return choices;
                 });

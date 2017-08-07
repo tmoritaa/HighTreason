@@ -11,7 +11,20 @@ namespace HighTreasonGame
         {
             private Dictionary<Player.PlayerSide, bool> seenStatus = new Dictionary<Player.PlayerSide, bool>();
 
-            private Jury owner;
+            public Jury Owner
+            {
+                get; private set;
+            }
+
+            public Property Trait
+            {
+                get; private set;
+            }
+
+            public Property Aspect
+            {
+                get; private set;
+            }
 
             public bool IsFullyRevealed
             {
@@ -21,16 +34,19 @@ namespace HighTreasonGame
                 }
             }
             
-            public JuryAspect(Game game, Jury _owner, params Property[] _property) 
-                : base(game, _property)
+            public JuryAspect(Game game, Jury _owner, Property trait, Property aspect) 
+                : base(game, trait, aspect)
             {
-                properties.Add(Property.Jury);
-                properties.Add(Property.Aspect);
+                Properties.Add(Property.Jury);
+                Properties.Add(Property.Aspect);
+
+                Trait = trait;
+                Aspect = aspect;
 
                 seenStatus.Add(Player.PlayerSide.Prosecution, false);
                 seenStatus.Add(Player.PlayerSide.Defense, false);
 
-                owner = _owner;
+                Owner = _owner;
             }
 
             public void Revealed()
@@ -46,9 +62,9 @@ namespace HighTreasonGame
 
             public override string ToString()
             {
-                string outStr = "-";
+                string outStr = "Owner Id = " + Owner.Id + "\n";
 
-                foreach (Property str in properties)
+                foreach (Property str in Properties)
                 {
                     outStr += str + " ";
                 }
@@ -64,6 +80,13 @@ namespace HighTreasonGame
             }
         }
 
+        public int Id
+        {
+            get; private set;
+        }
+
+        private static int nextUniqueId = 0;
+
         private SwayTrack track;
         private int actionPoints;
         private List<JuryAspect> aspects = new List<JuryAspect>();
@@ -71,6 +94,9 @@ namespace HighTreasonGame
         public Jury(int swayMax, int _actionPoints, Game game, Property religionAspect, Property languageAspect, Property occupationAspect)
             : base(game, Property.Jury, Property.Religion, Property.Language, Property.Occupation)
         {
+            Id = nextUniqueId;
+            ++nextUniqueId;
+
             actionPoints = _actionPoints;
 
             track = new SwayTrack(-swayMax, swayMax, game, Property.Jury);
@@ -92,11 +118,13 @@ namespace HighTreasonGame
 
         public override string ToString()
         {
-            string outStr = string.Empty;
+            string outStr = "Id = " + Id + "\n";
             foreach (JuryAspect aspect in aspects)
             {
+                outStr += "---------------------------------------\n";
                 outStr += aspect;
             }
+            outStr += "---------------------------------------\n";
 
             outStr += track.ToString() + "\n";
             outStr += "Action Points=" + actionPoints + "\n";

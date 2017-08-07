@@ -34,8 +34,9 @@ namespace HighTreasonGame
         private Game game;
         private IChoiceHandler choiceHandler;
 
-        List<CardTemplate> hand = new List<CardTemplate>();
-        List<CardTemplate> cardsForSummation = new List<CardTemplate>();
+        public List<CardTemplate> hand = new List<CardTemplate>();
+
+        private List<CardTemplate> cardsForSummation = new List<CardTemplate>();
 
         public Player(PlayerSide _side, IChoiceHandler _choiceHandler, Game _game)
         {
@@ -51,7 +52,7 @@ namespace HighTreasonGame
 
         public void PlayCard(Type curStateType)
         {
-            CardUsageParams cardUsage = choiceHandler.ChooseCardAndUsage(hand);
+            CardUsageParams cardUsage = choiceHandler.ChooseCardAndUsage(hand, game);
 
             if (cardUsage.usage == CardUsageParams.UsageType.Event)
             {
@@ -69,7 +70,7 @@ namespace HighTreasonGame
 
         public void DismissJury()
         {
-            Jury jury = choiceHandler.ChooseJuryToDismiss(game.Board.Juries);
+            Jury jury = choiceHandler.ChooseJuryToDismiss(game.Board.Juries, game);
 
             Console.WriteLine("Dismissed Jury\n" + jury);
 
