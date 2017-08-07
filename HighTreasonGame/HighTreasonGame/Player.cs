@@ -34,7 +34,10 @@ namespace HighTreasonGame
         private Game game;
         private IChoiceHandler choiceHandler;
 
-        public List<CardTemplate> hand = new List<CardTemplate>();
+        public List<CardTemplate> Hand
+        {
+            get; private set;
+        }
 
         private List<CardTemplate> cardsForSummation = new List<CardTemplate>();
 
@@ -47,12 +50,12 @@ namespace HighTreasonGame
 
         public void SetupHand(List<CardTemplate> _hand)
         {
-            hand = _hand;
+            Hand = _hand;
         }
 
         public void PlayCard(Type curStateType)
         {
-            CardUsageParams cardUsage = choiceHandler.ChooseCardAndUsage(hand, game);
+            CardUsageParams cardUsage = choiceHandler.ChooseCardAndUsage(Hand, game);
 
             if (cardUsage.usage == CardUsageParams.UsageType.Event)
             {
@@ -79,13 +82,13 @@ namespace HighTreasonGame
 
         public bool MustPass()
         {
-            return hand.Count <= 2;
+            return Hand.Count <= 2;
         }
 
         public void AddHandToSummation()
         {
-            cardsForSummation.AddRange(hand);
-            hand.Clear();
+            cardsForSummation.AddRange(Hand);
+            Hand.Clear();
         }
 
         public override string ToString()
@@ -93,7 +96,7 @@ namespace HighTreasonGame
             string outStr = Side + " player:\n";
 
             outStr += "Hand = \n";
-            foreach (CardTemplate card in hand)
+            foreach (CardTemplate card in Hand)
             {
                 outStr += card.Name + "\n";
             }
@@ -109,7 +112,7 @@ namespace HighTreasonGame
 
         private void discardCard(CardTemplate card)
         {
-            hand.Remove(card);
+            Hand.Remove(card);
             game.Discards.Add(card);
         }
     }

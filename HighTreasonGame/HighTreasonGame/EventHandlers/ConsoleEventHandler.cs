@@ -16,41 +16,12 @@ namespace HighTreasonGame.EventHandlers
 
         public override void StartOfNewTurn(Game game, Type stateType)
         {
-            string outStr = "\n";
-
-            if (stateType == typeof(JurySelectionState) || stateType == typeof(JuryDismissalState))
-            {
-                outStr += "Players:\n";
-                foreach (Player player in game.GetPlayers())
-                {
-                    outStr += player;
-                }
-
-                outStr += "Discard:\n";
-                foreach (CardTemplate card in game.Discards)
-                {
-                    outStr += card.Name + "\n";
-                }
-
-                outStr += "Juries:\n";
-                List<Jury> juries = game.Board.Juries;
-                foreach(Jury jury in juries)
-                {
-                    outStr += "*************************************************\n";
-                    outStr += jury;
-                }
-                outStr += "*************************************************\n";
-            }
-            else
-            {
-                outStr += game;
-            }
-
-            System.Console.WriteLine(outStr);
+            // Do nothing.
         }
 
         public override void PlayedCard(Player player, Player.CardUsageParams cardUsage)
         {
+            // TODO: for now. Later once actions are implemented, will have to handle that case.
             System.Console.WriteLine("Player " + player.Side + " played " + cardUsage.card.Name + " as event at idx " + (int)cardUsage.misc[0]);
         }
     }

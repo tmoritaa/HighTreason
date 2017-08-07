@@ -10,9 +10,15 @@ namespace HighTreasonGame
     {
         private Game game;
 
-        private List<EvidenceTrack> evidenceTracks = new List<EvidenceTrack>();
+        public List<EvidenceTrack> EvidenceTracks
+        {
+            get; private set;
+        }
 
-        private List<AspectTrack> aspectTracks = new List<AspectTrack>();
+        public List<AspectTrack> AspectTracks
+        {
+            get; private set;
+        }
 
         public List<Jury> Juries
         {
@@ -33,7 +39,7 @@ namespace HighTreasonGame
 
             outStr += "*************************************************\n";
             outStr += "Evidence Tracks:\n";
-            foreach (EvidenceTrack track in evidenceTracks)
+            foreach (EvidenceTrack track in EvidenceTracks)
             {
                 outStr += "++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
                 outStr += track.ToString() + "\n";
@@ -43,7 +49,7 @@ namespace HighTreasonGame
 
             outStr += "*************************************************\n";
             outStr += "Aspect Tracks:\n";
-            foreach (AspectTrack track in aspectTracks)
+            foreach (AspectTrack track in AspectTracks)
             {
                 outStr += "++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
                 outStr += track.ToString() + "\n";
@@ -69,7 +75,7 @@ namespace HighTreasonGame
             EvidenceTrack insanityTrack = new EvidenceTrack(game, Property.Insanity);
             EvidenceTrack guiltTrack = new EvidenceTrack(game, Property.Guilt);
 
-            evidenceTracks = new List<EvidenceTrack> { insanityTrack, guiltTrack };
+            EvidenceTracks = new List<EvidenceTrack> { insanityTrack, guiltTrack };
 
             AspectTrack protestantTrack = new AspectTrack(5, game, Property.Religion, Property.Protestant);
             AspectTrack catholicTrack = new AspectTrack(3, game, Property.Religion, Property.Catholic);
@@ -81,7 +87,7 @@ namespace HighTreasonGame
             AspectTrack merchantTrack = new AspectTrack(5, game, Property.Occupation, Property.Merchant);
             AspectTrack govWorkerTrack = new AspectTrack(5, game, Property.Occupation, Property.GovWorker);
 
-            aspectTracks = new List<AspectTrack> { protestantTrack, catholicTrack, englishTrack, frenchTrack, farmerTrack, merchantTrack, govWorkerTrack };
+            AspectTracks = new List<AspectTrack> { protestantTrack, catholicTrack, englishTrack, frenchTrack, farmerTrack, merchantTrack, govWorkerTrack };
         }
 
         private void initJury()

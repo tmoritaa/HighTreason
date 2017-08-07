@@ -25,7 +25,7 @@ namespace HighTreasonGame.CardTemplates
                                 return (htgo.Properties.Contains(Property.Jury)
                                 && htgo.Properties.Contains(Property.Aspect)
                                 && htgo.Properties.Contains(Property.Religion)
-                                && !((Jury.JuryAspect)htgo).IsFullyRevealed);
+                                && !((Jury.JuryAspect)htgo).IsRevealed);
                             }),
                         1, game).ForEach(a => juryAspects.Add(a));
 
@@ -36,7 +36,7 @@ namespace HighTreasonGame.CardTemplates
                                 return (htgo.Properties.Contains(Property.Jury)
                                 && htgo.Properties.Contains(Property.Aspect)
                                 && htgo.Properties.Contains(Property.Language)
-                                && !((Jury.JuryAspect)htgo).IsFullyRevealed);
+                                && !((Jury.JuryAspect)htgo).IsRevealed);
                             }),
                         1, game).ForEach(a => juryAspects.Add(a));
 
@@ -47,7 +47,7 @@ namespace HighTreasonGame.CardTemplates
                                 return (htgo.Properties.Contains(Property.Jury)
                                 && htgo.Properties.Contains(Property.Aspect)
                                 && htgo.Properties.Contains(Property.Occupation)
-                                && !((Jury.JuryAspect)htgo).IsFullyRevealed);
+                                && !((Jury.JuryAspect)htgo).IsRevealed);
                             }),
                         1, game).ForEach(a => juryAspects.Add(a));
 

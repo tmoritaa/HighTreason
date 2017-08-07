@@ -9,25 +9,28 @@ namespace HighTreasonGame.ChoiceHandlers
     {
         public Player.CardUsageParams ChooseCardAndUsage(List<CardTemplate> cards, Game game)
         {
-            Console.WriteLine("Current player=" + game.CurPlayer.Side);
-            Console.WriteLine("Hand:");
-            for (int i = 0; i < cards.Count; ++i)
-            {
-                CardTemplate card = cards[i];
-                Console.WriteLine(i + " " + card.Name + " eventNum=" + card.GetNumberOfEventsInState(game.CurState.GetType()));
-            }
-
-            Console.WriteLine("Please choose card and usage => <card idx> <action or event> <usage idx>");
-
             Player.CardUsageParams cardUsage = null;
             while (true)
             {
+                Console.WriteLine("Current player=" + game.CurPlayer.Side);
+                Console.WriteLine("Hand:");
+                for (int i = 0; i < cards.Count; ++i)
+                {
+                    CardTemplate card = cards[i];
+                    Console.WriteLine(i + " " + card.Name + " eventNum=" + card.GetNumberOfEventsInState(game.CurState.GetType()));
+                }
+                Console.WriteLine("Please choose card and usage => <card idx> <action or event> <usage idx>");
+
                 string input = Console.ReadLine();
                 string[] tokens = input.Split(' ');
 
                 try
                 {
-                    if (tokens.Length == 3)
+                    if (handleGenericCases(tokens, game))
+                    {
+                        // Do nothing since case already handled.
+                    }
+                    else if (tokens.Length == 3)
                     {
                         int cardIdx = Int32.Parse((tokens[0]));
                         string usage = tokens[1];
@@ -75,26 +78,32 @@ namespace HighTreasonGame.ChoiceHandlers
 
         public List<AspectTrack> ChooseAspectTracks(List<HTGameObject> choices, int numChoices, Game game)
         {
-            Console.WriteLine("Affectable Aspect Tracks:");
-            for (int i = 0; i < choices.Count; ++i)
+            if (choices.Count == 0)
             {
-                AspectTrack track = (AspectTrack)choices[i];
-
-                Console.Write(i + " ");
-                foreach (Property str in track.Properties)
-                {
-                    Console.Write(str + " ");
-                }
-
-                Console.Write(" value=" + track.Value + " min=" + track.MinValue + " max=" + track.MaxValue + "\n");
+                Console.WriteLine("No choices");
+                return new List<AspectTrack>();
             }
-
-            Console.WriteLine("Please choose " + numChoices + " aspects to affect => <aspect idx> ... <aspect idx>");
 
             List<AspectTrack> aspects = new List<AspectTrack>();
             bool inputComplete = false;
             while (!inputComplete)
             {
+                Console.WriteLine("Affectable Aspect Tracks:");
+                for (int i = 0; i < choices.Count; ++i)
+                {
+                    AspectTrack track = (AspectTrack)choices[i];
+
+                    Console.Write(i + " ");
+                    foreach (Property str in track.Properties)
+                    {
+                        Console.Write(str + " ");
+                    }
+
+                    Console.Write(" value=" + track.Value + " min=" + track.MinValue + " max=" + track.MaxValue + "\n");
+                }
+
+                Console.WriteLine("Please choose " + numChoices + " aspects to affect => <aspect idx> ... <aspect idx>");
+
                 aspects.Clear();
 
                 string input = Console.ReadLine();
@@ -102,7 +111,11 @@ namespace HighTreasonGame.ChoiceHandlers
 
                 try
                 {
-                    if (tokens.Length == numChoices)
+                    if (handleGenericCases(tokens, game))
+                    {
+                        // Do nothing since already handled.
+                    }
+                    else if (tokens.Length == numChoices)
                     {
                         foreach (string token in tokens)
                         {
@@ -150,21 +163,19 @@ namespace HighTreasonGame.ChoiceHandlers
                 return new List<Jury.JuryAspect>();
             }
 
-            Console.WriteLine("JuryAspects:");
-
-            foreach (HTGameObject htgo in choices)
-            {
-                Jury.JuryAspect juryAspect = (Jury.JuryAspect)htgo;
-                Console.WriteLine("JuryId=" + juryAspect.Owner.Id + " Trait=" + juryAspect.Trait);
-            }
-
-            Console.WriteLine("Please pick " + numChoices + " jury aspects => <jury id> <religion or language or occupation> ... <jury id> <religion or language or occupation>");
-
             List<Jury.JuryAspect> aspects = new List<Jury.JuryAspect>();
 
             bool inputComplete = false;
             while (!inputComplete)
             {
+                Console.WriteLine("JuryAspects:");
+                for (int i = 0; i < choices.Count; ++i)
+                {
+                    Jury.JuryAspect juryAspect = (Jury.JuryAspect)choices[i];
+                    Console.WriteLine(i + " JuryId=" + juryAspect.Owner.Id + " Trait=" + juryAspect.Trait);
+                }
+                Console.WriteLine("Please pick " + numChoices + " jury aspects => <idx> ... <idx>");
+
                 aspects.Clear();
 
                 string input = Console.ReadLine();
@@ -172,45 +183,22 @@ namespace HighTreasonGame.ChoiceHandlers
 
                 try
                 {
-                    if (tokens.Length == numChoices * 2)
+                    if (handleGenericCases(tokens, game))
                     {
-                        for (int i = 0; i < tokens.Length; i += 2)
+                        // Do nothing since case already handled.
+                    }
+                    else if (tokens.Length == numChoices)
+                    {
+                        foreach (string idxStr in tokens)
                         {
-                            int juryId = Int32.Parse(tokens[i]);
-                            string aspectType = tokens[i + 1];
+                            int choiceIdx = Int32.Parse(idxStr);
 
-                            if (choices.Exists(c => ((Jury.JuryAspect)c).Owner.Id == juryId) 
-                                && (aspectType.Equals("religion") || aspectType.Equals("language") || aspectType.Equals("occupation")))
-                            {
-                                Property property = Property.Religion;
-                                if (aspectType.Equals("religion"))
-                                {
-                                    property = Property.Religion;
-                                }
-                                else if (aspectType.Equals("language"))
-                                {
-                                    property = Property.Language;
-                                }
-                                else if (aspectType.Equals("occupation"))
-                                {
-                                    property = Property.Occupation;
-                                }
-
-                                List<HTGameObject> chosen = choices.FindAll(c => ((Jury.JuryAspect)c).Owner.Id == juryId && c.Properties.Contains(property));
-
-                                if (chosen.Count == 0 || aspects.Contains((Jury.JuryAspect)chosen[0]))
-                                {
-                                    throw new Exception();
-                                }
-
-                                System.Diagnostics.Debug.Assert(chosen.Count == 1, "Jury Aspect chosen from ConsolePlayerChoiceHandler has more than 1 valid aspect.");
-
-                                aspects.Add((Jury.JuryAspect)chosen[0]);
-                            }
-                            else
+                            if (choiceIdx >= choices.Count || aspects.Contains((Jury.JuryAspect)choices[choiceIdx]))
                             {
                                 throw new Exception();
                             }
+
+                            aspects.Add((Jury.JuryAspect)choices[choiceIdx]);
                         }
 
                         if (aspects.Count == numChoices)
@@ -239,23 +227,26 @@ namespace HighTreasonGame.ChoiceHandlers
 
         public Jury ChooseJuryToDismiss(List<Jury> juries, Game game)
         {
-            Console.WriteLine("Juries:");
-            foreach (Jury jury in juries)
-            {
-                Console.Write(jury);
-            }
-
-            Console.WriteLine("Please choose jury to dismiss => <jury id>");
-
             Jury chosenJury = null;
             while (true)
             {
+                Console.WriteLine("Juries:");
+                foreach (Jury jury in juries)
+                {
+                    Console.Write(jury);
+                }
+                Console.WriteLine("Please choose jury to dismiss => <jury id>");
+
                 string input = Console.ReadLine();
                 string[] tokens = input.Split(' ');
 
                 try
                 {
-                    if (tokens.Length == 1)
+                    if (handleGenericCases(tokens, game))
+                    {
+                        // Do nothing since case already handled.
+                    }
+                    else if (tokens.Length == 1)
                     {
                         int juryId = Int32.Parse((tokens[0]));
 
@@ -288,6 +279,91 @@ namespace HighTreasonGame.ChoiceHandlers
         public string ChooseMomentOfInsightUse(Game game)
         {
             return string.Empty;
+        }
+
+        private bool handleGenericCases(string[] tokens, Game game)
+        {
+            bool handled = true;
+
+            string command = tokens[0];
+
+            if (command.Equals("help"))
+            {
+                Console.WriteLine("Available Commands - track, player, jury, discard");
+            }
+            else if (command.Equals("track"))
+            {
+                Console.WriteLine("Evidence Tracks:");
+                foreach (EvidenceTrack track in game.Board.EvidenceTracks)
+                {
+                    Console.WriteLine("---------------------------------------------------\n");
+                    Console.WriteLine(track);
+                }
+                Console.WriteLine("---------------------------------------------------\n");
+
+                Console.WriteLine("Aspect Tracks:");
+                foreach (AspectTrack track in game.Board.AspectTracks)
+                {
+                    Console.WriteLine("---------------------------------------------------\n");
+                    Console.WriteLine(track);
+                }
+                Console.WriteLine("---------------------------------------------------\n");
+            }
+            else if (command.Equals("player"))
+            {
+                Console.WriteLine("Current player = " + game.CurPlayer.Side);
+                Console.WriteLine("Hand:");
+                foreach (CardTemplate card in game.CurPlayer.Hand)
+                {
+                    Console.WriteLine(card.Name);
+                }
+            }
+            else if (command.Equals("jury"))
+            {
+                List<Jury> juries = game.Board.Juries;
+
+                Console.WriteLine("Juries:");
+                foreach (Jury jury in juries)
+                {
+                    Console.WriteLine("---------------------------------------");
+                    Console.WriteLine(jury.SwayTrack);
+                    Console.WriteLine("Action Points = " + jury.ActionPoints);
+                    Console.WriteLine("Aspects:");
+                    foreach (Jury.JuryAspect aspect in jury.Aspects)
+                    {
+                        string outStr = "- " + aspect.Trait;
+                        if (aspect.IsVisibleToPlayer(game.CurPlayer.Side))
+                        {
+                            outStr += " " + aspect.Aspect;
+                        }
+                        
+                        if (aspect.IsRevealed)
+                        {
+                            outStr += " revealed";
+                        }
+                        else if (aspect.IsPeaked)
+                        {
+                            outStr += " peeked";
+                        }
+                        Console.WriteLine(outStr);
+                    }
+                }
+                Console.WriteLine("---------------------------------------");
+            }
+            else if (command.Equals("discard"))
+            {
+                Console.WriteLine("Discards:");
+                foreach (CardTemplate card in game.Discards)
+                {
+                    Console.WriteLine(card.Name);
+                }
+            }
+            else
+            {
+                handled = false;
+            }
+
+            return handled;
         }
     }
 }

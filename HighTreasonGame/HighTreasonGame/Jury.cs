@@ -26,11 +26,19 @@ namespace HighTreasonGame
                 get; private set;
             }
 
-            public bool IsFullyRevealed
+            public bool IsRevealed
             {
                 get
                 {
                     return seenStatus[Player.PlayerSide.Prosecution] && seenStatus[Player.PlayerSide.Defense];
+                }
+            }
+
+            public bool IsPeaked
+            {
+                get
+                {
+                    return seenStatus[Player.PlayerSide.Prosecution] || seenStatus[Player.PlayerSide.Defense];
                 }
             }
             
@@ -60,6 +68,11 @@ namespace HighTreasonGame
                 seenStatus[side] = true;
             }
 
+            public bool IsVisibleToPlayer(Player.PlayerSide side)
+            {
+                return seenStatus[side];
+            }
+
             public override string ToString()
             {
                 string outStr = "Owner Id = " + Owner.Id + "\n";
@@ -85,11 +98,22 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        private static int nextUniqueId = 0;
+        public SwayTrack SwayTrack
+        {
+            get; private set;
+        }
 
-        private SwayTrack track;
-        private int actionPoints;
-        private List<JuryAspect> aspects = new List<JuryAspect>();
+        public int ActionPoints
+        {
+            get; private set;
+        }
+
+        public List<JuryAspect> Aspects
+        {
+            get; private set;
+        }
+
+        private static int nextUniqueId = 0;
 
         public Jury(int swayMax, int _actionPoints, Game game, Property religionAspect, Property languageAspect, Property occupationAspect)
             : base(game, Property.Jury, Property.Religion, Property.Language, Property.Occupation)
@@ -97,20 +121,21 @@ namespace HighTreasonGame
             Id = nextUniqueId;
             ++nextUniqueId;
 
-            actionPoints = _actionPoints;
+            ActionPoints = _actionPoints;
 
-            track = new SwayTrack(-swayMax, swayMax, game, Property.Jury);
+            SwayTrack = new SwayTrack(-swayMax, swayMax, game, Property.Jury);
 
-            aspects.Add(new JuryAspect(game, this, Property.Religion, religionAspect));
-            aspects.Add(new JuryAspect(game, this, Property.Language, languageAspect));
-            aspects.Add(new JuryAspect(game, this, Property.Occupation, occupationAspect));
+            Aspects = new List<JuryAspect>();
+            Aspects.Add(new JuryAspect(game, this, Property.Religion, religionAspect));
+            Aspects.Add(new JuryAspect(game, this, Property.Language, languageAspect));
+            Aspects.Add(new JuryAspect(game, this, Property.Occupation, occupationAspect));
         }
 
         public override void RemoveChildrenHTGameObjects()
         {
-            game.RemoveHTGameObject(track);
+            game.RemoveHTGameObject(SwayTrack);
 
-            foreach (JuryAspect aspect in aspects)
+            foreach (JuryAspect aspect in Aspects)
             {
                 game.RemoveHTGameObject(aspect);
             }
@@ -119,15 +144,14 @@ namespace HighTreasonGame
         public override string ToString()
         {
             string outStr = "Id = " + Id + "\n";
-            foreach (JuryAspect aspect in aspects)
+            outStr += SwayTrack.ToString() + "\n";
+            outStr += "Action Points=" + ActionPoints + "\n";
+            foreach (JuryAspect aspect in Aspects)
             {
                 outStr += "---------------------------------------\n";
                 outStr += aspect;
             }
             outStr += "---------------------------------------\n";
-
-            outStr += track.ToString() + "\n";
-            outStr += "Action Points=" + actionPoints + "\n";
 
             return outStr;
         }
