@@ -26,7 +26,7 @@ namespace HighTreasonGame.CardTemplates
                         });
 
                     BoardChoices choices = new BoardChoices();
-                    choices.juryAspects = IChoiceHandler.ChooseJuryAspects(options, 3, game);
+                    choices.juryAspects = IChoiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { options }, new List<int>() { 3 }, game);
 
                     return choices;
                 });
@@ -49,7 +49,7 @@ namespace HighTreasonGame.CardTemplates
                         });
 
                     BoardChoices choices = new BoardChoices();
-                    choices.juryAspects = choiceHandler.ChooseJuryAspects(options, 2, game);
+                    choices.juryAspects = choiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { options }, new List<int>() { 2 }, game);
 
                     return choices;
                 });

@@ -18,39 +18,34 @@ namespace HighTreasonGame.CardTemplates
                 {
                     List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
 
-                    choiceHandler.ChooseJuryAspects(
-                        game.GetHTGOFromCondition(
+                    List<HTGameObject> religionChoices = game.GetHTGOFromCondition(
                             (HTGameObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Jury)
                                 && htgo.Properties.Contains(Property.Aspect)
                                 && htgo.Properties.Contains(Property.Religion)
                                 && !((Jury.JuryAspect)htgo).IsRevealed);
-                            }),
-                        1, game).ForEach(a => juryAspects.Add(a));
-
-                    choiceHandler.ChooseJuryAspects(
-                        game.GetHTGOFromCondition(
+                            });
+                    List<HTGameObject> languageChoices = game.GetHTGOFromCondition(
                             (HTGameObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Jury)
                                 && htgo.Properties.Contains(Property.Aspect)
                                 && htgo.Properties.Contains(Property.Language)
                                 && !((Jury.JuryAspect)htgo).IsRevealed);
-                            }),
-                        1, game).ForEach(a => juryAspects.Add(a));
-
-                    choiceHandler.ChooseJuryAspects(
-                        game.GetHTGOFromCondition(
+                            });
+                    List<HTGameObject> occupationChoices = game.GetHTGOFromCondition(
                             (HTGameObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Jury)
                                 && htgo.Properties.Contains(Property.Aspect)
                                 && htgo.Properties.Contains(Property.Occupation)
                                 && !((Jury.JuryAspect)htgo).IsRevealed);
-                            }),
-                        1, game).ForEach(a => juryAspects.Add(a));
+                            });
 
+                    choiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { religionChoices, languageChoices, occupationChoices },
+                        new List<int>() { 1, 1, 1 }, 
+                        game).ForEach(a => juryAspects.Add(a));
 
                     BoardChoices choices = new BoardChoices();
                     choices.juryAspects = juryAspects;

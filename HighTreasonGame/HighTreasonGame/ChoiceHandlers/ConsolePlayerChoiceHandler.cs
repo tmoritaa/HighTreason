@@ -155,9 +155,9 @@ namespace HighTreasonGame.ChoiceHandlers
             return aspects;
         }
 
-        public List<Jury.JuryAspect> ChooseJuryAspects(List<HTGameObject> choices, int numChoices, Game game)
+        public List<Jury.JuryAspect> ChooseJuryAspects(List<List<HTGameObject>> choicesList, List<int> numChoicesList, Game game)
         {
-            if (choices.Count == 0)
+            if (choicesList.Count == 0)
             {
                 Console.WriteLine("No choices");
                 return new List<Jury.JuryAspect>();
@@ -165,60 +165,73 @@ namespace HighTreasonGame.ChoiceHandlers
 
             List<Jury.JuryAspect> aspects = new List<Jury.JuryAspect>();
 
-            bool inputComplete = false;
-            while (!inputComplete)
+            for (int c = 0; c < choicesList.Count; ++c)
             {
-                Console.WriteLine("JuryAspects:");
-                for (int i = 0; i < choices.Count; ++i)
+                List<HTGameObject> choices = choicesList[c];
+                int numChoices = numChoicesList[c];
+
+                if (choices.Count == 0)
                 {
-                    Jury.JuryAspect juryAspect = (Jury.JuryAspect)choices[i];
-                    Console.WriteLine(i + " JuryId=" + juryAspect.Owner.Id + " Trait=" + juryAspect.Trait);
+                    continue;
                 }
-                Console.WriteLine("Please pick " + numChoices + " jury aspects => <idx> ... <idx>");
 
-                aspects.Clear();
-
-                string input = Console.ReadLine();
-                string[] tokens = input.Split(' ');
-
-                try
+                List<Jury.JuryAspect> chosenAspects = new List<Jury.JuryAspect>();
+                bool inputComplete = false;
+                while (!inputComplete)
                 {
-                    if (handleGenericCases(tokens, game))
+                    Console.WriteLine("JuryAspects:");
+                    for (int i = 0; i < choices.Count; ++i)
                     {
-                        // Do nothing since case already handled.
+                        Jury.JuryAspect juryAspect = (Jury.JuryAspect)choices[i];
+                        Console.WriteLine(i + " JuryId=" + juryAspect.Owner.Id + " Trait=" + juryAspect.Trait);
                     }
-                    else if (tokens.Length == numChoices)
-                    {
-                        foreach (string idxStr in tokens)
-                        {
-                            int choiceIdx = Int32.Parse(idxStr);
+                    Console.WriteLine("Please pick " + numChoices + " jury aspects => <idx> ... <idx>");
 
-                            if (choiceIdx >= choices.Count || aspects.Contains((Jury.JuryAspect)choices[choiceIdx]))
+                    chosenAspects.Clear();
+
+                    string input = Console.ReadLine();
+                    string[] tokens = input.Split(' ');
+
+                    try
+                    {
+                        if (handleGenericCases(tokens, game))
+                        {
+                            // Do nothing since case already handled.
+                        }
+                        else if (tokens.Length == numChoices)
+                        {
+                            foreach (string idxStr in tokens)
                             {
-                                throw new Exception();
+                                int choiceIdx = Int32.Parse(idxStr);
+
+                                if (choiceIdx >= choices.Count || aspects.Contains((Jury.JuryAspect)choices[choiceIdx]))
+                                {
+                                    throw new Exception();
+                                }
+
+                                chosenAspects.Add((Jury.JuryAspect)choices[choiceIdx]);
                             }
 
-                            aspects.Add((Jury.JuryAspect)choices[choiceIdx]);
+                            if (chosenAspects.Count == numChoices)
+                            {
+                                inputComplete = true;
+                            }
                         }
-
-                        if (aspects.Count == numChoices)
+                        else
                         {
-                            inputComplete = true;
+                            throw new Exception();
                         }
                     }
-                    else
+                    catch
                     {
-                        throw new Exception();
+                        Console.WriteLine("Invalid input. Try again.");
                     }
-                }
-                catch
-                {
-                    Console.WriteLine("Invalid input. Try again.");
-                }
 
-                if (inputComplete)
-                {
-                    break;
+                    if (inputComplete)
+                    {
+                        aspects.AddRange(chosenAspects);
+                        break;
+                    }
                 }
             }
 

@@ -17,14 +17,20 @@ namespace HighTreasonGame.ChoiceHandlers
             return cardUsage;
         }
 
-        public List<Jury.JuryAspect> ChooseJuryAspects(List<HTGameObject> choices, int numChoices, Game game)
+        public List<Jury.JuryAspect> ChooseJuryAspects(List<List<HTGameObject>> choicesList, List<int> numChoicesList, Game game)
         {
             List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
 
-            int uptoIdx = Math.Min(numChoices, choices.Count);
-            for (int i = 0; i < uptoIdx; ++i)
+            for (int c = 0; c < choicesList.Count; ++c)
             {
-                juryAspects.Add((Jury.JuryAspect)choices[i]);
+                List<HTGameObject> choices = choicesList[c];
+                int numChoices = numChoicesList[c];
+
+                int uptoIdx = Math.Min(numChoices, choices.Count);
+                for (int i = 0; i < uptoIdx; ++i)
+                {
+                    juryAspects.Add((Jury.JuryAspect)choices[i]);
+                }
             }
 
             return juryAspects;
