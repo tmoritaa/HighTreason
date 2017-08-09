@@ -39,13 +39,17 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        private List<CardTemplate> cardsForSummation = new List<CardTemplate>();
+        public List<CardTemplate> CardsForSummation
+        {
+            get; private set;
+        }
 
         public Player(PlayerSide _side, IChoiceHandler _choiceHandler, Game _game)
         {
             game = _game;
             Side = _side;
             choiceHandler = _choiceHandler;
+            CardsForSummation = new List<CardTemplate>();
         }
 
         public void SetupHand(List<CardTemplate> _hand)
@@ -57,6 +61,7 @@ namespace HighTreasonGame
         {
             CardUsageParams cardUsage = choiceHandler.ChooseCardAndUsage(Hand, game);
 
+            discardCard(cardUsage.card);
             if (cardUsage.usage == CardUsageParams.UsageType.Event)
             {
                 cardUsage.card.PlayAsEvent(curStateType, game, (int)cardUsage.misc[0], choiceHandler);
@@ -67,8 +72,6 @@ namespace HighTreasonGame
             {
                 // TODO: implement.
             }
-
-            discardCard(cardUsage.card);
         }
 
         public void DismissJury()
@@ -87,8 +90,15 @@ namespace HighTreasonGame
 
         public void AddHandToSummation()
         {
-            cardsForSummation.AddRange(Hand);
+            CardsForSummation.AddRange(Hand);
             Hand.Clear();
+        }
+
+        public void RevealCardInSummation()
+        {
+            int randIdx = GlobalRandom.GetRandomNumber(0, CardsForSummation.Count);
+            // TODO: add persistence to shown card.
+            Console.WriteLine(CardsForSummation[randIdx].Name);
         }
 
         public override string ToString()
@@ -102,7 +112,7 @@ namespace HighTreasonGame
             }
 
             outStr += "Summation = \n";
-            foreach (CardTemplate card in cardsForSummation)
+            foreach (CardTemplate card in CardsForSummation)
             {
                 outStr += card.Name + "\n";
             }

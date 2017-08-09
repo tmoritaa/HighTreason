@@ -23,7 +23,7 @@ namespace HighTreasonGame
         public Player CurPlayer {
             get; set;
         }
-
+        
         public List<CardTemplate> Discards
         {
             get; private set;
@@ -62,6 +62,7 @@ namespace HighTreasonGame
 
         public void StartGame()
         {
+            // TODO: make loop here so we don't make a billion stacks by states starting the next state and keeping themselves on the stack.
             GotoStateAndStart(typeof(JurySelectionState));
         }
 
@@ -106,6 +107,12 @@ namespace HighTreasonGame
         public Player GetPlayerOfSide(Player.PlayerSide side)
         {
             return players[side];
+        }
+
+        public Player GetPlayerOfOppositeSide(Player.PlayerSide side)
+        {
+            Player.PlayerSide oppositeSide = (side == Player.PlayerSide.Defense) ? Player.PlayerSide.Prosecution : Player.PlayerSide.Defense;
+            return players[oppositeSide];
         }
 
         public void AddHTGameObject(HTGameObject go)

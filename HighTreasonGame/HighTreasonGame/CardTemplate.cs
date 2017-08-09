@@ -120,6 +120,21 @@ namespace HighTreasonGame
         protected abstract void addTrialEventsAndChoices();
         protected abstract void addSummationEventsAndChoices();
 
+        #region Choice Utility
+
+        protected void handleMomentOfInsightChoice(List<Player.PlayerSide> supportedSides, Game game, IChoiceHandler choiceHandler, BoardChoices outBoardChoices)
+        {
+            if (!supportedSides.Contains(game.CurPlayer.Side))
+            {
+                outBoardChoices.MoIInfo.Use = BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.NotChosen;
+                return;
+            }
+
+            choiceHandler.ChooseMomentOfInsightUse(game, outBoardChoices);
+        }
+
+        #endregion
+
         #region Search Utility
         protected EvidenceTrack findInsanityTrack(Game game)
         {
@@ -145,9 +160,22 @@ namespace HighTreasonGame
         #endregion
 
         #region Effect Utility
-        protected void handleMomentOfInsight(Game game)
+        protected void handleMomentOfInsight(Game game, BoardChoices choices)
         {
-            // TODO: implement.
+            if (choices.MoIInfo.Use == BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Reveal)
+            {
+                game.GetPlayerOfOppositeSide(game.CurPlayer.Side).RevealCardInSummation();
+            }
+            else if (choices.MoIInfo.Use == BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Swap)
+            {
+                Player player = game.CurPlayer;
+
+                player.Hand.Remove(choices.MoIInfo.HandCard);
+                player.CardsForSummation.Remove(choices.MoIInfo.SummationCard);
+
+                player.Hand.Add(choices.MoIInfo.SummationCard);
+                player.CardsForSummation.Add(choices.MoIInfo.HandCard);
+            }
         }
         #endregion
     }

@@ -7,8 +7,23 @@ namespace HighTreasonGame
 {
     public class BoardChoices
     {
-        public List<AspectTrack> aspectTracks = new List<AspectTrack>();
-        public List<EvidenceTrack> evidenceTracks = new List<EvidenceTrack>();
-        public List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
+        public class MomentOfInsightInfo
+        {
+            public enum MomentOfInsightUse
+            {
+                Swap,
+                Reveal,
+                NotChosen
+            }
+
+            public MomentOfInsightUse Use;
+            public CardTemplate SummationCard;
+            public CardTemplate HandCard;
+        }
+
+        public List<AspectTrack> AspectTracks = new List<AspectTrack>();
+        public List<EvidenceTrack> EvidenceTracks = new List<EvidenceTrack>();
+        public List<Jury.JuryAspect> JuryAspects = new List<Jury.JuryAspect>();
+        public MomentOfInsightInfo MoIInfo = new MomentOfInsightInfo();
     }
 }

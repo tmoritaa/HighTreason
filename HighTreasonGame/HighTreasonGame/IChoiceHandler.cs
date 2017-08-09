@@ -11,6 +11,6 @@ namespace HighTreasonGame
         List<AspectTrack> ChooseAspectTracks(List<HTGameObject> choices, int numChoices, Game game);
         List<Jury.JuryAspect> ChooseJuryAspects(List<List<HTGameObject>> choicesList, List<int> numChoicesList, Game game);
         Jury ChooseJuryToDismiss(List<Jury> juries, Game game);
-        string ChooseMomentOfInsightUse(Game game);
+        void ChooseMomentOfInsightUse(Game game, BoardChoices outBoardChoices);
     }
 }

@@ -26,7 +26,7 @@ namespace HighTreasonGame.CardTemplates
                         });
 
                     BoardChoices choices = new BoardChoices();
-                    choices.juryAspects = IChoiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { options }, new List<int>() { 3 }, game);
+                    choices.JuryAspects = IChoiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { options }, new List<int>() { 3 }, game);
 
                     return choices;
                 });
@@ -34,7 +34,7 @@ namespace HighTreasonGame.CardTemplates
             SelectionEvents.Add(
                 (Game game, BoardChoices choices) => 
                 {
-                    choices.juryAspects.ForEach(ja => ja.Revealed());
+                    choices.JuryAspects.ForEach(ja => ja.Revealed());
                 });
 
             SelectionEventChoices.Add(
@@ -49,14 +49,14 @@ namespace HighTreasonGame.CardTemplates
                         });
 
                     BoardChoices choices = new BoardChoices();
-                    choices.juryAspects = choiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { options }, new List<int>() { 2 }, game);
+                    choices.JuryAspects = choiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { options }, new List<int>() { 2 }, game);
 
                     return choices;
                 });
 
             SelectionEvents.Add(
                 (Game game, BoardChoices choices) => {
-                    choices.juryAspects.ForEach(ja => ja.Revealed());
+                    choices.JuryAspects.ForEach(ja => ja.Revealed());
                 });
         }
 
@@ -74,8 +74,8 @@ namespace HighTreasonGame.CardTemplates
                         });
 
                     BoardChoices choices = new BoardChoices();
-                    choices.evidenceTracks.Add(findGuiltTrack(game));
-                    choices.aspectTracks = choiceHandler.ChooseAspectTracks(options, 1, game);
+                    choices.EvidenceTracks.Add(findGuiltTrack(game));
+                    choices.AspectTracks = choiceHandler.ChooseAspectTracks(options, 1, game);
 
                     return choices;
                 });
@@ -83,12 +83,12 @@ namespace HighTreasonGame.CardTemplates
             TrialEvents.Add(
                 (Game game, BoardChoices choices) => 
                 {
-                    if (choices.evidenceTracks.Count > 0)
+                    if (choices.EvidenceTracks.Count > 0)
                     {
-                        choices.evidenceTracks[0].AddToValue(1);
+                        choices.EvidenceTracks[0].AddToValue(1);
                     }
                     
-                    choices.aspectTracks.ForEach(t => t.AddToValue(1));
+                    choices.AspectTracks.ForEach(t => t.AddToValue(1));
                 });
         }
 
@@ -107,7 +107,7 @@ namespace HighTreasonGame.CardTemplates
                         });
 
                     BoardChoices choices = new BoardChoices();
-                    choices.aspectTracks = choiceHandler.ChooseAspectTracks(options, 3, game);
+                    choices.AspectTracks = choiceHandler.ChooseAspectTracks(options, 3, game);
 
                     return choices;
                 });
@@ -115,7 +115,7 @@ namespace HighTreasonGame.CardTemplates
             SummationEvents.Add(
                 (Game game, BoardChoices choices) => 
                 {
-                    choices.aspectTracks.ForEach(t => t.AddToValue(1));
+                    choices.AspectTracks.ForEach(t => t.AddToValue(1));
                 });
         }
     }

@@ -49,15 +49,14 @@ namespace HighTreasonGame.ChoiceHandlers
             return tracks;
         }
 
-        public string ChooseMomentOfInsightUse(Game game)
-        {
-            Console.WriteLine("Choose moment of insight use");
-            return null;
-        }
-
         public Jury ChooseJuryToDismiss(List<Jury> juries, Game game)
         {
             return juries[0];
+        }
+
+        public void ChooseMomentOfInsightUse(Game game, BoardChoices outBoardChoices)
+        {
+            outBoardChoices.MoIInfo.Use = BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Reveal;
         }
     }
 }

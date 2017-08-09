@@ -145,11 +145,6 @@ namespace HighTreasonGame.ChoiceHandlers
                 {
                     Console.WriteLine("Invalid input. Try again.");
                 }
-
-                if (inputComplete)
-                {
-                    break;
-                }
             }
 
             return aspects;
@@ -177,7 +172,7 @@ namespace HighTreasonGame.ChoiceHandlers
 
                 List<Jury.JuryAspect> chosenAspects = new List<Jury.JuryAspect>();
                 bool inputComplete = false;
-                while (!inputComplete)
+                while (true)
                 {
                     Console.WriteLine("JuryAspects:");
                     for (int i = 0; i < choices.Count; ++i)
@@ -289,11 +284,6 @@ namespace HighTreasonGame.ChoiceHandlers
             return chosenJury;
         }
 
-        public string ChooseMomentOfInsightUse(Game game)
-        {
-            return string.Empty;
-        }
-
         private bool handleGenericCases(string[] tokens, Game game)
         {
             bool handled = true;
@@ -377,6 +367,86 @@ namespace HighTreasonGame.ChoiceHandlers
             }
 
             return handled;
+        }
+
+        void IChoiceHandler.ChooseMomentOfInsightUse(Game game, BoardChoices outBoardChoices)
+        {
+            bool inputComplete = false;
+
+            while (!inputComplete)
+            {
+                Console.WriteLine("Current player=" + game.CurPlayer.Side);
+                Console.WriteLine("Hand:");
+                for (int i = 0; i < game.CurPlayer.Hand.Count; ++i)
+                {
+                    CardTemplate card = game.CurPlayer.Hand[i];
+                    Console.WriteLine(i + " " + card.Name);
+                }
+                Console.WriteLine("CardsInSummation:");
+                for (int i = 0; i < game.CurPlayer.CardsForSummation.Count; ++i)
+                {
+                    CardTemplate card = game.CurPlayer.CardsForSummation[i];
+                    Console.WriteLine(i + " " + card.Name);
+                }
+
+                Console.WriteLine("Please choose how to use moment of insight => <swap or reveal> <hand card idx if swap> <summation card idx if swap>");
+
+                string input = Console.ReadLine();
+                string[] tokens = input.Split(' ');
+
+                try
+                {
+                    if (handleGenericCases(tokens, game))
+                    {
+                        // Do nothing since case already handled.
+                    }
+                    else if (tokens.Length == 1 || tokens.Length == 3)
+                    {
+                        string action = tokens[0];
+
+                        if (action != "swap" && action != "reveal")
+                        {
+                            throw new Exception();
+                        }
+
+                        BoardChoices.MomentOfInsightInfo.MomentOfInsightUse moiUse = 
+                            (action.Equals("swap")) ? BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Swap : BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Reveal;
+
+                        if (moiUse == BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Swap)
+                        {
+                            int handIdx = Int32.Parse(tokens[1]);
+                            int summationIdx = Int32.Parse(tokens[2]);
+
+                            if (handIdx >= game.CurPlayer.Hand.Count || summationIdx >= game.CurPlayer.CardsForSummation.Count)
+                            {
+                                throw new Exception();
+                            }
+
+                            outBoardChoices.MoIInfo.Use = moiUse;
+                            outBoardChoices.MoIInfo.HandCard = game.CurPlayer.Hand[handIdx];
+                            outBoardChoices.MoIInfo.SummationCard = game.CurPlayer.CardsForSummation[summationIdx];
+
+                            inputComplete = true;
+                        }
+                        else
+                        {
+                            outBoardChoices.MoIInfo.Use = moiUse;
+
+                            inputComplete = true;
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("Invalid input. Try again.");
+                }
+            }
+
+            return;
         }
     }
 }
