@@ -62,16 +62,19 @@ namespace HighTreasonGame
 
         public void StartGame()
         {
-            // TODO: make loop here so we don't make a billion stacks by states starting the next state and keeping themselves on the stack.
-            GotoStateAndStart(typeof(JurySelectionState));
+            setNextState(typeof(JurySelectionState));
+
+            while (true)
+            {
+                CurState.StartState();
+            }
         }
 
-        public void GotoStateAndStart(Type stateType)
+        public void setNextState(Type stateType)
         {
             EventHandler.GotoNextState(stateType);
 
             CurState = states[stateType];
-            CurState.StartState();
         }
 
         public void PassToNextPlayer()

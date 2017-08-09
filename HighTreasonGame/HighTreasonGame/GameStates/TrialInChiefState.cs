@@ -22,7 +22,7 @@ namespace HighTreasonGame.GameStates
         public override void GotoNextState()
         {
             Type nextStateType = (numVisits < 2) ? typeof(TrialInChiefState) : typeof(SummationState);
-            game.GotoStateAndStart(nextStateType);
+            game.setNextState(nextStateType);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace HighTreasonGame.GameStates
 
         public override void GotoNextState()
         {
-            game.GotoStateAndStart(typeof(JuryDismissalState));
+            game.setNextState(typeof(JuryDismissalState));
         }
 
         protected override void mainLoop()

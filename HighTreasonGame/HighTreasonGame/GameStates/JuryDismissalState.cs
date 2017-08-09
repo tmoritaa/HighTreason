@@ -40,7 +40,7 @@ namespace HighTreasonGame.GameStates
 
         public override void GotoNextState()
         {
-            game.GotoStateAndStart(typeof(TrialInChiefState));
+            game.setNextState(typeof(TrialInChiefState));
         }
     }
 }
