@@ -7,10 +7,11 @@ namespace HighTreasonGame.ChoiceHandlers
 {
     public class ConsolePlayerChoiceHandler : IChoiceHandler
     {
-        public Player.CardUsageParams ChooseCardAndUsage(List<CardTemplate> cards, Game game)
+        public bool ChooseCardAndUsage(List<CardTemplate> cards, Game game, out Player.CardUsageParams outCardUsage)
         {
-            Player.CardUsageParams cardUsage = null;
-            while (true)
+            outCardUsage = new Player.CardUsageParams();
+            bool inputHandled = false;
+            while (!inputHandled)
             {
                 Console.WriteLine("Current player=" + game.CurPlayer.Side);
                 Console.WriteLine("Hand:");
@@ -26,9 +27,13 @@ namespace HighTreasonGame.ChoiceHandlers
 
                 try
                 {
-                    if (handleGenericCases(tokens, game))
+                    bool goBack;
+                    if (handleGenericCases(tokens, game, out goBack))
                     {
-                        // Do nothing since case already handled.
+                        if (goBack)
+                        {
+                            return false;
+                        }
                     }
                     else if (tokens.Length == 3)
                     {
@@ -43,19 +48,20 @@ namespace HighTreasonGame.ChoiceHandlers
                             throw new Exception();
                         }
 
-                        cardUsage = new Player.CardUsageParams();
-                        cardUsage.card = cards[cardIdx];
+                        outCardUsage.card = cards[cardIdx];
 
                         if (usage == "action")
                         {
-                            cardUsage.usage = Player.CardUsageParams.UsageType.Action;
+                            outCardUsage.usage = Player.CardUsageParams.UsageType.Action;
                         }
                         else if (usage == "event")
                         {
-                            cardUsage.usage = Player.CardUsageParams.UsageType.Event;
+                            outCardUsage.usage = Player.CardUsageParams.UsageType.Event;
                         }
                         
-                        cardUsage.misc.Add(usageIdx);
+                        outCardUsage.misc.Add(usageIdx);
+
+                        inputHandled = true;
                     }
                     else
                     {
@@ -66,22 +72,19 @@ namespace HighTreasonGame.ChoiceHandlers
                 {
                     Console.WriteLine("Invalid input. Try again.");
                 }
-
-                if (cardUsage != null)
-                {
-                    break;
-                }
             }
 
-            return cardUsage;
+            return true;
         }
 
-        public List<AspectTrack> ChooseAspectTracks(List<HTGameObject> choices, int numChoices, Game game)
+        public bool ChooseAspectTracks(List<HTGameObject> choices, int numChoices, Game game, out List<AspectTrack> outAspectTracks)
         {
+            outAspectTracks = new List<AspectTrack>();
+
             if (choices.Count == 0)
             {
                 Console.WriteLine("No choices");
-                return new List<AspectTrack>();
+                return true;
             }
 
             List<AspectTrack> aspects = new List<AspectTrack>();
@@ -111,9 +114,13 @@ namespace HighTreasonGame.ChoiceHandlers
 
                 try
                 {
-                    if (handleGenericCases(tokens, game))
+                    bool goBack;
+                    if (handleGenericCases(tokens, game, out goBack))
                     {
-                        // Do nothing since already handled.
+                        if (goBack)
+                        {
+                            return false;
+                        }
                     }
                     else if (tokens.Length == numChoices)
                     {
@@ -147,18 +154,20 @@ namespace HighTreasonGame.ChoiceHandlers
                 }
             }
 
-            return aspects;
+            outAspectTracks = aspects;
+
+            return true;
         }
 
-        public List<Jury.JuryAspect> ChooseJuryAspects(List<List<HTGameObject>> choicesList, List<int> numChoicesList, Game game)
+        public bool ChooseJuryAspects(List<List<HTGameObject>> choicesList, List<int> numChoicesList, Game game, out List<Jury.JuryAspect> outJuryAspects)
         {
+            outJuryAspects = new List<Jury.JuryAspect>();
+
             if (choicesList.Count == 0)
             {
                 Console.WriteLine("No choices");
-                return new List<Jury.JuryAspect>();
+                return true;
             }
-
-            List<Jury.JuryAspect> aspects = new List<Jury.JuryAspect>();
 
             for (int c = 0; c < choicesList.Count; ++c)
             {
@@ -189,9 +198,13 @@ namespace HighTreasonGame.ChoiceHandlers
 
                     try
                     {
-                        if (handleGenericCases(tokens, game))
+                        bool goBack;
+                        if (handleGenericCases(tokens, game, out goBack))
                         {
-                            // Do nothing since case already handled.
+                            if (goBack)
+                            {
+                                return false;
+                            }
                         }
                         else if (tokens.Length == numChoices)
                         {
@@ -199,7 +212,7 @@ namespace HighTreasonGame.ChoiceHandlers
                             {
                                 int choiceIdx = Int32.Parse(idxStr);
 
-                                if (choiceIdx >= choices.Count || aspects.Contains((Jury.JuryAspect)choices[choiceIdx]))
+                                if (choiceIdx >= choices.Count || chosenAspects.Contains((Jury.JuryAspect)choices[choiceIdx]))
                                 {
                                     throw new Exception();
                                 }
@@ -224,19 +237,20 @@ namespace HighTreasonGame.ChoiceHandlers
 
                     if (inputComplete)
                     {
-                        aspects.AddRange(chosenAspects);
+                        outJuryAspects.AddRange(chosenAspects);
                         break;
                     }
                 }
             }
 
-            return aspects;
+            return true;
         }
 
-        public Jury ChooseJuryToDismiss(List<Jury> juries, Game game)
+        public bool ChooseJuryToDismiss(List<Jury> juries, Game game, out List<Jury> outJury)
         {
-            Jury chosenJury = null;
-            while (true)
+            outJury = new List<Jury>();
+            bool inputHandled = false;
+            while (!inputHandled)
             {
                 Console.WriteLine("Juries:");
                 foreach (Jury jury in juries)
@@ -250,9 +264,13 @@ namespace HighTreasonGame.ChoiceHandlers
 
                 try
                 {
-                    if (handleGenericCases(tokens, game))
+                    bool goBack;
+                    if (handleGenericCases(tokens, game, out goBack))
                     {
-                        // Do nothing since case already handled.
+                        if (goBack)
+                        {
+                            return false;
+                        }
                     }
                     else if (tokens.Length == 1)
                     {
@@ -263,7 +281,8 @@ namespace HighTreasonGame.ChoiceHandlers
                             throw new Exception();
                         }
 
-                        chosenJury = juries.Find(j => j.Id == juryId);
+                        outJury.Add(juries.Find(j => j.Id == juryId));
+                        inputHandled = true;
                     }
                     else
                     {
@@ -274,18 +293,99 @@ namespace HighTreasonGame.ChoiceHandlers
                 {
                     Console.WriteLine("Invalid input. Try again.");
                 }
+            }
 
-                if (chosenJury != null)
+            return true;
+        }
+
+        public bool ChooseMomentOfInsightUse(Game game, out BoardChoices.MomentOfInsightInfo outMoIInfo)
+        {
+            outMoIInfo = new BoardChoices.MomentOfInsightInfo();
+            bool inputComplete = false;
+
+            while (!inputComplete)
+            {
+                Console.WriteLine("Current player=" + game.CurPlayer.Side);
+                Console.WriteLine("Hand:");
+                for (int i = 0; i < game.CurPlayer.Hand.Count; ++i)
                 {
-                    break;
+                    CardTemplate card = game.CurPlayer.Hand[i];
+                    Console.WriteLine(i + " " + card.Name);
+                }
+                Console.WriteLine("CardsInSummation:");
+                for (int i = 0; i < game.CurPlayer.CardsForSummation.Count; ++i)
+                {
+                    CardTemplate card = game.CurPlayer.CardsForSummation[i];
+                    Console.WriteLine(i + " " + card.Name);
+                }
+
+                Console.WriteLine("Please choose how to use moment of insight => <swap or reveal> <hand card idx if swap> <summation card idx if swap>");
+
+                string input = Console.ReadLine();
+                string[] tokens = input.Split(' ');
+
+                try
+                {
+                    bool goBack;
+                    if (handleGenericCases(tokens, game, out goBack))
+                    {
+                        if (goBack)
+                        {
+                            return false;
+                        }
+                    }
+                    else if (tokens.Length == 1 || tokens.Length == 3)
+                    {
+                        string action = tokens[0];
+
+                        if (action != "swap" && action != "reveal")
+                        {
+                            throw new Exception();
+                        }
+
+                        BoardChoices.MomentOfInsightInfo.MomentOfInsightUse moiUse =
+                            (action.Equals("swap")) ? BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Swap : BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Reveal;
+
+                        if (moiUse == BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Swap)
+                        {
+                            int handIdx = Int32.Parse(tokens[1]);
+                            int summationIdx = Int32.Parse(tokens[2]);
+
+                            if (handIdx >= game.CurPlayer.Hand.Count || summationIdx >= game.CurPlayer.CardsForSummation.Count)
+                            {
+                                throw new Exception();
+                            }
+
+                            outMoIInfo.Use = moiUse;
+                            outMoIInfo.HandCard = game.CurPlayer.Hand[handIdx];
+                            outMoIInfo.SummationCard = game.CurPlayer.CardsForSummation[summationIdx];
+
+                            inputComplete = true;
+                        }
+                        else
+                        {
+                            outMoIInfo.Use = moiUse;
+
+                            inputComplete = true;
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception();
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("Invalid input. Try again.");
                 }
             }
 
-            return chosenJury;
+            return true;
         }
 
-        private bool handleGenericCases(string[] tokens, Game game)
+        private bool handleGenericCases(string[] tokens, Game game, out bool goBack)
         {
+            goBack = false;
             bool handled = true;
 
             string command = tokens[0];
@@ -339,7 +439,7 @@ namespace HighTreasonGame.ChoiceHandlers
                         {
                             outStr += " " + aspect.Aspect;
                         }
-                        
+
                         if (aspect.IsRevealed)
                         {
                             outStr += " revealed";
@@ -361,92 +461,16 @@ namespace HighTreasonGame.ChoiceHandlers
                     Console.WriteLine(card.Name);
                 }
             }
+            else if (command.Equals("back"))
+            {
+                goBack = true;
+            }
             else
             {
                 handled = false;
             }
 
             return handled;
-        }
-
-        void IChoiceHandler.ChooseMomentOfInsightUse(Game game, BoardChoices outBoardChoices)
-        {
-            bool inputComplete = false;
-
-            while (!inputComplete)
-            {
-                Console.WriteLine("Current player=" + game.CurPlayer.Side);
-                Console.WriteLine("Hand:");
-                for (int i = 0; i < game.CurPlayer.Hand.Count; ++i)
-                {
-                    CardTemplate card = game.CurPlayer.Hand[i];
-                    Console.WriteLine(i + " " + card.Name);
-                }
-                Console.WriteLine("CardsInSummation:");
-                for (int i = 0; i < game.CurPlayer.CardsForSummation.Count; ++i)
-                {
-                    CardTemplate card = game.CurPlayer.CardsForSummation[i];
-                    Console.WriteLine(i + " " + card.Name);
-                }
-
-                Console.WriteLine("Please choose how to use moment of insight => <swap or reveal> <hand card idx if swap> <summation card idx if swap>");
-
-                string input = Console.ReadLine();
-                string[] tokens = input.Split(' ');
-
-                try
-                {
-                    if (handleGenericCases(tokens, game))
-                    {
-                        // Do nothing since case already handled.
-                    }
-                    else if (tokens.Length == 1 || tokens.Length == 3)
-                    {
-                        string action = tokens[0];
-
-                        if (action != "swap" && action != "reveal")
-                        {
-                            throw new Exception();
-                        }
-
-                        BoardChoices.MomentOfInsightInfo.MomentOfInsightUse moiUse = 
-                            (action.Equals("swap")) ? BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Swap : BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Reveal;
-
-                        if (moiUse == BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Swap)
-                        {
-                            int handIdx = Int32.Parse(tokens[1]);
-                            int summationIdx = Int32.Parse(tokens[2]);
-
-                            if (handIdx >= game.CurPlayer.Hand.Count || summationIdx >= game.CurPlayer.CardsForSummation.Count)
-                            {
-                                throw new Exception();
-                            }
-
-                            outBoardChoices.MoIInfo.Use = moiUse;
-                            outBoardChoices.MoIInfo.HandCard = game.CurPlayer.Hand[handIdx];
-                            outBoardChoices.MoIInfo.SummationCard = game.CurPlayer.CardsForSummation[summationIdx];
-
-                            inputComplete = true;
-                        }
-                        else
-                        {
-                            outBoardChoices.MoIInfo.Use = moiUse;
-
-                            inputComplete = true;
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception();
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine("Invalid input. Try again.");
-                }
-            }
-
-            return;
         }
     }
 }

@@ -69,7 +69,7 @@ namespace HighTreasonGame
             addSummationEventsAndChoices();
         }
 
-        public void PlayAsEvent(Type curStateType, Game game, int idx, IChoiceHandler choiceHandler)
+        public bool PlayAsEvent(Type curStateType, Game game, int idx, IChoiceHandler choiceHandler)
         {
             CardChoice cardChoice = null;
             CardEffect cardEffect = null;
@@ -93,7 +93,13 @@ namespace HighTreasonGame
             System.Diagnostics.Debug.Assert(cardChoice != null && cardEffect != null, "Card choice or card effect is null. Should never happen");
 
             BoardChoices choices = cardChoice(game, choiceHandler);
-            cardEffect(game, choices);
+
+            if (choices.NotCancelled)
+            {
+                cardEffect(game, choices);
+            }
+
+            return choices.NotCancelled;
         }
 
         public int GetNumberOfEventsInState(Type type)
@@ -122,15 +128,16 @@ namespace HighTreasonGame
 
         #region Choice Utility
 
-        protected void handleMomentOfInsightChoice(List<Player.PlayerSide> supportedSides, Game game, IChoiceHandler choiceHandler, BoardChoices outBoardChoices)
+        protected bool handleMomentOfInsightChoice(List<Player.PlayerSide> supportedSides, Game game, IChoiceHandler choiceHandler, out BoardChoices.MomentOfInsightInfo moiInfo)
         {
+            moiInfo = new BoardChoices.MomentOfInsightInfo();
             if (!supportedSides.Contains(game.CurPlayer.Side))
             {
-                outBoardChoices.MoIInfo.Use = BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.NotChosen;
-                return;
+                moiInfo.Use = BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.NotChosen;
+                return true;
             }
 
-            choiceHandler.ChooseMomentOfInsightUse(game, outBoardChoices);
+            return choiceHandler.ChooseMomentOfInsightUse(game, out moiInfo);
         }
 
         #endregion

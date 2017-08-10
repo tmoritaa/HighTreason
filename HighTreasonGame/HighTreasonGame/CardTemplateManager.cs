@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 
 using HighTreasonGame.CardTemplates;
-using HighTreasonGame.ChoiceHandlers;
 
 namespace HighTreasonGame
 {
@@ -44,13 +43,6 @@ namespace HighTreasonGame
             }
 
             return CardTemplates.Values.ToList();
-        }
-
-        public void Test(Game game)
-        {
-            CardTemplate template = CardTemplates["\"A Purely Constitutional Movement\""];
-            BoardChoices choices = template.SelectionEventChoices[0](game, new TestChoiceHandler());
-            template.SelectionEvents[0](game, choices);
         }
 
         private CardTemplateManager()

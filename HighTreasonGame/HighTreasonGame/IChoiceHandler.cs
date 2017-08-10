@@ -7,10 +7,10 @@ namespace HighTreasonGame
 {
     public interface IChoiceHandler
     {
-        Player.CardUsageParams ChooseCardAndUsage(List<CardTemplate> cards, Game game);
-        List<AspectTrack> ChooseAspectTracks(List<HTGameObject> choices, int numChoices, Game game);
-        List<Jury.JuryAspect> ChooseJuryAspects(List<List<HTGameObject>> choicesList, List<int> numChoicesList, Game game);
-        Jury ChooseJuryToDismiss(List<Jury> juries, Game game);
-        void ChooseMomentOfInsightUse(Game game, BoardChoices outBoardChoices);
+        bool ChooseCardAndUsage(List<CardTemplate> cards, Game game, out Player.CardUsageParams outCardUsage);
+        bool ChooseAspectTracks(List<HTGameObject> choices, int numChoices, Game game, out List<AspectTrack> outAspectTracks);
+        bool ChooseJuryAspects(List<List<HTGameObject>> choicesList, List<int> numChoicesList, Game game, out List<Jury.JuryAspect> outJuryAspects);
+        bool ChooseJuryToDismiss(List<Jury> juries, Game game, out List<Jury> outJury);
+        bool ChooseMomentOfInsightUse(Game game, out BoardChoices.MomentOfInsightInfo outMoIInfo);
     }
 }

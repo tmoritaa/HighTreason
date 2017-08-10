@@ -43,12 +43,10 @@ namespace HighTreasonGame.CardTemplates
                                 && !((Jury.JuryAspect)htgo).IsRevealed);
                             });
 
-                    choiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { religionChoices, languageChoices, occupationChoices },
-                        new List<int>() { 1, 1, 1 }, 
-                        game).ForEach(a => juryAspects.Add(a));
-
                     BoardChoices choices = new BoardChoices();
-                    choices.JuryAspects = juryAspects;
+                    choices.NotCancelled = choiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { religionChoices, languageChoices, occupationChoices },
+                        new List<int>() { 1, 1, 1 }, 
+                        game, out choices.JuryAspects);
 
                     return choices;
                 });
@@ -66,9 +64,12 @@ namespace HighTreasonGame.CardTemplates
                 (Game game, IChoiceHandler choiceHandler) =>
                 {
                     BoardChoices choices = new BoardChoices();
-                    choices.EvidenceTracks.Add(findInsanityTrack(game));
-
-                    handleMomentOfInsightChoice(new List<Player.PlayerSide>() { Player.PlayerSide.Defense }, game, choiceHandler, choices);
+                    choices.NotCancelled = handleMomentOfInsightChoice(new List<Player.PlayerSide>() { Player.PlayerSide.Defense }, game, choiceHandler, out choices.MoIInfo);
+                    
+                    if (choices.NotCancelled)
+                    {
+                        choices.EvidenceTracks.Add(findInsanityTrack(game));
+                    }
 
                     return choices;
                 });

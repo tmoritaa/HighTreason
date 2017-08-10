@@ -26,7 +26,7 @@ namespace HighTreasonGame.CardTemplates
                         });
 
                     BoardChoices choices = new BoardChoices();
-                    choices.JuryAspects = IChoiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { options }, new List<int>() { 3 }, game);
+                    choices.NotCancelled = IChoiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { options }, new List<int>() { 3 }, game, out choices.JuryAspects);
 
                     return choices;
                 });
@@ -49,7 +49,7 @@ namespace HighTreasonGame.CardTemplates
                         });
 
                     BoardChoices choices = new BoardChoices();
-                    choices.JuryAspects = choiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { options }, new List<int>() { 2 }, game);
+                    choices.NotCancelled = choiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { options }, new List<int>() { 2 }, game, out choices.JuryAspects);
 
                     return choices;
                 });
@@ -75,7 +75,7 @@ namespace HighTreasonGame.CardTemplates
 
                     BoardChoices choices = new BoardChoices();
                     choices.EvidenceTracks.Add(findGuiltTrack(game));
-                    choices.AspectTracks = choiceHandler.ChooseAspectTracks(options, 1, game);
+                    choices.NotCancelled = choiceHandler.ChooseAspectTracks(options, 1, game, out choices.AspectTracks);
 
                     return choices;
                 });
@@ -107,7 +107,7 @@ namespace HighTreasonGame.CardTemplates
                         });
 
                     BoardChoices choices = new BoardChoices();
-                    choices.AspectTracks = choiceHandler.ChooseAspectTracks(options, 3, game);
+                    choices.NotCancelled = choiceHandler.ChooseAspectTracks(options, 3, game, out choices.AspectTracks);
 
                     return choices;
                 });

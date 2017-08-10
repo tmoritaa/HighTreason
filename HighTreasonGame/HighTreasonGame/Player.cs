@@ -59,28 +59,44 @@ namespace HighTreasonGame
 
         public void PlayCard(Type curStateType)
         {
-            CardUsageParams cardUsage = choiceHandler.ChooseCardAndUsage(Hand, game);
-
-            discardCard(cardUsage.card);
-            if (cardUsage.usage == CardUsageParams.UsageType.Event)
+            bool cardPlayed = false;
+            while (!cardPlayed)
             {
-                cardUsage.card.PlayAsEvent(curStateType, game, (int)cardUsage.misc[0], choiceHandler);
+                CardUsageParams cardUsage;
+                if (!choiceHandler.ChooseCardAndUsage(Hand, game, out cardUsage))
+                {
+                    continue;
+                }
 
-                game.EventHandler.PlayedCard(this, cardUsage);
-            }
-            else if (cardUsage.usage == CardUsageParams.UsageType.Action)
-            {
-                // TODO: implement.
+                if (cardUsage.usage == CardUsageParams.UsageType.Event)
+                {
+                    cardPlayed = cardUsage.card.PlayAsEvent(curStateType, game, (int)cardUsage.misc[0], choiceHandler);
+                }
+                else if (cardUsage.usage == CardUsageParams.UsageType.Action)
+                {
+                    // TODO: implement.
+                }
+
+                if (cardPlayed)
+                {
+                    game.EventHandler.PlayedCard(this, cardUsage);
+
+                    // TODO: need a way to not show card in hand when chosen, but still not completely discard it to keep card position.
+                    // Currently will bug with MoI swap if played card is selected for swap.
+                    discardCard(cardUsage.card);
+                }
             }
         }
 
         public void DismissJury()
         {
-            Jury jury = choiceHandler.ChooseJuryToDismiss(game.Board.Juries, game);
+            List<Jury> jury;
+            while (!choiceHandler.ChooseJuryToDismiss(game.Board.Juries, game, out jury))
+            {};
 
-            Console.WriteLine("Dismissed Jury\n" + jury);
+            Console.WriteLine("Dismissed Jury\n" + jury[0]);
 
-            game.RemoveJury(jury);
+            game.RemoveJury(jury[0]);
         }
 
         public bool MustPass()

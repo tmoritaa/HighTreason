@@ -25,5 +25,7 @@ namespace HighTreasonGame
         public List<EvidenceTrack> EvidenceTracks = new List<EvidenceTrack>();
         public List<Jury.JuryAspect> JuryAspects = new List<Jury.JuryAspect>();
         public MomentOfInsightInfo MoIInfo = new MomentOfInsightInfo();
+
+        public bool NotCancelled = true;
     }
 }
