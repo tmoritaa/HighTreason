@@ -38,8 +38,8 @@ namespace HighTreasonGame
         {
             get; private set;
         }
-
-        public List<CardTemplate> CardsForSummation
+        
+        public SummationDeck SummationDeck
         {
             get; private set;
         }
@@ -49,7 +49,7 @@ namespace HighTreasonGame
             game = _game;
             Side = _side;
             choiceHandler = _choiceHandler;
-            CardsForSummation = new List<CardTemplate>();
+            SummationDeck = new SummationDeck();
         }
 
         public void SetupHand(List<CardTemplate> _hand)
@@ -68,6 +68,9 @@ namespace HighTreasonGame
                     continue;
                 }
 
+                // Remove card being used from hand.
+                Hand.Remove(cardUsage.card);
+
                 if (cardUsage.usage == CardUsageParams.UsageType.Event)
                 {
                     cardPlayed = cardUsage.card.PlayAsEvent(curStateType, game, (int)cardUsage.misc[0], choiceHandler);
@@ -81,9 +84,13 @@ namespace HighTreasonGame
                 {
                     game.EventHandler.PlayedCard(this, cardUsage);
 
-                    // TODO: need a way to not show card in hand when chosen, but still not completely discard it to keep card position.
-                    // Currently will bug with MoI swap if played card is selected for swap.
-                    discardCard(cardUsage.card);
+                    // Move used card to discard.
+                    game.Discards.Add(cardUsage.card);
+                }
+                else
+                {
+                    // Readd card to hand since undoing selection.
+                    Hand.Add(cardUsage.card);
                 }
             }
         }
@@ -106,15 +113,14 @@ namespace HighTreasonGame
 
         public void AddHandToSummation()
         {
-            CardsForSummation.AddRange(Hand);
+            Hand.ForEach(c => SummationDeck.AddCard(c));
             Hand.Clear();
         }
 
         public void RevealCardInSummation()
         {
-            int randIdx = GlobalRandom.GetRandomNumber(0, CardsForSummation.Count);
-            // TODO: add persistence to shown card.
-            Console.WriteLine(CardsForSummation[randIdx].Name);
+            CardTemplate revealedCard = SummationDeck.RevealRandomCardInSummation();
+            Console.WriteLine(revealedCard.Name + " revealed in summation");
         }
 
         public override string ToString()
@@ -128,7 +134,7 @@ namespace HighTreasonGame
             }
 
             outStr += "Summation = \n";
-            foreach (CardTemplate card in CardsForSummation)
+            foreach (CardTemplate card in SummationDeck.AllCards)
             {
                 outStr += card.Name + "\n";
             }

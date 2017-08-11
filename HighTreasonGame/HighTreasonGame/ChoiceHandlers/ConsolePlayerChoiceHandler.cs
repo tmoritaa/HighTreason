@@ -313,9 +313,10 @@ namespace HighTreasonGame.ChoiceHandlers
                     Console.WriteLine(i + " " + card.Name);
                 }
                 Console.WriteLine("CardsInSummation:");
-                for (int i = 0; i < game.CurPlayer.CardsForSummation.Count; ++i)
+                List<CardTemplate> allSummationCards = game.CurPlayer.SummationDeck.AllCards;
+                for (int i = 0; i < allSummationCards.Count; ++i)
                 {
-                    CardTemplate card = game.CurPlayer.CardsForSummation[i];
+                    CardTemplate card = allSummationCards[i];
                     Console.WriteLine(i + " " + card.Name);
                 }
 
@@ -351,14 +352,14 @@ namespace HighTreasonGame.ChoiceHandlers
                             int handIdx = Int32.Parse(tokens[1]);
                             int summationIdx = Int32.Parse(tokens[2]);
 
-                            if (handIdx >= game.CurPlayer.Hand.Count || summationIdx >= game.CurPlayer.CardsForSummation.Count)
+                            if (handIdx >= game.CurPlayer.Hand.Count || summationIdx >= allSummationCards.Count)
                             {
                                 throw new Exception();
                             }
 
                             outMoIInfo.Use = moiUse;
                             outMoIInfo.HandCard = game.CurPlayer.Hand[handIdx];
-                            outMoIInfo.SummationCard = game.CurPlayer.CardsForSummation[summationIdx];
+                            outMoIInfo.SummationCard = allSummationCards[summationIdx];
 
                             inputComplete = true;
                         }
@@ -419,6 +420,22 @@ namespace HighTreasonGame.ChoiceHandlers
                 foreach (CardTemplate card in game.CurPlayer.Hand)
                 {
                     Console.WriteLine(card.Name);
+                }
+
+                Console.WriteLine("Summation:");
+                foreach (CardTemplate card in game.CurPlayer.SummationDeck.HiddenCards)
+                {
+                    Console.WriteLine(card.Name);
+                }
+                foreach (CardTemplate card in game.CurPlayer.SummationDeck.RevealedCards)
+                {
+                    Console.WriteLine(card.Name + " - revealed");
+                }
+
+                Console.WriteLine("Opponent Summation:");
+                foreach(CardTemplate card in game.GetPlayerOfOppositeSide(game.CurPlayer.Side).SummationDeck.RevealedCards)
+                {
+                    Console.WriteLine(card.Name + " - revealed");
                 }
             }
             else if (command.Equals("jury"))

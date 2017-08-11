@@ -69,6 +69,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GameStates\SummationState.cs" />
+    <Compile Include="SummationDeck.cs" />
     <Compile Include="SwayTrack.cs" />
     <Compile Include="Track.cs" />
     <Compile Include="GameStates\TrialInChiefState.cs" />

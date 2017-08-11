@@ -178,10 +178,10 @@ namespace HighTreasonGame
                 Player player = game.CurPlayer;
 
                 player.Hand.Remove(choices.MoIInfo.HandCard);
-                player.CardsForSummation.Remove(choices.MoIInfo.SummationCard);
+                player.SummationDeck.RemoveCard(choices.MoIInfo.SummationCard);
 
                 player.Hand.Add(choices.MoIInfo.SummationCard);
-                player.CardsForSummation.Add(choices.MoIInfo.HandCard);
+                player.SummationDeck.AddCard(choices.MoIInfo.HandCard);
             }
         }
         #endregion
