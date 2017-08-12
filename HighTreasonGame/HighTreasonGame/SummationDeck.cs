@@ -33,6 +33,16 @@ namespace HighTreasonGame
             RevealedCards = new List<CardTemplate>();
         }
 
+        public List<CardTemplate> DealoutCards()
+        {
+            List<CardTemplate> cards = AllCards;
+
+            HiddenCards.Clear();
+            RevealedCards.Clear();
+
+            return cards;
+        }
+
         public void AddCard(CardTemplate card)
         {
             HiddenCards.Add(card);

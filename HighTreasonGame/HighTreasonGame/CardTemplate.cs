@@ -171,7 +171,7 @@ namespace HighTreasonGame
         {
             if (choices.MoIInfo.Use == BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Reveal)
             {
-                game.GetPlayerOfOppositeSide(game.CurPlayer.Side).RevealCardInSummation();
+                game.GetOtherPlayer().RevealCardInSummation();
             }
             else if (choices.MoIInfo.Use == BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Swap)
             {

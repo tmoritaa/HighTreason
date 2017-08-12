@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
+using HighTreasonGame.GameStates;
 
 namespace HighTreasonGame
 {
@@ -104,11 +104,6 @@ namespace HighTreasonGame
             Console.WriteLine("Dismissed Jury\n" + jury[0]);
 
             game.RemoveJury(jury[0]);
-        }
-
-        public bool MustPass()
-        {
-            return Hand.Count <= 2;
         }
 
         public void AddHandToSummation()

@@ -23,28 +23,6 @@ namespace HighTreasonGame.GameStates
             mainLoop();
         }
 
-        protected virtual void mainLoop()
-        {
-            while (true)
-            {
-                game.EventHandler.StartOfNewTurn(game, this.GetType());
-
-                game.CurPlayer.PlayCard(GetType());
-
-                int numPlayersFinished = 0;
-                List<Player> players = game.GetPlayers();
-                players.ForEach(p => numPlayersFinished += p.MustPass() ? 1 : 0);
-                if (numPlayersFinished == players.Count)
-                {
-                    break;
-                }
-
-                game.PassToNextPlayer();
-            }
-
-            game.GetPlayers().ForEach(p => p.AddHandToSummation());
-
-            GotoNextState();
-        }
+        protected abstract void mainLoop();
     }
 }

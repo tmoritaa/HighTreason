@@ -112,6 +112,8 @@ namespace HighTreasonGame.ChoiceHandlers
                 string input = Console.ReadLine();
                 string[] tokens = input.Split(' ');
 
+                int expectedTokenLength = Math.Min(numChoices, choices.Count);
+
                 try
                 {
                     bool goBack;
@@ -122,7 +124,7 @@ namespace HighTreasonGame.ChoiceHandlers
                             return false;
                         }
                     }
-                    else if (tokens.Length == numChoices)
+                    else if (tokens.Length == expectedTokenLength)
                     {
                         foreach (string token in tokens)
                         {
@@ -196,6 +198,8 @@ namespace HighTreasonGame.ChoiceHandlers
                     string input = Console.ReadLine();
                     string[] tokens = input.Split(' ');
 
+                    int numValidChoices = Math.Min(numChoices, choices.Count);
+
                     try
                     {
                         bool goBack;
@@ -206,7 +210,7 @@ namespace HighTreasonGame.ChoiceHandlers
                                 return false;
                             }
                         }
-                        else if (tokens.Length == numChoices)
+                        else if (tokens.Length == numValidChoices)
                         {
                             foreach (string idxStr in tokens)
                             {
@@ -220,7 +224,7 @@ namespace HighTreasonGame.ChoiceHandlers
                                 chosenAspects.Add((Jury.JuryAspect)choices[choiceIdx]);
                             }
 
-                            if (chosenAspects.Count == numChoices)
+                            if (chosenAspects.Count == numValidChoices)
                             {
                                 inputComplete = true;
                             }
@@ -433,7 +437,7 @@ namespace HighTreasonGame.ChoiceHandlers
                 }
 
                 Console.WriteLine("Opponent Summation:");
-                foreach(CardTemplate card in game.GetPlayerOfOppositeSide(game.CurPlayer.Side).SummationDeck.RevealedCards)
+                foreach(CardTemplate card in game.GetOtherPlayer().SummationDeck.RevealedCards)
                 {
                     Console.WriteLine(card.Name + " - revealed");
                 }

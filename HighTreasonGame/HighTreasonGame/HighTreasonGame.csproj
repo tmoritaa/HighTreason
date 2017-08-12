@@ -56,6 +56,7 @@
     <Compile Include="EventHandlers\ConsoleEventHandler.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="GameStates\CardPlayState.cs" />
+    <Compile Include="GameStates\DelibrationState.cs" />
     <Compile Include="GameStates\JuryDismissalState.cs" />
     <Compile Include="GameStates\JurySelectionState.cs" />
     <Compile Include="GlobalRandom.cs" />

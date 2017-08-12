@@ -79,15 +79,7 @@ namespace HighTreasonGame
 
         public void PassToNextPlayer()
         {
-            switch (CurPlayer.Side)
-            {
-                case Player.PlayerSide.Prosecution:
-                    CurPlayer = players[Player.PlayerSide.Defense];
-                    break;
-                case Player.PlayerSide.Defense:
-                    CurPlayer = players[Player.PlayerSide.Prosecution];
-                    break;
-            }
+            CurPlayer = GetOtherPlayer();
         }
 
         public void ShuffleDiscardBackToDeck()
@@ -112,9 +104,9 @@ namespace HighTreasonGame
             return players[side];
         }
 
-        public Player GetPlayerOfOppositeSide(Player.PlayerSide side)
+        public Player GetOtherPlayer()
         {
-            Player.PlayerSide oppositeSide = (side == Player.PlayerSide.Defense) ? Player.PlayerSide.Prosecution : Player.PlayerSide.Defense;
+            Player.PlayerSide oppositeSide = (CurPlayer.Side == Player.PlayerSide.Defense) ? Player.PlayerSide.Prosecution : Player.PlayerSide.Defense;
             return players[oppositeSide];
         }
 
@@ -160,6 +152,8 @@ namespace HighTreasonGame
             states.Add(typeof(JurySelectionState), new JurySelectionState(this));
             states.Add(typeof(JuryDismissalState), new JuryDismissalState(this));
             states.Add(typeof(TrialInChiefState), new TrialInChiefState(this));
+            states.Add(typeof(SummationState), new SummationState(this));
+            states.Add(typeof(DelibrationState), new DelibrationState(this));
         }
     }
 }
