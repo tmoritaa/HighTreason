@@ -36,7 +36,7 @@ namespace HighTreasonGame.GameStates
             {
                 game.EventHandler.StartOfNewTurn(game, this.GetType());
 
-                game.CurPlayer.PlayCard(GetType());
+                game.CurPlayer.PlayCard();
 
                 int numPlayersFinished = 0;
                 List<Player> players = game.GetPlayers();

@@ -37,14 +37,14 @@ namespace HighTreasonGame
             Value = Math.Max(Math.Min(Value, MaxValue), MinValue);
         }
 
-        public bool CanIncrease()
+        public bool CanModify(int modValue)
         {
-            return Value < MaxValue;
+            return (Math.Sign(modValue) > 0) ? Value < MaxValue : Value > MinValue;
         }
 
-        public bool CanDecrease()
+        public virtual bool CanModifyByAction(int modValue)
         {
-            return Value > MinValue;
+            return CanModify(modValue);
         }
 
         public override string ToString()

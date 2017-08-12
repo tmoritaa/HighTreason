@@ -95,7 +95,7 @@ namespace HighTreasonGame.CardTemplates
                             return (htgo.Properties.Contains(Property.Track)
                             && htgo.Properties.Contains(Property.Aspect)
                             && (htgo.Properties.Contains(Property.Farmer) || htgo.Properties.Contains(Property.French))
-                            && ((Track)htgo).CanDecrease());
+                            && ((Track)htgo).CanModify(-1));
                         });
 
                     choices.AspectTracks = options.Cast<AspectTrack>().ToList();

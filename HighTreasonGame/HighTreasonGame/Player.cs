@@ -57,7 +57,7 @@ namespace HighTreasonGame
             Hand = _hand;
         }
 
-        public void PlayCard(Type curStateType)
+        public void PlayCard()
         {
             bool cardPlayed = false;
             while (!cardPlayed)
@@ -73,11 +73,11 @@ namespace HighTreasonGame
 
                 if (cardUsage.usage == CardUsageParams.UsageType.Event)
                 {
-                    cardPlayed = cardUsage.card.PlayAsEvent(curStateType, game, (int)cardUsage.misc[0], choiceHandler);
+                    cardPlayed = cardUsage.card.PlayAsEvent(game, (int)cardUsage.misc[0], choiceHandler);
                 }
                 else if (cardUsage.usage == CardUsageParams.UsageType.Action)
                 {
-                    // TODO: implement.
+                    cardPlayed = cardUsage.card.PlayAsAction(game, choiceHandler);
                 }
 
                 if (cardPlayed)

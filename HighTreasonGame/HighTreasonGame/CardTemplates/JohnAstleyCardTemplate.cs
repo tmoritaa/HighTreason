@@ -70,7 +70,7 @@ namespace HighTreasonGame.CardTemplates
                         {
                             return (htgo.Properties.Contains(Property.Track)
                             && htgo.Properties.Contains(Property.Aspect)
-                            && ((Track)htgo).CanIncrease());
+                            && ((Track)htgo).CanModify(1));
                         });
 
                     BoardChoices choices = new BoardChoices();
@@ -103,7 +103,7 @@ namespace HighTreasonGame.CardTemplates
                             return (htgo.Properties.Contains(Property.Track)
                             && htgo.Properties.Contains(Property.Aspect)
                             && !htgo.Properties.Contains(Property.French)
-                            && ((Track)htgo).CanIncrease());
+                            && ((Track)htgo).CanModify(1));
                         });
 
                     BoardChoices choices = new BoardChoices();

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
+using HighTreasonGame.GameStates;
 
 namespace HighTreasonGame.ChoiceHandlers
 {
@@ -11,6 +12,8 @@ namespace HighTreasonGame.ChoiceHandlers
         {
             outCardUsage = new Player.CardUsageParams();
             bool inputHandled = false;
+
+            bool actionIsValid = (game.CurState.GetType() != typeof(JurySelectionState));
             while (!inputHandled)
             {
                 Console.WriteLine("Current player=" + game.CurPlayer.Side);
@@ -20,7 +23,15 @@ namespace HighTreasonGame.ChoiceHandlers
                     CardTemplate card = cards[i];
                     Console.WriteLine(i + " " + card.Name + " eventNum=" + card.GetNumberOfEventsInState(game.CurState.GetType()));
                 }
-                Console.WriteLine("Please choose card and usage => <card idx> <action or event> <usage idx>");
+
+                if (!actionIsValid)
+                {
+                    Console.WriteLine("Please choose card and usage => <card idx> <usage idx>");
+                }
+                else
+                {
+                    Console.WriteLine("Please choose card and usage => <card idx> <action or event> <usage idx>");
+                }
 
                 string input = Console.ReadLine();
                 string[] tokens = input.Split(' ');
@@ -35,11 +46,11 @@ namespace HighTreasonGame.ChoiceHandlers
                             return false;
                         }
                     }
-                    else if (tokens.Length == 3)
+                    else if ((actionIsValid && tokens.Length == 3) || (!actionIsValid && tokens.Length == 2))
                     {
                         int cardIdx = Int32.Parse((tokens[0]));
-                        string usage = tokens[1];
-                        int usageIdx = Int32.Parse(tokens[2]);
+                        string usage = actionIsValid ? tokens[1] : "event";
+                        int usageIdx = actionIsValid ? Int32.Parse(tokens[2]) : Int32.Parse(tokens[1]);
 
                         if (!(cardIdx < cards.Count 
                             && (usage.Equals("action") 
@@ -73,6 +84,116 @@ namespace HighTreasonGame.ChoiceHandlers
                     Console.WriteLine("Invalid input. Try again.");
                 }
             }
+
+            return true;
+        }
+
+        public bool ChooseCardActionUsage(int actionPts, Game game, out Dictionary<Track, int> outTracks)
+        {
+            outTracks = new Dictionary<Track, int>();
+            bool inputHandled = false;
+
+            int modValue = (game.CurPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
+
+            List<Track> allTracks = new List<Track>();
+            allTracks.AddRange(game.Board.AspectTracks.Cast<Track>());
+            game.Board.Juries.ForEach(j => allTracks.Add(j.SwayTrack));
+            allTracks = allTracks.Where(t => t.CanModifyByAction(modValue)).ToList();
+
+            if (allTracks.Count <= 0)
+            {
+                Console.WriteLine("No tracks to affect");
+                return true;
+            }
+
+            Dictionary<Track, int> trackDict = new Dictionary<Track, int>();
+            while (!inputHandled)
+            {
+                trackDict.Clear();
+
+                Console.WriteLine("Current player=" + game.CurPlayer.Side);
+                Console.WriteLine("Tracks:");
+                for (int i = 0; i < allTracks.Count; ++i)
+                {
+                    Track track = allTracks[i];
+                    Console.WriteLine(i + " " + track);
+                }
+
+                Console.WriteLine("Choose aspect tracks to modify with " + actionPts + " action points => <idx> ... <idx>");
+
+                string input = Console.ReadLine();
+                string[] tokens = input.Split(' ');
+
+                try
+                {
+                    bool goBack;
+                    if (handleGenericCases(tokens, game, out goBack))
+                    {
+                        if (goBack)
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        foreach (string token in tokens)
+                        {
+                            int idx = Int32.Parse(token);
+
+                            if (idx >= allTracks.Count)
+                            {
+                                throw new Exception();
+                            }
+
+                            Track track = allTracks[idx];
+
+                            if (!trackDict.ContainsKey(track))
+                            {
+                                trackDict.Add(track, 0);
+                            }
+
+                            trackDict[track] += 1;
+                        }
+
+                        // Check that it's valid
+                        bool isValid = true;
+                        int actionPtsLeft = actionPts;
+                        foreach (Track track in trackDict.Keys)
+                        {
+                            int numTimesAffected = trackDict[track];
+
+                            if (numTimesAffected > 2)
+                            {
+                                isValid = false;
+                                break;
+                            }
+
+                            if (track.GetType() == typeof(SwayTrack))
+                            {
+                                actionPtsLeft -= numTimesAffected;
+                            }
+                            else if (track.GetType() == typeof(AspectTrack))
+                            {
+                                actionPtsLeft -= (numTimesAffected > 1) ? 3: 1;
+                            }
+                            else
+                            {
+                                System.Diagnostics.Debug.Assert(false, "Track chosen to affect by action is not sway or aspect track. Should never happen!");
+                            }
+                        }
+
+                        isValid &= (actionPtsLeft == 0);
+                        
+                        inputHandled = isValid;
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("Invalid input. Try again.");
+                }
+            }
+
+            outTracks = trackDict;
 
             return true;
         }
@@ -404,18 +525,18 @@ namespace HighTreasonGame.ChoiceHandlers
                 Console.WriteLine("Evidence Tracks:");
                 foreach (EvidenceTrack track in game.Board.EvidenceTracks)
                 {
-                    Console.WriteLine("---------------------------------------------------\n");
+                    Console.WriteLine("---------------------------------------------------");
                     Console.WriteLine(track);
                 }
-                Console.WriteLine("---------------------------------------------------\n");
+                Console.WriteLine("---------------------------------------------------");
 
                 Console.WriteLine("Aspect Tracks:");
                 foreach (AspectTrack track in game.Board.AspectTracks)
                 {
-                    Console.WriteLine("---------------------------------------------------\n");
+                    Console.WriteLine("---------------------------------------------------");
                     Console.WriteLine(track);
                 }
-                Console.WriteLine("---------------------------------------------------\n");
+                Console.WriteLine("---------------------------------------------------");
             }
             else if (command.Equals("player"))
             {

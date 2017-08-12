@@ -69,8 +69,10 @@ namespace HighTreasonGame
             addSummationEventsAndChoices();
         }
 
-        public bool PlayAsEvent(Type curStateType, Game game, int idx, IChoiceHandler choiceHandler)
+        public bool PlayAsEvent(Game game, int idx, IChoiceHandler choiceHandler)
         {
+            Type curStateType = game.CurState.GetType();
+
             CardChoice cardChoice = null;
             CardEffect cardEffect = null;
 
@@ -100,6 +102,31 @@ namespace HighTreasonGame
             }
 
             return choices.NotCancelled;
+        }
+
+        public bool PlayAsAction(Game game, IChoiceHandler choiceHandler)
+        {
+            Dictionary<Track, int> affectedTracks;
+
+            bool choiceMade = choiceHandler.ChooseCardActionUsage(ActionPts, game, out affectedTracks);
+
+            if (choiceMade)
+            {
+                int modValue = (game.CurPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
+                foreach (Track track in affectedTracks.Keys)
+                {
+                    if (track.GetType() == typeof(AspectTrack))
+                    {
+                        ((AspectTrack)track).ModTrackByAction(modValue * affectedTracks[track]);
+                    }
+                    else
+                    {
+                        track.AddToValue(modValue * affectedTracks[track]);
+                    }
+                }
+            }
+
+            return choiceMade;
         }
 
         public int GetNumberOfEventsInState(Type type)
