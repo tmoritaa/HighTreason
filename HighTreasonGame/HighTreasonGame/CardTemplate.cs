@@ -106,13 +106,24 @@ namespace HighTreasonGame
 
         public bool PlayAsAction(Game game, IChoiceHandler choiceHandler)
         {
-            Dictionary<Track, int> affectedTracks;
+            bool isSummation = game.CurState.GetType() == typeof(SummationState);
 
-            bool choiceMade = choiceHandler.ChooseCardActionUsage(ActionPts, game, out affectedTracks);
+            int modValue = (game.CurPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
+            List<Track> choices = game.GetHTGOFromCondition(
+                (HTGameObject htgo) =>
+                {
+                    return (htgo.Properties.Contains(Property.Track) &&
+                    ((htgo.Properties.Contains(Property.Jury) && htgo.Properties.Contains(Property.Sway))
+                    || (!isSummation && htgo.Properties.Contains(Property.Aspect))))
+                    && ((Track)htgo).CanModifyByAction(modValue);
+                }).Cast<Track>().ToList();
+
+            int actionPtsForState = isSummation ? 2 : ActionPts;
+            Dictionary<Track, int> affectedTracks;
+            bool choiceMade = choiceHandler.ChooseCardActionUsage(choices, actionPtsForState, game, out affectedTracks);
 
             if (choiceMade)
             {
-                int modValue = (game.CurPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
                 foreach (Track track in affectedTracks.Keys)
                 {
                     if (track.GetType() == typeof(AspectTrack))

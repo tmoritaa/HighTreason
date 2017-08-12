@@ -88,19 +88,12 @@ namespace HighTreasonGame.ChoiceHandlers
             return true;
         }
 
-        public bool ChooseCardActionUsage(int actionPts, Game game, out Dictionary<Track, int> outTracks)
+        public bool ChooseCardActionUsage(List<Track> choices, int actionPts, Game game, out Dictionary<Track, int> outTracks)
         {
             outTracks = new Dictionary<Track, int>();
             bool inputHandled = false;
 
-            int modValue = (game.CurPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
-
-            List<Track> allTracks = new List<Track>();
-            allTracks.AddRange(game.Board.AspectTracks.Cast<Track>());
-            game.Board.Juries.ForEach(j => allTracks.Add(j.SwayTrack));
-            allTracks = allTracks.Where(t => t.CanModifyByAction(modValue)).ToList();
-
-            if (allTracks.Count <= 0)
+            if (choices.Count <= 0)
             {
                 Console.WriteLine("No tracks to affect");
                 return true;
@@ -113,9 +106,9 @@ namespace HighTreasonGame.ChoiceHandlers
 
                 Console.WriteLine("Current player=" + game.CurPlayer.Side);
                 Console.WriteLine("Tracks:");
-                for (int i = 0; i < allTracks.Count; ++i)
+                for (int i = 0; i < choices.Count; ++i)
                 {
-                    Track track = allTracks[i];
+                    Track track = choices[i];
                     Console.WriteLine(i + " " + track);
                 }
 
@@ -140,12 +133,12 @@ namespace HighTreasonGame.ChoiceHandlers
                         {
                             int idx = Int32.Parse(token);
 
-                            if (idx >= allTracks.Count)
+                            if (idx >= choices.Count)
                             {
                                 throw new Exception();
                             }
 
-                            Track track = allTracks[idx];
+                            Track track = choices[idx];
 
                             if (!trackDict.ContainsKey(track))
                             {
