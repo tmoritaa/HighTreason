@@ -11,7 +11,23 @@ namespace HighTreasonGame
         {
             get
             {
-                return Value == MinValue || Value == MaxValue;
+                return IsLockedByProsecution || IsLockedByDefense;
+            }
+        }
+
+        public bool IsLockedByProsecution
+        {
+            get
+            {
+                return Value == MaxValue;
+            }
+        }
+
+        public bool IsLockedByDefense
+        {
+            get
+            {
+                return Value == MinValue;
             }
         }
 

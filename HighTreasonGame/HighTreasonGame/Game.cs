@@ -39,12 +39,12 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        public EventHandler EventHandler
+        public IEventHandler EventHandler
         {
             get; private set;
         }
 
-        public Game(EventHandler _eventHandler)
+        public Game(IEventHandler _eventHandler)
         {
             EventHandler = _eventHandler;
 
@@ -62,19 +62,24 @@ namespace HighTreasonGame
 
         public void StartGame()
         {
-            setNextState(typeof(JurySelectionState));
+            SetNextState(typeof(JurySelectionState));
 
-            while (true)
+            while (CurState != null)
             {
                 CurState.StartState();
             }
         }
 
-        public void setNextState(Type stateType)
+        public void SetNextState(Type stateType)
         {
             EventHandler.GotoNextState(stateType);
 
             CurState = states[stateType];
+        }
+
+        public void SignifyEndGame()
+        {
+            CurState = null;
         }
 
         public void PassToNextPlayer()
@@ -86,6 +91,24 @@ namespace HighTreasonGame
         {
             Deck.AddCardsToDeck(Discards);
             Discards.Clear();
+        }
+
+        public Player.PlayerSide DetermineWinner()
+        {
+            int totalScore = 0;
+            foreach (Jury jury in Board.Juries)
+            {
+                int score = jury.CalculateGuiltScore();
+                totalScore += score;
+                // TODO: debug log. Remove later.
+                Console.WriteLine("Jury " + jury.Id + " contributed " + score + " guilt score");
+            }
+
+            // TODO: debug log. Remove later.
+            Console.WriteLine("Total guilt score is " + totalScore);
+
+            Player.PlayerSide winningPlayer = totalScore >= GameConstants.PROSECUTION_SCORE_THRESHOLD ? Player.PlayerSide.Prosecution : Player.PlayerSide.Defense;
+            return winningPlayer;
         }
 
         public void RemoveJury(Jury jury)
@@ -124,6 +147,16 @@ namespace HighTreasonGame
         public List<HTGameObject> GetHTGOFromCondition(Func<HTGameObject, bool> condition)
         {
             return htGameObjects.FindAll(htgo => condition(htgo));
+        }
+
+        public EvidenceTrack GetInsanityTrack()
+        {
+            return Board.EvidenceTracks.Find(t => t.Properties.Contains(Property.Insanity));
+        }
+
+        public EvidenceTrack GetGuiltTrack()
+        {
+            return Board.EvidenceTracks.Find(t => t.Properties.Contains(Property.Guilt));
         }
 
         public override string ToString()

@@ -9,38 +9,32 @@ namespace HighTreasonGame
     {
         private const int MAX_TIMES_MODABLE = 3;
 
-        private SwayTrack swayTrack;
+        private int timesAffectedByAction = 0;
 
         public AspectTrack(int _value, Game _game, params Property[] _properties) 
             : base(_value, 1, 10, _game, _properties)
         {
             Properties.Add(Property.Aspect);
-            swayTrack = new SwayTrack(0, 3, _game, _properties);
         }
 
         public void ModTrackByAction(int modValue)
         {
-            System.Diagnostics.Debug.Assert(swayTrack.Value != swayTrack.MaxValue, "Sway track of Aspect track should never be full when being modified.");
+            System.Diagnostics.Debug.Assert(timesAffectedByAction < MAX_TIMES_MODABLE, "Sway track of Aspect track should never be full when being modified.");
 
-            swayTrack.AddToValue(1);
+            timesAffectedByAction += 1;
             AddToValue(modValue);
         }
 
         public override bool CanModifyByAction(int modValue)
         {
-            return (swayTrack.Value != swayTrack.MaxValue) && base.CanModifyByAction(modValue);
-        }
-
-        public override void RemoveChildrenHTGameObjects()
-        {
-            game.RemoveHTGameObject(swayTrack);
+            return (timesAffectedByAction < MAX_TIMES_MODABLE) && base.CanModifyByAction(modValue);
         }
 
         public override string ToString()
         {
             string outStr = "-" + base.ToString() + "\n";
 
-            outStr += "\t" + swayTrack.ToString();
+            outStr += "\t" + "times modified=" + timesAffectedByAction;
 
             return outStr;
         }

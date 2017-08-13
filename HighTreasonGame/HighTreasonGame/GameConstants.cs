@@ -41,7 +41,7 @@
         public static int NUM_JURY_AFTER_DISMISSAL = 6;
 
         public static int NUM_HAND_SIZE = 7;
-
+        public static int PROSECUTION_SCORE_THRESHOLD = 100;
         #endregion
     }
 }

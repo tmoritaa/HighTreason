@@ -8,7 +8,7 @@ namespace HighTreasonGame.ChoiceHandlers
 {
     public class ConsolePlayerChoiceHandler : IChoiceHandler
     {
-        public bool ChooseCardAndUsage(List<CardTemplate> cards, Game game, out Player.CardUsageParams outCardUsage)
+        public void ChooseCardAndUsage(List<CardTemplate> cards, Game game, out Player.CardUsageParams outCardUsage)
         {
             outCardUsage = new Player.CardUsageParams();
             bool inputHandled = false;
@@ -41,10 +41,7 @@ namespace HighTreasonGame.ChoiceHandlers
                     bool goBack;
                     if (handleGenericCases(tokens, game, out goBack))
                     {
-                        if (goBack)
-                        {
-                            return false;
-                        }
+                        // Do nothing.
                     }
                     else if ((actionIsValid && tokens.Length == 3) || (!actionIsValid && tokens.Length == 2))
                     {
@@ -85,10 +82,10 @@ namespace HighTreasonGame.ChoiceHandlers
                 }
             }
 
-            return true;
+            return;
         }
 
-        public bool ChooseCardActionUsage(List<Track> choices, int actionPts, Game game, out Dictionary<Track, int> outTracks)
+        public bool ChooseActionUsage(List<Track> choices, int actionPts, Game game, out Dictionary<Track, int> outTracks)
         {
             outTracks = new Dictionary<Track, int>();
             bool inputHandled = false;
@@ -606,6 +603,12 @@ namespace HighTreasonGame.ChoiceHandlers
             }
 
             return handled;
+        }
+
+        public void ChooseJuryForDelibration(List<Jury> juries, Game game, out Jury outJury)
+        {
+            // TODO: for now. Later implement.
+            outJury = juries[0];
         }
     }
 }

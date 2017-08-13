@@ -120,7 +120,7 @@ namespace HighTreasonGame
 
             int actionPtsForState = isSummation ? 2 : ActionPts;
             Dictionary<Track, int> affectedTracks;
-            bool choiceMade = choiceHandler.ChooseCardActionUsage(choices, actionPtsForState, game, out affectedTracks);
+            bool choiceMade = choiceHandler.ChooseActionUsage(choices, actionPtsForState, game, out affectedTracks);
 
             if (choiceMade)
             {
@@ -176,30 +176,6 @@ namespace HighTreasonGame
             }
 
             return choiceHandler.ChooseMomentOfInsightUse(game, out moiInfo);
-        }
-
-        #endregion
-
-        #region Search Utility
-        protected EvidenceTrack findInsanityTrack(Game game)
-        {
-            List<HTGameObject> insanityTrack = game.GetHTGOFromCondition((HTGameObject htgo) =>
-            {
-                return (htgo.Properties.Contains(Property.Insanity));
-            });
-            System.Diagnostics.Debug.Assert(insanityTrack.Count == 1, "Insanity track search failed");
-
-            return (EvidenceTrack)insanityTrack[0];
-        }
-
-        protected EvidenceTrack findGuiltTrack(Game game)
-        {
-            List<HTGameObject> guiltTrack = game.GetHTGOFromCondition((HTGameObject htgo) =>
-            {
-                return (htgo.Properties.Contains(Property.Guilt));
-            });
-            System.Diagnostics.Debug.Assert(guiltTrack.Count == 1, "Guilt track search failed");
-            return (EvidenceTrack)guiltTrack[0];
         }
 
         #endregion

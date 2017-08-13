@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using HighTreasonGame.GameStates;
 
@@ -63,10 +64,7 @@ namespace HighTreasonGame
             while (!cardPlayed)
             {
                 CardUsageParams cardUsage;
-                if (!choiceHandler.ChooseCardAndUsage(Hand, game, out cardUsage))
-                {
-                    continue;
-                }
+                choiceHandler.ChooseCardAndUsage(Hand, game, out cardUsage);
 
                 // Remove card being used from hand.
                 Hand.Remove(cardUsage.card);
@@ -116,6 +114,48 @@ namespace HighTreasonGame
         {
             CardTemplate revealedCard = SummationDeck.RevealRandomCardInSummation();
             Console.WriteLine(revealedCard.Name + " revealed in summation");
+        }
+
+        public Jury PerformJuryForDeliberation(List<Jury> juries)
+        {
+            Jury jury;
+            while (true)
+            {
+                choiceHandler.ChooseJuryForDelibration(juries, game, out jury);
+
+                int modValue = (this.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
+                List<Track> choices = game.GetHTGOFromCondition(
+                    (HTGameObject htgo) =>
+                    {
+                        return (htgo.Properties.Contains(Property.Track) &&
+                        ((htgo.Properties.Contains(Property.Jury) && htgo.Properties.Contains(Property.Sway))
+                        || (htgo.Properties.Contains(Property.Aspect)))
+                        && (htgo.Properties.Contains(jury.Aspects[0].Aspect) || htgo.Properties.Contains(jury.Aspects[1].Aspect) || htgo.Properties.Contains(jury.Aspects[2].Aspect)))
+                        && ((Track)htgo).CanModifyByAction(modValue);
+                    }).Cast<Track>().ToList();
+
+                Dictionary<Track, int> affectedTracks;
+                bool choiceMade = choiceHandler.ChooseActionUsage(choices, jury.ActionPoints, game, out affectedTracks);
+
+                if (choiceMade)
+                {
+                    foreach (Track track in affectedTracks.Keys)
+                    {
+                        if (track.GetType() == typeof(AspectTrack))
+                        {
+                            ((AspectTrack)track).ModTrackByAction(modValue * affectedTracks[track]);
+                        }
+                        else
+                        {
+                            track.AddToValue(modValue * affectedTracks[track]);
+                        }
+                    }
+
+                    break;
+                }
+            }
+
+            return jury;
         }
 
         public override string ToString()

@@ -26,12 +26,11 @@ namespace HighTreasonGame.GameStates
 
         public override void GotoNextState()
         {
-            game.setNextState(typeof(DelibrationState));
+            game.SetNextState(typeof(DelibrationState));
         }
 
         protected override void mainLoop()
         {
-
             while (true)
             {
                 game.EventHandler.StartOfNewTurn(game, this.GetType());

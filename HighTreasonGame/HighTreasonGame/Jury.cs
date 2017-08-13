@@ -57,13 +57,13 @@ namespace HighTreasonGame
                 Owner = _owner;
             }
 
-            public void Revealed()
+            public void Reveal()
             {
                 seenStatus[Player.PlayerSide.Prosecution] = true;
                 seenStatus[Player.PlayerSide.Defense] = true;
             }
 
-            public void Peeked(Player.PlayerSide side)
+            public void Peek(Player.PlayerSide side)
             {
                 seenStatus[side] = true;
             }
@@ -71,6 +71,18 @@ namespace HighTreasonGame
             public bool IsVisibleToPlayer(Player.PlayerSide side)
             {
                 return seenStatus[side];
+            }
+
+            public int CalculateGuiltScore(Game game)
+            {
+                AspectTrack track = (AspectTrack)game.GetHTGOFromCondition(
+                    (HTGameObject htgo) =>
+                    {
+                        return (htgo.Properties.Contains(Property.Track) && htgo.Properties.Contains(Property.Aspect)
+                        && htgo.Properties.Contains(Trait) && htgo.Properties.Contains(Aspect));
+                    })[0];
+
+                return track.Value;
             }
 
             public override string ToString()
@@ -123,12 +135,40 @@ namespace HighTreasonGame
 
             ActionPoints = _actionPoints;
 
-            SwayTrack = new SwayTrack(-swayMax, swayMax, game, Property.Jury);
+            SwayTrack = new SwayTrack(-swayMax, swayMax, game, Property.Jury, Property.Religion, Property.Language, Property.Occupation, religionAspect, languageAspect, occupationAspect);
 
             Aspects = new List<JuryAspect>();
             Aspects.Add(new JuryAspect(game, this, Property.Religion, religionAspect));
             Aspects.Add(new JuryAspect(game, this, Property.Language, languageAspect));
             Aspects.Add(new JuryAspect(game, this, Property.Occupation, occupationAspect));
+        }
+
+        public void RevealAllTraits()
+        {
+            Aspects.ForEach(a => a.Reveal());
+        }
+
+        public int CalculateGuiltScore()
+        {
+            int guiltScore = 0;
+
+            foreach (JuryAspect aspect in Aspects)
+            {
+                guiltScore += aspect.CalculateGuiltScore(game);
+            }
+
+            if (SwayTrack.IsLockedByProsecution)
+            {
+                guiltScore *= 2;
+            }
+            else if (SwayTrack.IsLockedByDefense)
+            {
+                guiltScore /= 2;
+            }
+            
+            guiltScore += SwayTrack.Value;
+
+            return guiltScore;
         }
 
         public override void RemoveChildrenHTGameObjects()

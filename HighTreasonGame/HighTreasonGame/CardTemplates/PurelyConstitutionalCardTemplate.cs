@@ -54,7 +54,7 @@ namespace HighTreasonGame.CardTemplates
             SelectionEvents.Add(
                 (Game game, BoardChoices choices) => 
                 {
-                    choices.JuryAspects.ForEach(ja => ja.Revealed());
+                    choices.JuryAspects.ForEach(ja => ja.Reveal());
                 });
         }
 
@@ -68,7 +68,7 @@ namespace HighTreasonGame.CardTemplates
                     
                     if (choices.NotCancelled)
                     {
-                        choices.EvidenceTracks.Add(findInsanityTrack(game));
+                        choices.EvidenceTracks.Add(game.GetInsanityTrack());
                     }
 
                     return choices;
@@ -116,7 +116,7 @@ namespace HighTreasonGame.CardTemplates
                 (Game game, IChoiceHandler choiceHandler) =>
                 {                    
                     BoardChoices choices = new BoardChoices();
-                    choices.EvidenceTracks.Add(findInsanityTrack(game));
+                    choices.EvidenceTracks.Add(game.GetInsanityTrack());
 
                     return choices;
                 });
