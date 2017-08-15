@@ -93,6 +93,52 @@ namespace HighTreasonGame
             Discards.Clear();
         }
 
+        public bool ValidateActionUsage(Dictionary<Track, int> affectedTracks, int actionPts, Jury deliberationJury)
+        {
+            bool isDeliberation = deliberationJury != null;
+
+            bool isValid = true;
+            int actionPtsLeft = actionPts;
+            foreach (Track track in affectedTracks.Keys)
+            {
+                int numTimesAffected = affectedTracks[track];
+
+                int affectLimit = 2;
+
+                if (isDeliberation && track.Properties.Contains(Property.Sway) && track.Properties.Contains(Property.Jury))
+                {
+                    affectLimit = 0;
+                    foreach (Jury.JuryAspect aspect in deliberationJury.Aspects)
+                    {
+                        affectLimit += (track.Properties.Contains(aspect.Aspect)) ? 1 : 0;
+                    }
+                }
+
+                if (numTimesAffected > affectLimit)
+                {
+                    isValid = false;
+                    break;
+                }
+
+                if (track.GetType() == typeof(SwayTrack))
+                {
+                    actionPtsLeft -= numTimesAffected;
+                }
+                else if (track.GetType() == typeof(AspectTrack))
+                {
+                    actionPtsLeft -= (numTimesAffected > 1) ? 3 : 1;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.Assert(false, "Track chosen to affect by action is not sway or aspect track. Should never happen!");
+                }
+            }
+
+            isValid &= (actionPtsLeft == 0);
+
+            return isValid;
+        }
+
         public Player.PlayerSide DetermineWinner()
         {
             int totalScore = 0;

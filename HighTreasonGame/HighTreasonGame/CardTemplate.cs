@@ -120,7 +120,7 @@ namespace HighTreasonGame
 
             int actionPtsForState = isSummation ? 2 : ActionPts;
             Dictionary<Track, int> affectedTracks;
-            bool choiceMade = choiceHandler.ChooseActionUsage(choices, actionPtsForState, game, out affectedTracks);
+            bool choiceMade = choiceHandler.ChooseActionUsage(choices, actionPtsForState, null, game, out affectedTracks);
 
             if (choiceMade)
             {

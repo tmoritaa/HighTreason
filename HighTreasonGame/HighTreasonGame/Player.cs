@@ -95,13 +95,12 @@ namespace HighTreasonGame
 
         public void DismissJury()
         {
-            List<Jury> jury;
-            while (!choiceHandler.ChooseJuryToDismiss(game.Board.Juries, game, out jury))
-            {};
+            Jury jury;
+            while (!choiceHandler.ChooseJury(game.Board.Juries, game, out jury)) {}
 
-            Console.WriteLine("Dismissed Jury\n" + jury[0]);
+            Console.WriteLine("Dismissed Jury\n" + jury);
 
-            game.RemoveJury(jury[0]);
+            game.RemoveJury(jury);
         }
 
         public void AddHandToSummation()
@@ -121,7 +120,7 @@ namespace HighTreasonGame
             Jury jury;
             while (true)
             {
-                choiceHandler.ChooseJuryForDelibration(juries, game, out jury);
+                while (!choiceHandler.ChooseJury(juries, game, out jury)) {}
 
                 int modValue = (this.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
                 List<Track> choices = game.GetHTGOFromCondition(
@@ -135,7 +134,7 @@ namespace HighTreasonGame
                     }).Cast<Track>().ToList();
 
                 Dictionary<Track, int> affectedTracks;
-                bool choiceMade = choiceHandler.ChooseActionUsage(choices, jury.ActionPoints, game, out affectedTracks);
+                bool choiceMade = choiceHandler.ChooseActionUsage(choices, jury.ActionPoints, jury, game, out affectedTracks);
 
                 if (choiceMade)
                 {

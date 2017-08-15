@@ -85,9 +85,10 @@ namespace HighTreasonGame.ChoiceHandlers
             return;
         }
 
-        public bool ChooseActionUsage(List<Track> choices, int actionPts, Game game, out Dictionary<Track, int> outTracks)
+        public bool ChooseActionUsage(List<Track> choices, int actionPts, Jury deliberationJury, Game game, out Dictionary<Track, int> outTracks)
         {
             outTracks = new Dictionary<Track, int>();
+
             bool inputHandled = false;
 
             if (choices.Count <= 0)
@@ -109,7 +110,7 @@ namespace HighTreasonGame.ChoiceHandlers
                     Console.WriteLine(i + " " + track);
                 }
 
-                Console.WriteLine("Choose aspect tracks to modify with " + actionPts + " action points => <idx> ... <idx>");
+                Console.WriteLine("Choose tracks to modify with " + actionPts + " action points => <idx> ... <idx>");
 
                 string input = Console.ReadLine();
                 string[] tokens = input.Split(' ');
@@ -146,35 +147,15 @@ namespace HighTreasonGame.ChoiceHandlers
                         }
 
                         // Check that it's valid
-                        bool isValid = true;
-                        int actionPtsLeft = actionPts;
-                        foreach (Track track in trackDict.Keys)
-                        {
-                            int numTimesAffected = trackDict[track];
 
-                            if (numTimesAffected > 2)
-                            {
-                                isValid = false;
-                                break;
-                            }
-
-                            if (track.GetType() == typeof(SwayTrack))
-                            {
-                                actionPtsLeft -= numTimesAffected;
-                            }
-                            else if (track.GetType() == typeof(AspectTrack))
-                            {
-                                actionPtsLeft -= (numTimesAffected > 1) ? 3: 1;
-                            }
-                            else
-                            {
-                                System.Diagnostics.Debug.Assert(false, "Track chosen to affect by action is not sway or aspect track. Should never happen!");
-                            }
-                        }
-
-                        isValid &= (actionPtsLeft == 0);
+                        bool isValid = game.ValidateActionUsage(trackDict, actionPts, deliberationJury);
                         
-                        inputHandled = isValid;
+                        if (!isValid)
+                        {
+                            throw new Exception();
+                        }
+                        
+                        inputHandled = true;
                     }
                 }
                 catch
@@ -361,9 +342,9 @@ namespace HighTreasonGame.ChoiceHandlers
             return true;
         }
 
-        public bool ChooseJuryToDismiss(List<Jury> juries, Game game, out List<Jury> outJury)
+        public bool ChooseJury(List<Jury> juries, Game game, out Jury outJury)
         {
-            outJury = new List<Jury>();
+            outJury = null;
             bool inputHandled = false;
             while (!inputHandled)
             {
@@ -372,7 +353,7 @@ namespace HighTreasonGame.ChoiceHandlers
                 {
                     Console.Write(jury);
                 }
-                Console.WriteLine("Please choose jury to dismiss => <jury id>");
+                Console.WriteLine("Please choose jury => <jury id>");
 
                 string input = Console.ReadLine();
                 string[] tokens = input.Split(' ');
@@ -396,7 +377,7 @@ namespace HighTreasonGame.ChoiceHandlers
                             throw new Exception();
                         }
 
-                        outJury.Add(juries.Find(j => j.Id == juryId));
+                        outJury = juries.Find(j => j.Id == juryId);
                         inputHandled = true;
                     }
                     else
@@ -603,12 +584,6 @@ namespace HighTreasonGame.ChoiceHandlers
             }
 
             return handled;
-        }
-
-        public void ChooseJuryForDelibration(List<Jury> juries, Game game, out Jury outJury)
-        {
-            // TODO: for now. Later implement.
-            outJury = juries[0];
         }
     }
 }

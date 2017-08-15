@@ -52,7 +52,7 @@
     <Compile Include="CardTemplates\PurelyConstitutionalCardTemplate.cs" />
     <Compile Include="ChoiceHandlers\ConsolePlayerChoiceHandler.cs" />
     <Compile Include="Deck.cs" />
-    <Compile Include="EventHandler.cs" />
+    <Compile Include="IEventHandler.cs" />
     <Compile Include="EventHandlers\ConsoleEventHandler.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="GameStates\CardPlayState.cs" />
