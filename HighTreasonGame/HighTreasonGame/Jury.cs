@@ -34,7 +34,7 @@ namespace HighTreasonGame
                 }
             }
 
-            public bool IsPeaked
+            public bool IsPeeked
             {
                 get
                 {

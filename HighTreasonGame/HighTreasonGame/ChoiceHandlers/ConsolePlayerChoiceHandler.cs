@@ -557,7 +557,7 @@ namespace HighTreasonGame.ChoiceHandlers
                         {
                             outStr += " revealed";
                         }
-                        else if (aspect.IsPeaked)
+                        else if (aspect.IsPeeked)
                         {
                             outStr += " peeked";
                         }

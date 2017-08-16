@@ -166,6 +166,12 @@ namespace HighTreasonGame
 
         #region Choice Utility
 
+        protected BoardChoices doNothingChoice(Game game, IChoiceHandler choiceHandler)
+        {
+            BoardChoices choices = new BoardChoices();
+            return choices;
+        }
+
         protected bool handleMomentOfInsightChoice(List<Player.PlayerSide> supportedSides, Game game, IChoiceHandler choiceHandler, out BoardChoices.MomentOfInsightInfo moiInfo)
         {
             moiInfo = new BoardChoices.MomentOfInsightInfo();
@@ -178,9 +184,48 @@ namespace HighTreasonGame
             return choiceHandler.ChooseMomentOfInsightUse(game, out moiInfo);
         }
 
+        protected BoardChoices pickOneAnyAspectChoice(Game game, IChoiceHandler choiceHandler)
+        {
+            List<HTGameObject> options = game.GetHTGOFromCondition(
+                    (HTGameObject htgo) =>
+                    {
+                        return (htgo.Properties.Contains(Property.Track)
+                        && htgo.Properties.Contains(Property.Aspect)
+                        && ((Track)htgo).CanModify(1));
+                    });
+
+            BoardChoices choices = new BoardChoices();
+            choices.NotCancelled = choiceHandler.ChooseAspectTracks(options, 1, game, out choices.AspectTracks);
+
+            return choices;
+        }
+
         #endregion
 
         #region Effect Utility
+
+        // Common enough in cards that we'll just simplify it for ourselves.
+        protected void raiseGuiltAndOneAspectEffect(Game game, BoardChoices choices)
+        {
+            game.GetGuiltTrack().AddToValue(1);
+            choices.AspectTracks.ForEach(t => t.AddToValue(1));
+        }
+
+        protected void revealAllAspects(Game game, BoardChoices choices)
+        {
+            choices.JuryAspects.ForEach(a => a.Reveal());
+        }
+
+        protected void peekAllAspects(Game game, BoardChoices choices)
+        {
+            choices.JuryAspects.ForEach(a => a.Peek(game.CurPlayer.Side));
+        }
+
+        protected int calcModValueBasedOnSide(int value, Game game)
+        {
+            return value * ((game.CurPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1);
+        }
+
         protected void handleMomentOfInsight(Game game, BoardChoices choices)
         {
             if (choices.MoIInfo.Use == BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Reveal)

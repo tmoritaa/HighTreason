@@ -51,11 +51,7 @@ namespace HighTreasonGame.CardTemplates
                     return choices;
                 });
 
-            SelectionEvents.Add(
-                (Game game, BoardChoices choices) => 
-                {
-                    choices.JuryAspects.ForEach(ja => ja.Reveal());
-                });
+            SelectionEvents.Add(revealAllAspects);
         }
 
         protected override void addTrialEventsAndChoices()
@@ -65,22 +61,13 @@ namespace HighTreasonGame.CardTemplates
                 {
                     BoardChoices choices = new BoardChoices();
                     choices.NotCancelled = handleMomentOfInsightChoice(new List<Player.PlayerSide>() { Player.PlayerSide.Defense }, game, choiceHandler, out choices.MoIInfo);
-                    
-                    if (choices.NotCancelled)
-                    {
-                        choices.EvidenceTracks.Add(game.GetInsanityTrack());
-                    }
-
                     return choices;
                 });
 
             TrialEvents.Add(
                 (Game game, BoardChoices choices) => 
                 {
-                    if (choices.EvidenceTracks.Count > 0)
-                    {
-                        choices.EvidenceTracks[0].AddToValue(1);
-                    }
+                    game.GetInsanityTrack().AddToValue(1);
                     handleMomentOfInsight(game, choices);
                 });
 
@@ -116,15 +103,13 @@ namespace HighTreasonGame.CardTemplates
                 (Game game, IChoiceHandler choiceHandler) =>
                 {                    
                     BoardChoices choices = new BoardChoices();
-                    choices.EvidenceTracks.Add(game.GetInsanityTrack());
-
                     return choices;
                 });
 
             SummationEvents.Add(
                 (Game game, BoardChoices choices) => 
                 {
-                    choices.EvidenceTracks[0].AddToValue(1);
+                    game.GetInsanityTrack().AddToValue(1);
                 });
         }
     }

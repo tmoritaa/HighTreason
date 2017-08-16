@@ -22,7 +22,6 @@ namespace HighTreasonGame
         }
 
         public List<AspectTrack> AspectTracks = new List<AspectTrack>();
-        public List<EvidenceTrack> EvidenceTracks = new List<EvidenceTrack>();
         public List<Jury.JuryAspect> JuryAspects = new List<Jury.JuryAspect>();
         public MomentOfInsightInfo MoIInfo = new MomentOfInsightInfo();
 

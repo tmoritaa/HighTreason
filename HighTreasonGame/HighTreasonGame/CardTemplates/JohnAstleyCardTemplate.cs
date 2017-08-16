@@ -31,11 +31,7 @@ namespace HighTreasonGame.CardTemplates
                     return choices;
                 });
 
-            SelectionEvents.Add(
-                (Game game, BoardChoices choices) => 
-                {
-                    choices.JuryAspects.ForEach(ja => ja.Reveal());
-                });
+            SelectionEvents.Add(revealAllAspects);
 
             SelectionEventChoices.Add(
                 (Game game, IChoiceHandler choiceHandler) => {
@@ -54,42 +50,13 @@ namespace HighTreasonGame.CardTemplates
                     return choices;
                 });
 
-            SelectionEvents.Add(
-                (Game game, BoardChoices choices) => {
-                    choices.JuryAspects.ForEach(ja => ja.Reveal());
-                });
+            SelectionEvents.Add(revealAllAspects);
         }
 
         protected override void addTrialEventsAndChoices()
         {
-            TrialEventChoices.Add(
-                (Game game, IChoiceHandler choiceHandler) =>
-                {
-                    List<HTGameObject> options = game.GetHTGOFromCondition(
-                        (HTGameObject htgo) =>
-                        {
-                            return (htgo.Properties.Contains(Property.Track)
-                            && htgo.Properties.Contains(Property.Aspect)
-                            && ((Track)htgo).CanModify(1));
-                        });
-
-                    BoardChoices choices = new BoardChoices();
-                    choices.EvidenceTracks.Add(game.GetGuiltTrack());
-                    choices.NotCancelled = choiceHandler.ChooseAspectTracks(options, 1, game, out choices.AspectTracks);
-
-                    return choices;
-                });
-
-            TrialEvents.Add(
-                (Game game, BoardChoices choices) => 
-                {
-                    if (choices.EvidenceTracks.Count > 0)
-                    {
-                        choices.EvidenceTracks[0].AddToValue(1);
-                    }
-                    
-                    choices.AspectTracks.ForEach(t => t.AddToValue(1));
-                });
+            TrialEventChoices.Add(pickOneAnyAspectChoice);
+            TrialEvents.Add(raiseGuiltAndOneAspectEffect);
         }
 
         protected override void addSummationEventsAndChoices()
