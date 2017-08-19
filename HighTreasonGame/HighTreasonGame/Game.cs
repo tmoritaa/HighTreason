@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 
 using HighTreasonGame.GameStates;
-using HighTreasonGame.ChoiceHandlers;
 
 namespace HighTreasonGame
 {
@@ -44,7 +43,7 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        public Game(IEventHandler _eventHandler)
+        public Game(IEventHandler _eventHandler, IChoiceHandler[] playerChoiceHandlers)
         {
             EventHandler = _eventHandler;
 
@@ -52,9 +51,11 @@ namespace HighTreasonGame
             Deck = new Deck(this);
             Discards = new List<CardTemplate>();
 
+            int idx = 0;
             foreach (Player.PlayerSide side in new Player.PlayerSide[] { Player.PlayerSide.Prosecution, Player.PlayerSide.Defense })
             {
-                players.Add(side, new Player(side, new ConsolePlayerChoiceHandler(), this));
+                players.Add(side, new Player(side, playerChoiceHandlers[idx], this));
+                idx += 1;
             }
 
             initStates();

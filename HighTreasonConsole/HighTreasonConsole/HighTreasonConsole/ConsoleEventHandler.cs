@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using HighTreasonGame.GameStates;
+using HighTreasonGame;
 
-namespace HighTreasonGame.EventHandlers
+namespace HighTreasonConsole
 {
     public class ConsoleEventHandler : IEventHandler
     {

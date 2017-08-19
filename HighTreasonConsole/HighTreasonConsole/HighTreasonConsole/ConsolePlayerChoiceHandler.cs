@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using HighTreasonGame;
 using HighTreasonGame.GameStates;
 
-namespace HighTreasonGame.ChoiceHandlers
+namespace HighTreasonConsole
 {
     public class ConsolePlayerChoiceHandler : IChoiceHandler
     {

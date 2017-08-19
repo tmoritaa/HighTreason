@@ -47,7 +47,7 @@ namespace HighTreasonGame.CardTemplates
                                 return (htgo.Properties.Contains(Property.Jury)
                                 && htgo.Properties.Contains(Property.Aspect)
                                 && htgo.Properties.Contains(Property.Language)
-                                && !((Jury.JuryAspect)htgo).IsRevealed(game.CurPlayer.Side));
+                                && !((Jury.JuryAspect)htgo).IsRevealed);
                             });
 
                     BoardChoices choices = new BoardChoices();
