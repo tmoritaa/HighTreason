@@ -13,16 +13,6 @@ public class TrackBoxUIElement : MonoBehaviour
 
     private int value;
 
-	void Start()
-	{
-		
-	}
-	
-	void Update()
-	{
-		
-	}
-
     public void SetValue(int i)
     {
         value = i;

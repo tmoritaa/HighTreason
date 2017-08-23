@@ -10,14 +10,20 @@ using HighTreasonGame;
 public class TrackUIElement : HTGOUIElement 
 {
     [SerializeField]
-    private List<Property> uniqueProperties;
+    protected List<Property> uniqueProperties;
 
     [SerializeField]
-    private TrackBoxUIElement trackBoxPrefab;
+    protected TrackBoxUIElement trackBoxPrefab;
 
-    private List<TrackBoxUIElement> trackBoxes = new List<TrackBoxUIElement>();
+    [SerializeField]
+    protected GameObject token;
 
-    private Track track;
+    [SerializeField]
+    protected GameObject boxParent;
+
+    protected List<TrackBoxUIElement> trackBoxes = new List<TrackBoxUIElement>();
+
+    protected Track track;
 
     protected override void Awake()
 	{
@@ -26,6 +32,11 @@ public class TrackUIElement : HTGOUIElement
 
         base.Awake();
 	}
+
+    protected virtual void Update()
+    {
+        token.transform.position = trackBoxes[track.Value - track.MinValue].transform.position;
+    }
 
     protected override void initUIElement()
     {
@@ -39,7 +50,8 @@ public class TrackUIElement : HTGOUIElement
             RectTransform trans = trackBox.GetComponent<RectTransform>();
             trans.anchorMin = new Vector2(i * xAnchorInc, 0);
             trans.anchorMax = new Vector2((i + 1) * xAnchorInc, 1);
-            trans.SetParent(this.transform, false);
+
+            trans.SetParent(boxParent.transform, false);
 
             trackBox.SetValue(i + track.MinValue);
             trackBoxes.Add(trackBox);

@@ -10,6 +10,10 @@ namespace HighTreasonGame
         private const int MAX_TIMES_MODABLE = 3;
 
         private int timesAffectedByAction = 0;
+        public int TimesAffectedByAction
+        {
+            get; private set;
+        }
 
         public AspectTrack(int _value, Game _game, params Property[] _properties) 
             : base(_value, 1, 10, _game, _properties)
