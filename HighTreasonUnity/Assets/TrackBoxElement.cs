@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TrackBoxUIElement : MonoBehaviour 
+public class TrackBoxElement : MonoBehaviour 
 {
     [SerializeField]
     private Text text;

@@ -44,13 +44,20 @@ namespace HighTreasonGame.GameStates
 
         private void mainLogic()
         {
-            game.EventHandler.StartOfNewTurn(game, this.GetType());
+            if (game.NotifyStartOfTurn != null)
+            {
+                game.NotifyStartOfTurn(this.GetType());
+            }
 
             EvidenceTrack guiltTrack = game.GetGuiltTrack();
 
             if (guiltTrack.Value < 2)
             {
-                game.EventHandler.GameEnded(game, Player.PlayerSide.Defense);
+                if (game.NotifyGameEnd != null)
+                {
+                    game.NotifyGameEnd.Invoke(Player.PlayerSide.Defense);
+                }
+                
                 goto GameEnd;
             }
 
@@ -96,7 +103,10 @@ namespace HighTreasonGame.GameStates
 
             Player.PlayerSide winningSide = game.DetermineWinner();
 
-            game.EventHandler.GameEnded(game, winningSide);
+            if (game.NotifyGameEnd != null)
+            {
+                game.NotifyGameEnd(winningSide);
+            }
 
             GameEnd:
             {

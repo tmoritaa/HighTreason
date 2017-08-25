@@ -80,8 +80,11 @@ namespace HighTreasonGame
 
                 if (cardPlayed)
                 {
-                    game.EventHandler.PlayedCard(this, cardUsage);
-
+                    if (game.NotifyPlayedCard != null)
+                    {
+                        game.NotifyPlayedCard(this, cardUsage);
+                    }
+                    
                     // Move used card to discard.
                     game.Discards.Add(cardUsage.card);
                 }

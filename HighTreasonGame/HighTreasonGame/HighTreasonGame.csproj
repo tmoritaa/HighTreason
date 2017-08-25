@@ -60,7 +60,6 @@
     <Compile Include="CardTemplates\ThomasMcKayCardTemplate.cs" />
     <Compile Include="CardTemplates\WilliamTompkinsCardTemplate.cs" />
     <Compile Include="Deck.cs" />
-    <Compile Include="IEventHandler.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="GameStates\CardPlayState.cs" />
     <Compile Include="GameStates\DelibrationState.cs" />

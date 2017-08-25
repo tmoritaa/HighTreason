@@ -19,10 +19,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public delegate void initGameEvent();
-
-    public initGameEvent notifyInitGame;
-
     public Game Game
     {
         get; private set;
@@ -32,13 +28,11 @@ public class GameManager : MonoBehaviour
     {
         GameManager.instance = this;
 
-        Game = new Game(new UnityEventHandler(), new IChoiceHandler[] { new UnityChoiceHandler(), new UnityChoiceHandler() });
+        Game = new Game(new IChoiceHandler[] { new UnityChoiceHandler(), new UnityChoiceHandler() });
     }
 
     void Start()
     {
-        notifyInitGame();
-
         Game.StartGame();
     }
 

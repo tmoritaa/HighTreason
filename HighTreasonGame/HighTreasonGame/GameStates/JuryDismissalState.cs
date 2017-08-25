@@ -21,7 +21,10 @@ namespace HighTreasonGame.GameStates
         {
             while (true)
             {
-                game.EventHandler.StartOfNewTurn(game, this.GetType());
+                if (game.NotifyStartOfTurn != null)
+                {
+                    game.NotifyStartOfTurn(this.GetType());
+                }
 
                 game.CurPlayer.DismissJury();
 

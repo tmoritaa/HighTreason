@@ -9,6 +9,16 @@ namespace HighTreasonGame
 {
     public class Game
     {
+        public delegate void StateStartEvent(Type stateType);
+        public delegate void StartOfTurnEvent(Type stateType);
+        public delegate void PlayedCardEvent(Player player, Player.CardUsageParams usageParams);
+        public delegate void GameEndEvent(Player.PlayerSide winningPlayerSide);
+
+        public StateStartEvent NotifyStateStart;
+        public StartOfTurnEvent NotifyStartOfTurn;
+        public PlayedCardEvent NotifyPlayedCard;
+        public GameEndEvent NotifyGameEnd;
+
         public Board Board 
         {
             get; private set;
@@ -38,15 +48,8 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        public IEventHandler EventHandler
+        public Game(IChoiceHandler[] playerChoiceHandlers)
         {
-            get; private set;
-        }
-
-        public Game(IEventHandler _eventHandler, IChoiceHandler[] playerChoiceHandlers)
-        {
-            EventHandler = _eventHandler;
-
             Board = new Board(this);
             Deck = new Deck(this);
             Discards = new List<CardTemplate>();
@@ -57,6 +60,8 @@ namespace HighTreasonGame
                 players.Add(side, new Player(side, playerChoiceHandlers[idx], this));
                 idx += 1;
             }
+
+            CurPlayer = players[0];
 
             initStates();
         }
@@ -73,7 +78,10 @@ namespace HighTreasonGame
 
         public void SetNextState(Type stateType)
         {
-            EventHandler.GotoNextState(stateType);
+            if (NotifyStateStart != null)
+            {
+                NotifyStateStart(stateType);
+            }
 
             CurState = states[stateType];
         }

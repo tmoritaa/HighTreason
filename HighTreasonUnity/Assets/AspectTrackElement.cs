@@ -8,26 +8,24 @@ using UnityEngine.UI;
 
 using HighTreasonGame;
 
-public class AspectTrackUIElement : TrackUIElement 
+public class AspectTrackElement : TrackElement 
 {
+    [SerializeField]
+    private Text numUsedText;
+
     private AspectTrack aspectTrack;
 
-    [SerializeField]
-    Text numUsedText;
-
-    protected override void Awake()
+    public override void InitUIElement()
     {
-        base.Awake();
+        base.InitUIElement();
 
         aspectTrack = (AspectTrack)track;
     }
 
-    protected override void Update()
+    protected override void updateUIElement()
     {
-        base.Update();
+        base.updateUIElement();
 
         numUsedText.text = aspectTrack.TimesAffectedByAction.ToString();
     }
-
-
 }
