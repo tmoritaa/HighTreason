@@ -20,7 +20,7 @@ namespace HighTreasonGame.GameStates
             {
                 if (game.NotifyStartOfTurn != null)
                 {
-                    game.NotifyStartOfTurn(this.GetType());
+                    game.NotifyStartOfTurn();
                 }
 
                 game.CurPlayer.PlayCard();

@@ -18,9 +18,9 @@ public class JurySelectionBoard : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
-    private void handleNotifyStateStart(Type stateType)
+    private void handleNotifyStateStart()
     {
-        if (stateType == typeof(JurySelectionState))
+        if (GameManager.Instance.Game.CurState.GetType() == typeof(JurySelectionState))
         {
             this.gameObject.SetActive(true);
 

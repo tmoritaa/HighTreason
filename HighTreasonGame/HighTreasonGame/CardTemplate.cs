@@ -11,7 +11,7 @@ namespace HighTreasonGame
     {
         public delegate void CardEffect(Game game, BoardChoices choices);
 
-        public delegate BoardChoices CardChoice(Game game, IChoiceHandler choiceHandler);
+        public delegate BoardChoices CardChoice(Game game, ChoiceHandler choiceHandler);
 
         public string Name {
             get; private set;
@@ -69,7 +69,7 @@ namespace HighTreasonGame
             addSummationEventsAndChoices();
         }
 
-        public bool PlayAsEvent(Game game, int idx, IChoiceHandler choiceHandler)
+        public bool PlayAsEvent(Game game, int idx, ChoiceHandler choiceHandler)
         {
             Type curStateType = game.CurState.GetType();
 
@@ -104,7 +104,7 @@ namespace HighTreasonGame
             return choices.NotCancelled;
         }
 
-        public bool PlayAsAction(Game game, IChoiceHandler choiceHandler)
+        public bool PlayAsAction(Game game, ChoiceHandler choiceHandler)
         {
             bool isSummation = game.CurState.GetType() == typeof(SummationState);
 
@@ -166,13 +166,13 @@ namespace HighTreasonGame
 
         #region Choice Utility
 
-        protected BoardChoices doNothingChoice(Game game, IChoiceHandler choiceHandler)
+        protected BoardChoices doNothingChoice(Game game, ChoiceHandler choiceHandler)
         {
             BoardChoices choices = new BoardChoices();
             return choices;
         }
 
-        protected bool handleMomentOfInsightChoice(List<Player.PlayerSide> supportedSides, Game game, IChoiceHandler choiceHandler, out BoardChoices.MomentOfInsightInfo moiInfo)
+        protected bool handleMomentOfInsightChoice(List<Player.PlayerSide> supportedSides, Game game, ChoiceHandler choiceHandler, out BoardChoices.MomentOfInsightInfo moiInfo)
         {
             moiInfo = new BoardChoices.MomentOfInsightInfo();
             if (!supportedSides.Contains(game.CurPlayer.Side))
@@ -184,7 +184,7 @@ namespace HighTreasonGame
             return choiceHandler.ChooseMomentOfInsightUse(game, out moiInfo);
         }
 
-        protected BoardChoices pickOneAnyAspectChoice(Game game, IChoiceHandler choiceHandler)
+        protected BoardChoices pickOneAnyAspectChoice(Game game, ChoiceHandler choiceHandler)
         {
             List<HTGameObject> options = game.GetHTGOFromCondition(
                     (HTGameObject htgo) =>

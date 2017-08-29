@@ -14,6 +14,11 @@ namespace HighTreasonGame.GameStates
         {
             game.CurPlayer = game.GetPlayerOfSide(Player.PlayerSide.Prosecution);
 
+            if (game.NotifyStateStart != null)
+            {
+                game.NotifyStateStart();
+            }
+
             mainLoop();
         }
 
@@ -23,7 +28,7 @@ namespace HighTreasonGame.GameStates
             {
                 if (game.NotifyStartOfTurn != null)
                 {
-                    game.NotifyStartOfTurn(this.GetType());
+                    game.NotifyStartOfTurn();
                 }
 
                 game.CurPlayer.DismissJury();

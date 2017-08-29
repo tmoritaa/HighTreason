@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     {
         GameManager.instance = this;
 
-        Game = new Game(new IChoiceHandler[] { new UnityChoiceHandler(), new UnityChoiceHandler() });
+        Game = new Game(new ChoiceHandler[] { new UnityChoiceHandler(), new UnityChoiceHandler() });
     }
 
     void Start()

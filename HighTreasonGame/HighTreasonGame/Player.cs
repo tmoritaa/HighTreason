@@ -8,6 +8,12 @@ namespace HighTreasonGame
 {
     public class Player
     {
+        public enum PlayerType
+        {
+            Human,
+            AI,
+        }
+
         public enum PlayerSide
         {
             Prosecution,
@@ -32,8 +38,16 @@ namespace HighTreasonGame
             get; private set;
         }
 
+        public PlayerType ChoiceType
+        {
+            get
+            {
+                return choiceHandler.PlayerType;
+            }
+        }
+
         private Game game;
-        private IChoiceHandler choiceHandler;
+        private ChoiceHandler choiceHandler;
 
         public List<CardTemplate> Hand
         {
@@ -45,7 +59,7 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        public Player(PlayerSide _side, IChoiceHandler _choiceHandler, Game _game)
+        public Player(PlayerSide _side, ChoiceHandler _choiceHandler, Game _game)
         {
             game = _game;
             Side = _side;
@@ -82,7 +96,7 @@ namespace HighTreasonGame
                 {
                     if (game.NotifyPlayedCard != null)
                     {
-                        game.NotifyPlayedCard(this, cardUsage);
+                        game.NotifyPlayedCard(cardUsage);
                     }
                     
                     // Move used card to discard.

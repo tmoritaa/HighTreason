@@ -14,7 +14,7 @@ namespace HighTreasonGame.CardTemplates
         protected override void addSelectionEventsAndChoices()
         {
             SelectionEventChoices.Add(
-                (Game game, IChoiceHandler choiceHandler) =>
+                (Game game, ChoiceHandler choiceHandler) =>
                 {
                     List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
 
@@ -36,7 +36,7 @@ namespace HighTreasonGame.CardTemplates
             SelectionEvents.Add(revealAllAspects);
 
             SelectionEventChoices.Add(
-                (Game game, IChoiceHandler choiceHandler) =>
+                (Game game, ChoiceHandler choiceHandler) =>
                 {
                     List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
 
@@ -97,7 +97,7 @@ namespace HighTreasonGame.CardTemplates
                 });
 
             TrialEventChoices.Add(
-                (Game game, IChoiceHandler choiceHandler) =>
+                (Game game, ChoiceHandler choiceHandler) =>
                 {
                     BoardChoices choices = new BoardChoices();
                     
@@ -170,7 +170,7 @@ namespace HighTreasonGame.CardTemplates
                 });
 
             SummationEventChoices.Add(
-                (Game game, IChoiceHandler choiceHandler) =>
+                (Game game, ChoiceHandler choiceHandler) =>
                 {
                     BoardChoices choices = new BoardChoices();
 

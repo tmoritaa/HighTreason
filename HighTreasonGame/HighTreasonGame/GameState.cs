@@ -14,7 +14,7 @@ namespace HighTreasonGame
             game = _game;
         }
 
-        public abstract void StartState();
         public abstract void GotoNextState();
+        public abstract void StartState();
     }
 }

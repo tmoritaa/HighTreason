@@ -18,9 +18,9 @@ public class GameplayBoard : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
-    private void handleNotifyStateStart(Type stateType)
+    private void handleNotifyStateStart()
     {
-        if (stateType == typeof(TrialInChiefState))
+        if (GameManager.Instance.Game.CurState.GetType() == typeof(TrialInChiefState))
         {
             this.gameObject.SetActive(true);
             elements.ForEach(e => e.InitUIElement());

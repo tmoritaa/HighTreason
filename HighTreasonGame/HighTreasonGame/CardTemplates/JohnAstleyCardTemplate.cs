@@ -14,7 +14,7 @@ namespace HighTreasonGame.CardTemplates
         protected override void addSelectionEventsAndChoices()
         {
             SelectionEventChoices.Add(
-                (Game game, IChoiceHandler IChoiceHandler) =>
+                (Game game, ChoiceHandler IChoiceHandler) =>
                 {
                     List<HTGameObject> options = game.GetHTGOFromCondition(
                         (HTGameObject htgo) =>
@@ -34,7 +34,7 @@ namespace HighTreasonGame.CardTemplates
             SelectionEvents.Add(revealAllAspects);
 
             SelectionEventChoices.Add(
-                (Game game, IChoiceHandler choiceHandler) => {
+                (Game game, ChoiceHandler choiceHandler) => {
                     List<HTGameObject> options = game.GetHTGOFromCondition(
                         (HTGameObject htgo) =>
                         {
@@ -62,7 +62,7 @@ namespace HighTreasonGame.CardTemplates
         protected override void addSummationEventsAndChoices()
         {
             SummationEventChoices.Add(
-                (Game game, IChoiceHandler choiceHandler) =>
+                (Game game, ChoiceHandler choiceHandler) =>
                 {
                     List<HTGameObject> options = game.GetHTGOFromCondition(
                         (HTGameObject htgo) =>

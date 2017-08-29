@@ -9,9 +9,9 @@ namespace HighTreasonGame
 {
     public class Game
     {
-        public delegate void StateStartEvent(Type stateType);
-        public delegate void StartOfTurnEvent(Type stateType);
-        public delegate void PlayedCardEvent(Player player, Player.CardUsageParams usageParams);
+        public delegate void StateStartEvent();
+        public delegate void StartOfTurnEvent();
+        public delegate void PlayedCardEvent(Player.CardUsageParams usageParams);
         public delegate void GameEndEvent(Player.PlayerSide winningPlayerSide);
 
         public StateStartEvent NotifyStateStart;
@@ -48,7 +48,7 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        public Game(IChoiceHandler[] playerChoiceHandlers)
+        public Game(ChoiceHandler[] playerChoiceHandlers)
         {
             Board = new Board(this);
             Deck = new Deck(this);
@@ -78,11 +78,6 @@ namespace HighTreasonGame
 
         public void SetNextState(Type stateType)
         {
-            if (NotifyStateStart != null)
-            {
-                NotifyStateStart(stateType);
-            }
-
             CurState = states[stateType];
         }
 
