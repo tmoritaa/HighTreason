@@ -15,6 +15,17 @@ public class CardElement : MonoBehaviour
         get; private set;
     }
 
+    void Awake()
+    {
+        GetComponent<Button>().onClick.AddListener(TaskOnClick);
+    }
+
+    void TaskOnClick()
+    {
+        Debug.Log("asdf");
+        ChoiceHandlerDelegator.Instance.ChoiceComplete();
+    }
+
     public void SetCardTemplate(CardTemplate _cardTemplate)
     {
         CardTemplate = _cardTemplate;

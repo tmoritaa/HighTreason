@@ -14,10 +14,7 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance
     {
-        get
-        {
-            return instance;
-        }
+        get { return instance; }
     }
 
     public Game Game
@@ -37,10 +34,5 @@ public class GameManager : MonoBehaviour
         Thread thread = new Thread(new ThreadStart(Game.StartGame));
 
         thread.Start();
-    }
-
-    public void StartGame()
-    {
-        
     }
 }

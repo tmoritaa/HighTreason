@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Linq;
 using System.Text;
 
@@ -7,10 +8,11 @@ using HighTreasonGame;
 
 public class UnityChoiceHandler : ChoiceHandler
 {
+    private ManualResetEvent waitForInput = new ManualResetEvent(false);
+
     public UnityChoiceHandler()
         : base(Player.PlayerType.Human)
     {}
-
 
     public override bool ChooseActionUsage(List<Track> choices, int actionPts, Jury deliberationJury, Game game, out Dictionary<Track, int> outTracks)
     {
@@ -22,8 +24,16 @@ public class UnityChoiceHandler : ChoiceHandler
         throw new NotImplementedException();
     }
 
+    public void ChoiceInputMade()
+    {
+        waitForInput.Set();
+    }
+
     public override void ChooseCardAndUsage(List<CardTemplate> cards, Game game, out Player.CardUsageParams outCardUsage)
     {
+        ChoiceHandlerDelegator.Instance.TriggerChoice(this);
+        waitForInput.WaitOne();
+
         throw new NotImplementedException();
     }
 

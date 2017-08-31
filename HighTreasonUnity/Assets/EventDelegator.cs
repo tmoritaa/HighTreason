@@ -7,16 +7,13 @@ using UnityEngine;
 
 using HighTreasonGame;
 
-public class EventHandler : MonoBehaviour 
+public class EventDelegator : MonoBehaviour 
 {
-    private static EventHandler instance;
+    private static EventDelegator instance;
 
-    public static EventHandler Instance
+    public static EventDelegator Instance
     {
-        get
-        {
-            return instance;
-        }
+        get { return instance; }
     }
 
     public Game.StateStartEvent NotifyStateStart;
@@ -34,7 +31,7 @@ public class EventHandler : MonoBehaviour
 
     void Awake()
     {
-        EventHandler.instance = this;
+        EventDelegator.instance = this;
 
         GameManager.Instance.Game.NotifyStateStart += triggerStateStart;
         GameManager.Instance.Game.NotifyStartOfTurn += triggerStartOfTurn;

@@ -14,7 +14,7 @@ public class GameplayBoard : MonoBehaviour
 
     void Awake()
     {
-        EventHandler.Instance.NotifyStateStart += handleNotifyStateStart;
+        EventDelegator.Instance.NotifyStateStart += handleNotifyStateStart;
         this.gameObject.SetActive(false);
     }
 
