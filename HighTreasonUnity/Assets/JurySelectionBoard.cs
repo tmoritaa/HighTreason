@@ -14,7 +14,7 @@ public class JurySelectionBoard : MonoBehaviour
 
 	void Awake()
 	{
-        GameManager.Instance.Game.NotifyStateStart += handleNotifyStateStart;
+        EventHandler.Instance.NotifyStateStart += handleNotifyStateStart;
         this.gameObject.SetActive(false);
     }
 

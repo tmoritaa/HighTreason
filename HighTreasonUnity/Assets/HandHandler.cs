@@ -18,9 +18,9 @@ public class HandHandler : MonoBehaviour
 
 	void Awake()
 	{
-        GameManager.Instance.Game.NotifyStateStart += updateDisplayingPlayer;
-        GameManager.Instance.Game.NotifyStartOfTurn += updateDisplayingPlayer;
-        GameManager.Instance.Game.NotifyPlayedCard += cardPlayed;
+        EventHandler.Instance.NotifyStateStart += updateDisplayingPlayer;
+        EventHandler.Instance.NotifyStartOfTurn += updateDisplayingPlayer;
+        EventHandler.Instance.NotifyPlayedCard += cardPlayed;
 	}
 
     private void cardPlayed(Player.CardUsageParams usageParams)

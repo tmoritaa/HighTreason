@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        Game.StartGame();
+        Thread thread = new Thread(new ThreadStart(Game.StartGame));
+
+        thread.Start();
     }
 
     public void StartGame()
