@@ -10,6 +10,11 @@ using HighTreasonGame;
 
 public class CardElement : MonoBehaviour 
 {
+    [SerializeField]
+    private Text typing;
+    [SerializeField]
+    private Text cardName;
+
     public CardTemplate CardTemplate
     {
         get; private set;
@@ -35,7 +40,10 @@ public class CardElement : MonoBehaviour
 
     private void updateDisplay()
     {
-        // TODO: temp.
-        GetComponentInChildren<Text>().text = CardTemplate.Name;
+        Debug.Log("Setting up card " + CardTemplate.Name);
+        var cardInfo = CardInfoManager.Instance.GetCardInfo(CardTemplate.Name);
+
+        typing.text = cardInfo.typing;
+        cardName.text = cardInfo.name;
     }
 }
