@@ -7,9 +7,13 @@ using HighTreasonGame.GameStates;
 
 namespace HighTreasonConsole
 {
-    public class ConsolePlayerChoiceHandler : IChoiceHandler
+    public class ConsolePlayerChoiceHandler : ChoiceHandler
     {
-        public void ChooseCardAndUsage(List<CardTemplate> cards, Game game, out Player.CardUsageParams outCardUsage)
+        public ConsolePlayerChoiceHandler()
+            : base(Player.PlayerType.Human)
+        {}
+
+        public override void ChooseCardAndUsage(List<CardTemplate> cards, Game game, out Player.CardUsageParams outCardUsage)
         {
             outCardUsage = new Player.CardUsageParams();
             bool inputHandled = false;
@@ -86,7 +90,7 @@ namespace HighTreasonConsole
             return;
         }
 
-        public bool ChooseActionUsage(List<Track> choices, int actionPts, Jury deliberationJury, Game game, out Dictionary<Track, int> outTracks)
+        public override bool ChooseActionUsage(List<Track> choices, int actionPts, Jury deliberationJury, Game game, out Dictionary<Track, int> outTracks)
         {
             outTracks = new Dictionary<Track, int>();
 
@@ -170,216 +174,79 @@ namespace HighTreasonConsole
             return true;
         }
 
-        public bool ChooseAspectTracks(List<HTGameObject> choices, int numChoices, Game game, out List<AspectTrack> outAspectTracks)
+        public override void ChooseBoardObjects(List<BoardObject> choices, Func<Dictionary<BoardObject, int>, bool> validateChoices, Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices, Func<Dictionary<BoardObject, int>, bool> choicesComplete, Game game, out BoardChoices boardChoice)
         {
-            outAspectTracks = new List<AspectTrack>();
+            boardChoice = new BoardChoices();
 
             if (choices.Count == 0)
             {
                 Console.WriteLine("No choices");
-                return true;
+                return;
             }
 
-            List<AspectTrack> aspects = new List<AspectTrack>();
+            Dictionary<BoardObject, int> selected = new Dictionary<BoardObject, int>();
+            List<BoardObject> remainingChoices = new List<BoardObject>(choices);
+
             bool inputComplete = false;
             while (!inputComplete)
             {
-                Console.WriteLine("Affectable Aspect Tracks:");
-                for (int i = 0; i < choices.Count; ++i)
+                Console.WriteLine("Choices:");
+                for (int i = 0; i < remainingChoices.Count; ++i)
                 {
-                    AspectTrack track = (AspectTrack)choices[i];
-
-                    Console.Write(i + " ");
-                    foreach (Property str in track.Properties)
-                    {
-                        Console.Write(str + " ");
-                    }
-
-                    Console.Write(" value=" + track.Value + " min=" + track.MinValue + " max=" + track.MaxValue + "\n");
+                    Console.Write(i + " " + remainingChoices[i].ToString());
                 }
 
-                Console.WriteLine("Please choose " + numChoices + " aspects to affect => <aspect idx> ... <aspect idx>");
-
-                aspects.Clear();
+                Console.WriteLine("Please choose object => <idx>");
 
                 string input = Console.ReadLine();
                 string[] tokens = input.Split(' ');
 
-                int expectedTokenLength = Math.Min(numChoices, choices.Count);
-
                 try
                 {
-                    bool goBack;
-                    if (handleGenericCases(tokens, game, out goBack))
-                    {
-                        if (goBack)
-                        {
-                            return false;
-                        }
-                    }
-                    else if (tokens.Length == expectedTokenLength)
-                    {
-                        foreach (string token in tokens)
-                        {
-                            int idx = Int32.Parse(token);
-
-                            if (idx >= choices.Count)
-                            {
-                                throw new Exception();
-                            }
-
-                            AspectTrack track = (AspectTrack)choices[idx];
-                            if (aspects.Contains(track))
-                            {
-                                throw new Exception();
-                            }
-                            aspects.Add(track);
-                        }
-
-                        inputComplete = true;
-                    }
-                    else
-                    {
-                        throw new Exception();
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine("Invalid input. Try again.");
-                }
-            }
-
-            outAspectTracks = aspects;
-
-            return true;
-        }
-
-        public bool ChooseJuryAspects(List<List<HTGameObject>> choicesList, List<int> numChoicesList, Game game, out List<Jury.JuryAspect> outJuryAspects)
-        {
-            outJuryAspects = new List<Jury.JuryAspect>();
-
-            if (choicesList.Count == 0)
-            {
-                Console.WriteLine("No choices");
-                return true;
-            }
-
-            for (int c = 0; c < choicesList.Count; ++c)
-            {
-                List<HTGameObject> choices = choicesList[c];
-                int numChoices = numChoicesList[c];
-
-                if (choices.Count == 0)
-                {
-                    continue;
-                }
-
-                List<Jury.JuryAspect> chosenAspects = new List<Jury.JuryAspect>();
-                bool inputComplete = false;
-                while (true)
-                {
-                    Console.WriteLine("JuryAspects:");
-                    for (int i = 0; i < choices.Count; ++i)
-                    {
-                        Jury.JuryAspect juryAspect = (Jury.JuryAspect)choices[i];
-                        Console.WriteLine(i + " JuryId=" + juryAspect.Owner.Id + " Trait=" + juryAspect.Trait);
-                    }
-                    Console.WriteLine("Please pick " + numChoices + " jury aspects => <idx> ... <idx>");
-
-                    chosenAspects.Clear();
-
-                    string input = Console.ReadLine();
-                    string[] tokens = input.Split(' ');
-
-                    int numValidChoices = Math.Min(numChoices, choices.Count);
-
-                    try
                     {
                         bool goBack;
                         if (handleGenericCases(tokens, game, out goBack))
                         {
                             if (goBack)
                             {
-                                return false;
+                                boardChoice.NotCancelled = false;
+                                return;
                             }
                         }
-                        else if (tokens.Length == numValidChoices)
-                        {
-                            foreach (string idxStr in tokens)
-                            {
-                                int choiceIdx = Int32.Parse(idxStr);
-
-                                if (choiceIdx >= choices.Count || chosenAspects.Contains((Jury.JuryAspect)choices[choiceIdx]))
-                                {
-                                    throw new Exception();
-                                }
-
-                                chosenAspects.Add((Jury.JuryAspect)choices[choiceIdx]);
-                            }
-
-                            if (chosenAspects.Count == numValidChoices)
-                            {
-                                inputComplete = true;
-                            }
-                        }
-                        else
-                        {
-                            throw new Exception();
-                        }
                     }
-                    catch
+                    
+                    if (tokens.Length == 1)
                     {
-                        Console.WriteLine("Invalid input. Try again.");
-                    }
+                        int idx = Int32.Parse(tokens[0]);
 
-                    if (inputComplete)
-                    {
-                        outJuryAspects.AddRange(chosenAspects);
-                        break;
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        public bool ChooseJury(List<Jury> juries, Game game, out Jury outJury)
-        {
-            outJury = null;
-            bool inputHandled = false;
-            while (!inputHandled)
-            {
-                Console.WriteLine("Juries:");
-                foreach (Jury jury in juries)
-                {
-                    Console.Write(jury);
-                }
-                Console.WriteLine("Please choose jury => <jury id>");
-
-                string input = Console.ReadLine();
-                string[] tokens = input.Split(' ');
-
-                try
-                {
-                    bool goBack;
-                    if (handleGenericCases(tokens, game, out goBack))
-                    {
-                        if (goBack)
-                        {
-                            return false;
-                        }
-                    }
-                    else if (tokens.Length == 1)
-                    {
-                        int juryId = Int32.Parse((tokens[0]));
-
-                        if (!juries.Exists(j => j.Id == juryId))
+                        if (idx >= remainingChoices.Count)
                         {
                             throw new Exception();
                         }
 
-                        outJury = juries.Find(j => j.Id == juryId);
-                        inputHandled = true;
+                        BoardObject obj = remainingChoices[idx];
+                        if (!selected.ContainsKey(obj))
+                        {
+                            selected[obj] = 0;
+                        }
+                        selected[obj] += 1;
+
+                        bool valid = validateChoices(selected);
+
+                        if (!valid)
+                        {
+                            throw new Exception();
+                        }
+
+                        bool complete = choicesComplete(selected);
+
+                        if (complete)
+                        {
+                            inputComplete = true;
+                            break;
+                        }
+
+                        remainingChoices = filterChoices(remainingChoices, selected);
                     }
                     else
                     {
@@ -392,10 +259,10 @@ namespace HighTreasonConsole
                 }
             }
 
-            return true;
+            boardChoice.SelectedObjs = selected;
         }
 
-        public bool ChooseMomentOfInsightUse(Game game, out BoardChoices.MomentOfInsightInfo outMoIInfo)
+        public override bool ChooseMomentOfInsightUse(Game game, out BoardChoices.MomentOfInsightInfo outMoIInfo)
         {
             outMoIInfo = new BoardChoices.MomentOfInsightInfo();
             bool inputComplete = false;

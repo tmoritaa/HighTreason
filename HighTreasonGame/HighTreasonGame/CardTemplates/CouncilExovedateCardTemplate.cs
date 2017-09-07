@@ -13,48 +13,10 @@ namespace HighTreasonGame.CardTemplates
 
         protected override void addSelectionEventsAndChoices()
         {
-            SelectionEventChoices.Add(
-                (Game game, ChoiceHandler choiceHandler) =>
-                {
-                    List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
-
-                    List<HTGameObject> options = game.GetHTGOFromCondition(
-                            (HTGameObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Jury)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && !((Jury.JuryAspect)htgo).IsRevealed);
-                            });
-
-                    BoardChoices choices = new BoardChoices();
-                    choices.NotCancelled = choiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { options }, new List<int>() { 2 },
-                        game, out choices.JuryAspects);
-
-                    return choices;
-                });
-
+            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>(), 2, true));
             SelectionEvents.Add(revealAllAspects);
 
-            SelectionEventChoices.Add(
-                (Game game, ChoiceHandler choiceHandler) =>
-                {
-                    List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
-
-                    List<HTGameObject> options = game.GetHTGOFromCondition(
-                            (HTGameObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Jury)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && !((Jury.JuryAspect)htgo).IsVisibleToPlayer(game.CurPlayer.Side));
-                            });
-
-                    BoardChoices choices = new BoardChoices();
-                    choices.NotCancelled = choiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { options }, new List<int>() { 1 },
-                        game, out choices.JuryAspects);
-
-                    return choices;
-                });
-
+            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>(), 1, false));
             SelectionEvents.Add(peekAllAspects);
         }
 
@@ -68,7 +30,7 @@ namespace HighTreasonGame.CardTemplates
                     int modValue = calcModValueBasedOnSide(2, game);
 
                     AspectTrack aspectTrack = (AspectTrack)game.GetHTGOFromCondition(
-                            (HTGameObject htgo) =>
+                            (BoardObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Track)
                                 && htgo.Properties.Contains(Property.Aspect)
@@ -86,7 +48,7 @@ namespace HighTreasonGame.CardTemplates
                     int modValue = calcModValueBasedOnSide(2, game);
 
                     AspectTrack aspectTrack = (AspectTrack)game.GetHTGOFromCondition(
-                            (HTGameObject htgo) =>
+                            (BoardObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Track)
                                 && htgo.Properties.Contains(Property.Aspect)
@@ -102,14 +64,14 @@ namespace HighTreasonGame.CardTemplates
                     BoardChoices choices = new BoardChoices();
                     
                     AspectTrack aspectTrack = (AspectTrack)game.GetHTGOFromCondition(
-                            (HTGameObject htgo) =>
+                            (BoardObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Track)
                                 && htgo.Properties.Contains(Property.Aspect)
                                 && htgo.Properties.Contains(Property.Merchant));
                             })[0];
 
-                    choices.AspectTracks.Add(aspectTrack);
+                    choices.SelectedObjs.Keys.Cast<AspectTrack>().ToList().Add(aspectTrack);
 
                     return choices;
                 });
@@ -120,7 +82,7 @@ namespace HighTreasonGame.CardTemplates
                     int modValue = calcModValueBasedOnSide(1, game);
 
                     AspectTrack aspectTrack = (AspectTrack)game.GetHTGOFromCondition(
-                            (HTGameObject htgo) =>
+                            (BoardObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Track)
                                 && htgo.Properties.Contains(Property.Aspect)
@@ -134,14 +96,13 @@ namespace HighTreasonGame.CardTemplates
         protected override void addSummationEventsAndChoices()
         {
             SummationEventChoices.Add(doNothingChoice);
-
             SummationEvents.Add(
                 (Game game, BoardChoices choices) =>
                 {
                     int modValue = calcModValueBasedOnSide(2, game);
 
                     AspectTrack aspectTrack = (AspectTrack)game.GetHTGOFromCondition(
-                            (HTGameObject htgo) =>
+                            (BoardObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Track)
                                 && htgo.Properties.Contains(Property.Aspect)
@@ -152,14 +113,13 @@ namespace HighTreasonGame.CardTemplates
                 });
 
             SummationEventChoices.Add(doNothingChoice);
-
             SummationEvents.Add(
                 (Game game, BoardChoices choices) =>
                 {
                     int modValue = calcModValueBasedOnSide(2, game);
 
                     AspectTrack aspectTrack = (AspectTrack)game.GetHTGOFromCondition(
-                            (HTGameObject htgo) =>
+                            (BoardObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Track)
                                 && htgo.Properties.Contains(Property.Aspect)
@@ -169,31 +129,14 @@ namespace HighTreasonGame.CardTemplates
                     aspectTrack.AddToValue(modValue);
                 });
 
-            SummationEventChoices.Add(
-                (Game game, ChoiceHandler choiceHandler) =>
-                {
-                    BoardChoices choices = new BoardChoices();
-
-                    AspectTrack aspectTrack = (AspectTrack)game.GetHTGOFromCondition(
-                            (HTGameObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.Merchant));
-                            })[0];
-
-                    choices.AspectTracks.Add(aspectTrack);
-
-                    return choices;
-                });
-
+            SummationEventChoices.Add(doNothingChoice);
             SummationEvents.Add(
                 (Game game, BoardChoices choices) =>
                 {
                     int modValue = calcModValueBasedOnSide(1, game);
 
                     AspectTrack aspectTrack = (AspectTrack)game.GetHTGOFromCondition(
-                            (HTGameObject htgo) =>
+                            (BoardObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Track)
                                 && htgo.Properties.Contains(Property.Aspect)

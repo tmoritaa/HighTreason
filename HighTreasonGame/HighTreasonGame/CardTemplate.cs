@@ -110,7 +110,7 @@ namespace HighTreasonGame
 
             int modValue = (game.CurPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
             List<Track> choices = game.GetHTGOFromCondition(
-                (HTGameObject htgo) =>
+                (BoardObject htgo) =>
                 {
                     return (htgo.Properties.Contains(Property.Track) &&
                     ((htgo.Properties.Contains(Property.Jury) && htgo.Properties.Contains(Property.Sway))
@@ -184,20 +184,85 @@ namespace HighTreasonGame
             return choiceHandler.ChooseMomentOfInsightUse(game, out moiInfo);
         }
 
-        protected BoardChoices pickOneAnyAspectChoice(Game game, ChoiceHandler choiceHandler)
+        protected CardChoice genAspectTrackForModCardChoice(HashSet<Property> optionProps, int numChoices, int modValue, bool affectedByPlayerSide)
         {
-            List<HTGameObject> options = game.GetHTGOFromCondition(
-                    (HTGameObject htgo) =>
+            return
+                (Game game, ChoiceHandler choiceHandler) =>
+                {
+                    List<BoardObject> options = game.GetHTGOFromCondition(
+                    (BoardObject htgo) =>
                     {
-                        return (htgo.Properties.Contains(Property.Track)
-                        && htgo.Properties.Contains(Property.Aspect)
-                        && ((Track)htgo).CanModify(1));
+                        HashSet<Property> props = new HashSet<Property>(optionProps);
+                        props.Add(Property.Aspect);
+                        props.Add(Property.Track);
+
+                        bool valid = true;
+                        foreach (Property prop in props)
+                        {
+                            valid &= htgo.Properties.Contains(prop);
+                        }
+
+                        int mod = affectedByPlayerSide ? calcModValueBasedOnSide(modValue, game) : modValue;
+                        return valid && ((Track)htgo).CanModify(mod);
                     });
 
-            BoardChoices choices = new BoardChoices();
-            choices.NotCancelled = choiceHandler.ChooseAspectTracks(options, 1, game, out choices.AspectTracks);
+                    BoardChoices boardChoices;
+                    choiceHandler.ChooseBoardObjects(options,
+                        (Dictionary<BoardObject, int> selected) => { return true; },
+                        (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
+                        {
+                            return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
+                        },
+                        (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == numChoices; },
+                        game,
+                        out boardChoices);
 
-            return choices;
+                    return boardChoices;
+                };
+        }
+
+        protected CardChoice genRevealOrPeakCardChoice(HashSet<Property> optionProps, 
+            int numChoices, 
+            bool isReveal,
+            Func<Dictionary<BoardObject, int>, bool> validateChoices = null,
+            Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices = null)
+        {
+            return
+                (Game game, ChoiceHandler choiceHandler) =>
+                {
+                    List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
+
+                    List<BoardObject> options = game.GetHTGOFromCondition(
+                            (BoardObject htgo) =>
+                            {
+                                HashSet<Property> props = new HashSet<Property>(optionProps);
+                                props.Add(Property.Jury);
+                                props.Add(Property.Aspect);
+
+                                bool valid = true;
+                                foreach (Property prop in props)
+                                {
+                                    valid &= htgo.Properties.Contains(prop);
+                                }
+
+                                return valid && (isReveal ? !((Jury.JuryAspect)htgo).IsRevealed : !((Jury.JuryAspect)htgo).IsVisibleToPlayer(game.CurPlayer.Side));
+                            });
+
+                    BoardChoices boardChoices;
+                    choiceHandler.ChooseBoardObjects(options,
+                        validateChoices != null ? validateChoices : 
+                        (Dictionary<BoardObject, int> selected) => { return true; },
+                        filterChoices != null ? filterChoices : 
+                        (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
+                        {
+                            return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
+                        },
+                        (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == numChoices; },
+                        game,
+                        out boardChoices);
+
+                    return boardChoices;
+                };
         }
 
         #endregion
@@ -208,17 +273,17 @@ namespace HighTreasonGame
         protected void raiseGuiltAndOneAspectEffect(Game game, BoardChoices choices)
         {
             game.GetGuiltTrack().AddToValue(1);
-            choices.AspectTracks.ForEach(t => t.AddToValue(1));
+            choices.SelectedObjs.Keys.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(1));
         }
 
         protected void revealAllAspects(Game game, BoardChoices choices)
         {
-            choices.JuryAspects.ForEach(a => a.Reveal());
+            choices.SelectedObjs.Keys.Cast<Jury.JuryAspect>().ToList().ForEach(a => a.Reveal());
         }
 
         protected void peekAllAspects(Game game, BoardChoices choices)
         {
-            choices.JuryAspects.ForEach(a => a.Peek(game.CurPlayer.Side));
+            choices.SelectedObjs.Keys.Cast<Jury.JuryAspect>().ToList().ForEach(a => a.Peek(game.CurPlayer.Side));
         }
 
         protected int calcModValueBasedOnSide(int value, Game game)

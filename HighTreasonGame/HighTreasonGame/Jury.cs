@@ -5,9 +5,9 @@ using System.Text;
 
 namespace HighTreasonGame
 {
-    public class Jury : HTGameObject
+    public class Jury : BoardObject
     {
-        public class JuryAspect : HTGameObject
+        public class JuryAspect : BoardObject
         {
             private Dictionary<Player.PlayerSide, bool> seenStatus = new Dictionary<Player.PlayerSide, bool>();
 
@@ -76,7 +76,7 @@ namespace HighTreasonGame
             public int CalculateGuiltScore(Game game)
             {
                 AspectTrack track = (AspectTrack)game.GetHTGOFromCondition(
-                    (HTGameObject htgo) =>
+                    (BoardObject htgo) =>
                     {
                         return (htgo.Properties.Contains(Property.Track) && htgo.Properties.Contains(Property.Aspect)
                         && htgo.Properties.Contains(Trait) && htgo.Properties.Contains(Aspect));

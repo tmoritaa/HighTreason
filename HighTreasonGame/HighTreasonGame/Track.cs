@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HighTreasonGame
 {
-    public class Track : HTGameObject
+    public class Track : BoardObject
     {
         public int Value {
             get; protected set;

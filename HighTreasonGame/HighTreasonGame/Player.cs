@@ -112,8 +112,7 @@ namespace HighTreasonGame
 
         public void DismissJury()
         {
-            Jury jury;
-            while (!choiceHandler.ChooseJury(game.Board.Juries, game, out jury)) {}
+            Jury jury = ChooseJuryChoice();
 
             Console.WriteLine("Dismissed Jury\n" + jury);
 
@@ -134,24 +133,24 @@ namespace HighTreasonGame
 
         public Jury PerformJuryForDeliberation(List<Jury> juries)
         {
-            Jury jury;
+            Jury usedJury;
             while (true)
             {
-                while (!choiceHandler.ChooseJury(juries, game, out jury)) {}
+                usedJury = ChooseJuryChoice();
 
                 int modValue = (this.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
                 List<Track> choices = game.GetHTGOFromCondition(
-                    (HTGameObject htgo) =>
+                    (BoardObject htgo) =>
                     {
                         return (htgo.Properties.Contains(Property.Track) &&
                         ((htgo.Properties.Contains(Property.Jury) && htgo.Properties.Contains(Property.Sway))
                         || (htgo.Properties.Contains(Property.Aspect)))
-                        && (htgo.Properties.Contains(jury.Aspects[0].Aspect) || htgo.Properties.Contains(jury.Aspects[1].Aspect) || htgo.Properties.Contains(jury.Aspects[2].Aspect)))
+                        && (htgo.Properties.Contains(usedJury.Aspects[0].Aspect) || htgo.Properties.Contains(usedJury.Aspects[1].Aspect) || htgo.Properties.Contains(usedJury.Aspects[2].Aspect)))
                         && ((Track)htgo).CanModifyByAction(modValue);
                     }).Cast<Track>().ToList();
 
                 Dictionary<Track, int> affectedTracks;
-                bool choiceMade = choiceHandler.ChooseActionUsage(choices, jury.ActionPoints, jury, game, out affectedTracks);
+                bool choiceMade = choiceHandler.ChooseActionUsage(choices, usedJury.ActionPoints, usedJury, game, out affectedTracks);
 
                 if (choiceMade)
                 {
@@ -171,7 +170,7 @@ namespace HighTreasonGame
                 }
             }
 
-            return jury;
+            return usedJury;
         }
 
         public override string ToString()
@@ -197,6 +196,32 @@ namespace HighTreasonGame
         {
             Hand.Remove(card);
             game.Discards.Add(card);
+        }
+
+        private Jury ChooseJuryChoice()
+        {
+            Jury jury = null;
+            while (jury == null)
+            {
+                BoardChoices boardChoices;
+                choiceHandler.ChooseBoardObjects(
+                    game.Board.Juries.Cast<BoardObject>().ToList(),
+                    (Dictionary<BoardObject, int> selected) => { return true; },
+                    (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
+                    {
+                        return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
+                    },
+                    (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 1; },
+                    game,
+                    out boardChoices);
+
+                if (boardChoices.NotCancelled)
+                {
+                    jury = (Jury)boardChoices.SelectedObjs.Keys.First();
+                }
+            }
+
+            return jury;
         }
     }
 }

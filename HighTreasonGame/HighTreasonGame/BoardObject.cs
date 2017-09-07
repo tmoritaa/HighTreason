@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HighTreasonGame
 {
-    public abstract class HTGameObject
+    public abstract class BoardObject
     {
         public HashSet<Property> Properties
         {
@@ -14,7 +14,7 @@ namespace HighTreasonGame
 
         protected Game game;
 
-        public HTGameObject(Game _game, params Property[] _properties)
+        public BoardObject(Game _game, params Property[] _properties)
         {
             game = _game;
             Properties = new HashSet<Property>(_properties);

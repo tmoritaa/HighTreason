@@ -13,44 +13,30 @@ namespace HighTreasonGame.CardTemplates
 
         protected override void addSelectionEventsAndChoices()
         {
-            SelectionEventChoices.Add(
-                (Game game, ChoiceHandler choiceHandler) =>
+            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>(), 3, true, null,
+                (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
                 {
-                    List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
+                    List<BoardObject> newChoices = new List<BoardObject>(remainingChoices);
+                    foreach (BoardObject obj in selected.Keys)
+                    {
+                        if (obj.Properties.Contains(Property.Religion))
+                        {
+                            newChoices = newChoices.Where(c => !c.Properties.Contains(Property.Religion)).ToList();
+                        }
 
-                    List<HTGameObject> religionChoices = game.GetHTGOFromCondition(
-                            (HTGameObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Jury)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.Religion)
-                                && !((Jury.JuryAspect)htgo).IsRevealed);
-                            });
-                    List<HTGameObject> languageChoices = game.GetHTGOFromCondition(
-                            (HTGameObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Jury)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.Language)
-                                && !((Jury.JuryAspect)htgo).IsRevealed);
-                            });
-                    List<HTGameObject> occupationChoices = game.GetHTGOFromCondition(
-                            (HTGameObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Jury)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.Occupation)
-                                && !((Jury.JuryAspect)htgo).IsRevealed);
-                            });
+                        if (obj.Properties.Contains(Property.Occupation))
+                        {
+                            newChoices = newChoices.Where(c => !c.Properties.Contains(Property.Occupation)).ToList();
+                        }
 
-                    BoardChoices choices = new BoardChoices();
-                    choices.NotCancelled = choiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { religionChoices, languageChoices, occupationChoices },
-                        new List<int>() { 1, 1, 1 }, 
-                        game, out choices.JuryAspects);
+                        if (obj.Properties.Contains(Property.Language))
+                        {
+                            newChoices = newChoices.Where(c => !c.Properties.Contains(Property.Language)).ToList();
+                        }
+                    }
 
-                    return choices;
-                });
-
+                    return newChoices;
+                }));
             SelectionEvents.Add(revealAllAspects);
         }
 
@@ -63,7 +49,6 @@ namespace HighTreasonGame.CardTemplates
                     choices.NotCancelled = handleMomentOfInsightChoice(new List<Player.PlayerSide>() { Player.PlayerSide.Defense }, game, choiceHandler, out choices.MoIInfo);
                     return choices;
                 });
-
             TrialEvents.Add(
                 (Game game, BoardChoices choices) => 
                 {
@@ -71,29 +56,20 @@ namespace HighTreasonGame.CardTemplates
                     handleMomentOfInsight(game, choices);
                 });
 
-            TrialEventChoices.Add(
-                (Game game, ChoiceHandler choiceHandler) =>
+            TrialEventChoices.Add(doNothingChoice);
+            TrialEvents.Add(
+                (Game game, BoardChoices choices) => 
                 {
-                    BoardChoices choices = new BoardChoices();
-
-                    List<HTGameObject> options = game.GetHTGOFromCondition(
-                        (HTGameObject htgo) =>
+                    List<BoardObject> options = game.GetHTGOFromCondition(
+                        (BoardObject htgo) =>
                         {
                             return (htgo.Properties.Contains(Property.Track)
                             && htgo.Properties.Contains(Property.Aspect)
                             && (htgo.Properties.Contains(Property.Farmer) || htgo.Properties.Contains(Property.French))
-                            && ((Track)htgo).CanModify(-1));
+                            && ((Track)htgo).CanModify(-2));
                         });
 
-                    choices.AspectTracks = options.Cast<AspectTrack>().ToList();
-
-                    return choices;
-                });
-
-            TrialEvents.Add(
-                (Game game, BoardChoices choices) => 
-                {
-                    choices.AspectTracks.ForEach(t => t.AddToValue(-2));
+                    options.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(-2));
                 });
         }
 

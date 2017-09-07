@@ -13,64 +13,13 @@ namespace HighTreasonGame.CardTemplates
 
         protected override void addSelectionEventsAndChoices()
         {
-            SelectionEventChoices.Add(
-                (Game game, ChoiceHandler IChoiceHandler) =>
-                {
-                    List<HTGameObject> options = game.GetHTGOFromCondition(
-                        (HTGameObject htgo) =>
-                        {
-                            return (htgo.Properties.Contains(Property.Jury)
-                            && htgo.Properties.Contains(Property.Aspect)
-                            && htgo.Properties.Contains(Property.Occupation)
-                            && !((Jury.JuryAspect)htgo).IsRevealed);
-                        });
-
-                    BoardChoices choices = new BoardChoices();
-                    choices.NotCancelled = IChoiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { options }, new List<int>() { 3 }, game, out choices.JuryAspects);
-
-                    return choices;
-                });
-
+            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property> { Property.Occupation }, 3, true));
             SelectionEvents.Add(revealAllAspects);
 
-            SelectionEventChoices.Add(
-                (Game game, ChoiceHandler choiceHandler) =>
-                {
-                    List<HTGameObject> options = game.GetHTGOFromCondition(
-                        (HTGameObject htgo) =>
-                        {
-                            return (htgo.Properties.Contains(Property.Jury)
-                            && htgo.Properties.Contains(Property.Aspect)
-                            && htgo.Properties.Contains(Property.Language)
-                            && !((Jury.JuryAspect)htgo).IsRevealed);
-                        });
-
-                    BoardChoices choices = new BoardChoices();
-                    choices.NotCancelled = choiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { options }, new List<int>() { 2 }, game, out choices.JuryAspects);
-
-                    return choices;
-                });
-
+            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property> { Property.Language }, 2, true));
             SelectionEvents.Add(revealAllAspects);
 
-            SelectionEventChoices.Add(
-                (Game game, ChoiceHandler choiceHandler) =>
-                {
-                    List<HTGameObject> options = game.GetHTGOFromCondition(
-                        (HTGameObject htgo) =>
-                        {
-                            return (htgo.Properties.Contains(Property.Jury)
-                            && htgo.Properties.Contains(Property.Aspect)
-                            && htgo.Properties.Contains(Property.Religion)
-                            && !((Jury.JuryAspect)htgo).IsRevealed);
-                        });
-
-                    BoardChoices choices = new BoardChoices();
-                    choices.NotCancelled = choiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { options }, new List<int>() { 1 }, game, out choices.JuryAspects);
-
-                    return choices;
-                });
-
+            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Religion }, 1, true));
             SelectionEvents.Add(revealAllAspects);
         }
 
@@ -81,8 +30,8 @@ namespace HighTreasonGame.CardTemplates
                 {
                     int modValue = calcModValueBasedOnSide(2, game);
 
-                    List<HTGameObject> options = game.GetHTGOFromCondition(
-                        (HTGameObject htgo) =>
+                    List<BoardObject> options = game.GetHTGOFromCondition(
+                        (BoardObject htgo) =>
                         {
                             return (htgo.Properties.Contains(Property.Track)
                             && htgo.Properties.Contains(Property.Aspect)
@@ -90,23 +39,32 @@ namespace HighTreasonGame.CardTemplates
                             && ((Track)htgo).CanModify(modValue));
                         });
 
-                    BoardChoices choices = new BoardChoices();
-                    choices.NotCancelled = choiceHandler.ChooseAspectTracks(options, 1, game, out choices.AspectTracks);
-
-                    if (choices.NotCancelled)
+                    BoardChoices boardChoices;
+                    choiceHandler.ChooseBoardObjects(
+                        options,
+                        (Dictionary<BoardObject, int> selected) => { return true; },
+                        (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
+                        {
+                            return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
+                        },
+                        (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 1; },
+                        game,
+                        out boardChoices);
+                    
+                    if (boardChoices.NotCancelled)
                     {
-                        choices.NotCancelled = handleMomentOfInsightChoice(new List<Player.PlayerSide>() { Player.PlayerSide.Prosecution, Player.PlayerSide.Defense },
-                            game, choiceHandler, out choices.MoIInfo);
+                        boardChoices.NotCancelled = handleMomentOfInsightChoice(new List<Player.PlayerSide>() { Player.PlayerSide.Prosecution, Player.PlayerSide.Defense },
+                            game, choiceHandler, out boardChoices.MoIInfo);
                     }
 
-                    return choices;
+                    return boardChoices;
                 });
 
             TrialEvents.Add(
                 (Game game, BoardChoices choices) =>
                 {
                     int modValue = calcModValueBasedOnSide(2, game);
-                    choices.AspectTracks.ForEach(t => t.AddToValue(modValue));
+                    choices.SelectedObjs.Keys.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(modValue));
                     handleMomentOfInsight(game, choices);
                 });
         }
@@ -121,7 +79,7 @@ namespace HighTreasonGame.CardTemplates
                     int sign = (game.CurPlayer.Side == Player.PlayerSide.Prosecution ? 1 : -1);
 
                     List<AspectTrack> options = game.GetHTGOFromCondition(
-                        (HTGameObject htgo) =>
+                        (BoardObject htgo) =>
                         {
                             return (htgo.Properties.Contains(Property.Track)
                             && htgo.Properties.Contains(Property.Aspect)

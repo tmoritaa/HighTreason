@@ -13,32 +13,36 @@ namespace HighTreasonGame.CardTemplates
 
         protected override void addSelectionEventsAndChoices()
         {
-            SelectionEventChoices.Add(
-                (Game game, ChoiceHandler choiceHandler) =>
+            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>(), 2, true, null,
+                (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
                 {
-                    List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
+                    List<BoardObject> newChoices = new List<BoardObject>(remainingChoices);
+                    foreach (BoardObject obj in selected.Keys)
+                    {
+                        if (obj.Properties.Contains(Property.Religion))
+                        {
+                            newChoices = newChoices.Where(c => !c.Properties.Contains(Property.Religion)).ToList();
+                        }
 
-                    List<HTGameObject> options = game.GetHTGOFromCondition(
-                            (HTGameObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Jury)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && !((Jury.JuryAspect)htgo).IsRevealed);
-                            });
+                        if (obj.Properties.Contains(Property.Occupation))
+                        {
+                            newChoices = newChoices.Where(c => !c.Properties.Contains(Property.Occupation)).ToList();
+                        }
 
-                    BoardChoices choices = new BoardChoices();
-                    choices.NotCancelled = choiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { options }, new List<int>() { 2 },
-                        game, out choices.JuryAspects);
+                        if (obj.Properties.Contains(Property.Language))
+                        {
+                            newChoices = newChoices.Where(c => !c.Properties.Contains(Property.Language)).ToList();
+                        }
+                    }
 
-                    return choices;
-                });
-
+                    return newChoices;
+                }));
             SelectionEvents.Add(revealAllAspects);
         }
 
         protected override void addTrialEventsAndChoices()
         {
-            TrialEventChoices.Add(pickOneAnyAspectChoice);
+            TrialEventChoices.Add(genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 1, false));
             TrialEvents.Add(raiseGuiltAndOneAspectEffect);
         }
 
@@ -49,8 +53,8 @@ namespace HighTreasonGame.CardTemplates
             SummationEvents.Add(
                 (Game game, BoardChoices choices) =>
                 {
-                    List<HTGameObject> options = game.GetHTGOFromCondition(
-                            (HTGameObject htgo) =>
+                    List<BoardObject> options = game.GetHTGOFromCondition(
+                            (BoardObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Track)
                                 && htgo.Properties.Contains(Property.Aspect)

@@ -13,50 +13,10 @@ namespace HighTreasonGame.CardTemplates
 
         protected override void addSelectionEventsAndChoices()
         {
-            SelectionEventChoices.Add(
-                (Game game, ChoiceHandler choiceHandler) =>
-                {
-                    List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
-
-                    List<HTGameObject> options = game.GetHTGOFromCondition(
-                            (HTGameObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Jury)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.Occupation)
-                                && !((Jury.JuryAspect)htgo).IsRevealed);
-                            });
-
-                    BoardChoices choices = new BoardChoices();
-                    choices.NotCancelled = choiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { options }, new List<int>() { 3 },
-                        game, out choices.JuryAspects);
-
-                    return choices;
-                });
-
+            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Occupation }, 3, true));
             SelectionEvents.Add(revealAllAspects);
 
-            SelectionEventChoices.Add(
-                (Game game, ChoiceHandler choiceHandler) =>
-                {
-                    List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
-
-                    List<HTGameObject> options = game.GetHTGOFromCondition(
-                            (HTGameObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Jury)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.Religion)
-                                && !((Jury.JuryAspect)htgo).IsRevealed);
-                            });
-
-                    BoardChoices choices = new BoardChoices();
-                    choices.NotCancelled = choiceHandler.ChooseJuryAspects(new List<List<HTGameObject>>() { options }, new List<int>() { 2 },
-                        game, out choices.JuryAspects);
-
-                    return choices;
-                });
-
+            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Religion }, 2, true));
             SelectionEvents.Add(revealAllAspects);
         }
 
@@ -87,8 +47,8 @@ namespace HighTreasonGame.CardTemplates
             SummationEvents.Add(
                 (Game game, BoardChoices choices) =>
                 {
-                    List<HTGameObject> options = game.GetHTGOFromCondition(
-                            (HTGameObject htgo) =>
+                    List<BoardObject> options = game.GetHTGOFromCondition(
+                            (BoardObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Track)
                                 && htgo.Properties.Contains(Property.Aspect)

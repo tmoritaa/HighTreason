@@ -21,8 +21,7 @@ namespace HighTreasonGame
             public CardTemplate HandCard;
         }
 
-        public List<AspectTrack> AspectTracks = new List<AspectTrack>();
-        public List<Jury.JuryAspect> JuryAspects = new List<Jury.JuryAspect>();
+        public Dictionary<BoardObject, int> SelectedObjs = new Dictionary<BoardObject, int>();
         public MomentOfInsightInfo MoIInfo = new MomentOfInsightInfo();
 
         public bool NotCancelled = true;

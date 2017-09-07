@@ -38,7 +38,7 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        private List<HTGameObject> htGameObjects = new List<HTGameObject>();
+        private List<BoardObject> htGameObjects = new List<BoardObject>();
 
         private Dictionary<Player.PlayerSide, Player> players = new Dictionary<Player.PlayerSide, Player>();
 
@@ -183,18 +183,18 @@ namespace HighTreasonGame
             return players[oppositeSide];
         }
 
-        public void AddHTGameObject(HTGameObject go)
+        public void AddHTGameObject(BoardObject go)
         {
             htGameObjects.Add(go);
         }
 
-        public void RemoveHTGameObject(HTGameObject go)
+        public void RemoveHTGameObject(BoardObject go)
         {
             go.RemoveChildrenHTGameObjects();
             htGameObjects.Remove(go);
         }
 
-        public List<HTGameObject> GetHTGOFromCondition(Func<HTGameObject, bool> condition)
+        public List<BoardObject> GetHTGOFromCondition(Func<BoardObject, bool> condition)
         {
             return htGameObjects.FindAll(htgo => condition(htgo));
         }
