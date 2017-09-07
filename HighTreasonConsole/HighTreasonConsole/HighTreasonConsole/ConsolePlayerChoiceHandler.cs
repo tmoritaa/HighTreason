@@ -235,6 +235,12 @@ namespace HighTreasonConsole
 
                         if (!valid)
                         {
+                            selected[obj] -= 1;
+                            if (selected[obj] < 0)
+                            {
+                                selected.Remove(obj);
+                            }
+
                             throw new Exception();
                         }
 
