@@ -90,90 +90,6 @@ namespace HighTreasonConsole
             return;
         }
 
-        public override bool ChooseActionUsage(List<Track> choices, int actionPts, Jury deliberationJury, Game game, out Dictionary<Track, int> outTracks)
-        {
-            outTracks = new Dictionary<Track, int>();
-
-            bool inputHandled = false;
-
-            if (choices.Count <= 0)
-            {
-                Console.WriteLine("No tracks to affect");
-                return true;
-            }
-
-            Dictionary<Track, int> trackDict = new Dictionary<Track, int>();
-            while (!inputHandled)
-            {
-                trackDict.Clear();
-
-                Console.WriteLine("Current player=" + game.CurPlayer.Side);
-                Console.WriteLine("Tracks:");
-                for (int i = 0; i < choices.Count; ++i)
-                {
-                    Track track = choices[i];
-                    Console.WriteLine(i + " " + track);
-                }
-
-                Console.WriteLine("Choose tracks to modify with " + actionPts + " action points => <idx> ... <idx>");
-
-                string input = Console.ReadLine();
-                string[] tokens = input.Split(' ');
-
-                try
-                {
-                    bool goBack;
-                    if (handleGenericCases(tokens, game, out goBack))
-                    {
-                        if (goBack)
-                        {
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        foreach (string token in tokens)
-                        {
-                            int idx = Int32.Parse(token);
-
-                            if (idx >= choices.Count)
-                            {
-                                throw new Exception();
-                            }
-
-                            Track track = choices[idx];
-
-                            if (!trackDict.ContainsKey(track))
-                            {
-                                trackDict.Add(track, 0);
-                            }
-
-                            trackDict[track] += 1;
-                        }
-
-                        // Check that it's valid
-
-                        bool isValid = game.ValidateActionUsage(trackDict, actionPts, deliberationJury);
-                        
-                        if (!isValid)
-                        {
-                            throw new Exception();
-                        }
-                        
-                        inputHandled = true;
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine("Invalid input. Try again.");
-                }
-            }
-
-            outTracks = trackDict;
-
-            return true;
-        }
-
         public override void ChooseBoardObjects(List<BoardObject> choices, Func<Dictionary<BoardObject, int>, bool> validateChoices, Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices, Func<Dictionary<BoardObject, int>, bool> choicesComplete, Game game, out BoardChoices boardChoice)
         {
             boardChoice = new BoardChoices();
@@ -190,12 +106,18 @@ namespace HighTreasonConsole
             bool inputComplete = false;
             while (!inputComplete)
             {
+                if (remainingChoices.Count <= 0)
+                {
+                    inputComplete = true;
+                    continue;
+                }
+
                 Console.WriteLine("Choices:");
                 for (int i = 0; i < remainingChoices.Count; ++i)
                 {
                     Console.Write(i + " " + remainingChoices[i].ToString());
                 }
-
+                
                 Console.WriteLine("Please choose object => <idx>");
 
                 string input = Console.ReadLine();

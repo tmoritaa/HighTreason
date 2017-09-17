@@ -75,7 +75,7 @@ namespace HighTreasonGame
 
             public int CalculateGuiltScore(Game game)
             {
-                AspectTrack track = (AspectTrack)game.GetHTGOFromCondition(
+                AspectTrack track = (AspectTrack)game.FindBO(
                     (BoardObject htgo) =>
                     {
                         return (htgo.Properties.Contains(Property.Track) && htgo.Properties.Contains(Property.Aspect)
@@ -171,13 +171,13 @@ namespace HighTreasonGame
             return guiltScore;
         }
 
-        public override void RemoveChildrenHTGameObjects()
+        public override void RemoveChildrenBoardObjects()
         {
-            game.RemoveHTGameObject(SwayTrack);
+            game.RemoveBoardObject(SwayTrack);
 
             foreach (JuryAspect aspect in Aspects)
             {
-                game.RemoveHTGameObject(aspect);
+                game.RemoveBoardObject(aspect);
             }
         }
 

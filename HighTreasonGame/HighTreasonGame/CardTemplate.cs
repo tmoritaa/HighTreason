@@ -109,35 +109,41 @@ namespace HighTreasonGame
             bool isSummation = game.CurState.GetType() == typeof(SummationState);
 
             int modValue = (game.CurPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
-            List<Track> choices = game.GetHTGOFromCondition(
-                (BoardObject htgo) =>
+            List<BoardObject> choices = game.FindBO(
+                (BoardObject bo) =>
                 {
-                    return (htgo.Properties.Contains(Property.Track) &&
-                    ((htgo.Properties.Contains(Property.Jury) && htgo.Properties.Contains(Property.Sway))
-                    || (!isSummation && htgo.Properties.Contains(Property.Aspect))))
-                    && ((Track)htgo).CanModifyByAction(modValue);
-                }).Cast<Track>().ToList();
+                    return (bo.Properties.Contains(Property.Track) &&
+                    ((bo.Properties.Contains(Property.Jury) && bo.Properties.Contains(Property.Sway))
+                    || (!isSummation && bo.Properties.Contains(Property.Aspect))))
+                    && ((Track)bo).CanModifyByAction(modValue);
+                }).ToList();
 
             int actionPtsForState = isSummation ? 2 : ActionPts;
-            Dictionary<Track, int> affectedTracks;
-            bool choiceMade = choiceHandler.ChooseActionUsage(choices, actionPtsForState, null, game, out affectedTracks);
 
-            if (choiceMade)
+            BoardChoices boardChoices;
+            choiceHandler.ChooseBoardObjects(choices,
+                HTUtility.GenActionValidateChoicesFunc(actionPtsForState, null),
+                HTUtility.GenActionFilterChoicesFunc(actionPtsForState, null),
+                HTUtility.GenActionChoicesCompleteFunc(actionPtsForState, null),
+                game,
+                out boardChoices);
+
+            if (boardChoices.NotCancelled)
             {
-                foreach (Track track in affectedTracks.Keys)
+                foreach (BoardObject bo in boardChoices.SelectedObjs.Keys)
                 {
-                    if (track.GetType() == typeof(AspectTrack))
+                    if (bo.GetType() == typeof(AspectTrack))
                     {
-                        ((AspectTrack)track).ModTrackByAction(modValue * affectedTracks[track]);
+                        ((AspectTrack)bo).ModTrackByAction(modValue * boardChoices.SelectedObjs[bo]);
                     }
                     else
                     {
-                        track.AddToValue(modValue * affectedTracks[track]);
+                        ((Track)bo).AddToValue(modValue * boardChoices.SelectedObjs[bo]);
                     }
                 }
             }
 
-            return choiceMade;
+            return boardChoices.NotCancelled;
         }
 
         public int GetNumberOfEventsInState(Type type)
@@ -189,7 +195,7 @@ namespace HighTreasonGame
             return
                 (Game game, ChoiceHandler choiceHandler) =>
                 {
-                    List<BoardObject> options = game.GetHTGOFromCondition(
+                    List<BoardObject> options = game.FindBO(
                     (BoardObject htgo) =>
                     {
                         HashSet<Property> props = new HashSet<Property>(optionProps);
@@ -232,7 +238,7 @@ namespace HighTreasonGame
                 {
                     List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
 
-                    List<BoardObject> options = game.GetHTGOFromCondition(
+                    List<BoardObject> options = game.FindBO(
                             (BoardObject htgo) =>
                             {
                                 HashSet<Property> props = new HashSet<Property>(optionProps);

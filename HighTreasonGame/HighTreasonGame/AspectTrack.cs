@@ -38,7 +38,7 @@ namespace HighTreasonGame
         {
             string outStr = "-" + base.ToString() + "\n";
 
-            outStr += "\t" + "times modified=" + timesAffectedByAction;
+            outStr += "\t" + "times modified=" + timesAffectedByAction + "\n";
 
             return outStr;
         }

@@ -29,7 +29,7 @@ namespace HighTreasonGame.CardTemplates
                 {
                     int modValue = calcModValueBasedOnSide(2, game);
 
-                    AspectTrack aspectTrack = (AspectTrack)game.GetHTGOFromCondition(
+                    AspectTrack aspectTrack = (AspectTrack)game.FindBO(
                             (BoardObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Track)
@@ -47,7 +47,7 @@ namespace HighTreasonGame.CardTemplates
                 {
                     int modValue = calcModValueBasedOnSide(2, game);
 
-                    AspectTrack aspectTrack = (AspectTrack)game.GetHTGOFromCondition(
+                    AspectTrack aspectTrack = (AspectTrack)game.FindBO(
                             (BoardObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Track)
@@ -63,7 +63,7 @@ namespace HighTreasonGame.CardTemplates
                 {
                     BoardChoices choices = new BoardChoices();
                     
-                    AspectTrack aspectTrack = (AspectTrack)game.GetHTGOFromCondition(
+                    AspectTrack aspectTrack = (AspectTrack)game.FindBO(
                             (BoardObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Track)
@@ -81,7 +81,7 @@ namespace HighTreasonGame.CardTemplates
                 {
                     int modValue = calcModValueBasedOnSide(1, game);
 
-                    AspectTrack aspectTrack = (AspectTrack)game.GetHTGOFromCondition(
+                    AspectTrack aspectTrack = (AspectTrack)game.FindBO(
                             (BoardObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Track)
@@ -101,7 +101,7 @@ namespace HighTreasonGame.CardTemplates
                 {
                     int modValue = calcModValueBasedOnSide(2, game);
 
-                    AspectTrack aspectTrack = (AspectTrack)game.GetHTGOFromCondition(
+                    AspectTrack aspectTrack = (AspectTrack)game.FindBO(
                             (BoardObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Track)
@@ -118,7 +118,7 @@ namespace HighTreasonGame.CardTemplates
                 {
                     int modValue = calcModValueBasedOnSide(2, game);
 
-                    AspectTrack aspectTrack = (AspectTrack)game.GetHTGOFromCondition(
+                    AspectTrack aspectTrack = (AspectTrack)game.FindBO(
                             (BoardObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Track)
@@ -135,7 +135,7 @@ namespace HighTreasonGame.CardTemplates
                 {
                     int modValue = calcModValueBasedOnSide(1, game);
 
-                    AspectTrack aspectTrack = (AspectTrack)game.GetHTGOFromCondition(
+                    AspectTrack aspectTrack = (AspectTrack)game.FindBO(
                             (BoardObject htgo) =>
                             {
                                 return (htgo.Properties.Contains(Property.Track)

@@ -19,10 +19,10 @@ namespace HighTreasonGame
             game = _game;
             Properties = new HashSet<Property>(_properties);
 
-            game.AddHTGameObject(this);
+            game.AddBoardObject(this);
         }
 
-        public virtual void RemoveChildrenHTGameObjects()
+        public virtual void RemoveChildrenBoardObjects()
         {}
     }
 }

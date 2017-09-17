@@ -41,5 +41,10 @@ namespace HighTreasonGame
         {
             return !IsLocked && base.CanModifyByAction(modValue);
         }
+
+        public override string ToString()
+        {
+            return base.ToString() + "\n";
+        }
     }
 }

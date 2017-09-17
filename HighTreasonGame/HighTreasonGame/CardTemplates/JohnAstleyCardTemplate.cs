@@ -31,7 +31,7 @@ namespace HighTreasonGame.CardTemplates
             SummationEventChoices.Add(
                 (Game game, ChoiceHandler choiceHandler) =>
                 {
-                    List<BoardObject> options = game.GetHTGOFromCondition(
+                    List<BoardObject> options = game.FindBO(
                         (BoardObject htgo) =>
                         {
                             return (htgo.Properties.Contains(Property.Track)

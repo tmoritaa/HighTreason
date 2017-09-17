@@ -30,7 +30,7 @@ namespace HighTreasonGame
         {
             List<CardTemplate> cards = CardTemplates.Values.ToList();
 
-            // TODO: only for now.
+            // TODO: only for now until we have enough cards.
             while (CardTemplates.Keys.Count < 45)
             {
                 CardTemplate tmp1 = new JohnAstleyCardTemplate();

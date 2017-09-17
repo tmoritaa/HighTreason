@@ -71,6 +71,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="GameConstants.cs" />
     <Compile Include="BoardObject.cs" />
+    <Compile Include="HTUtility.cs" />
     <Compile Include="Jury.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

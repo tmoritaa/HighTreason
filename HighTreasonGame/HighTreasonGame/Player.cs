@@ -139,7 +139,7 @@ namespace HighTreasonGame
                 usedJury = ChooseJuryChoice();
 
                 int modValue = (this.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
-                List<Track> choices = game.GetHTGOFromCondition(
+                List<BoardObject> choices = game.FindBO(
                     (BoardObject htgo) =>
                     {
                         return (htgo.Properties.Contains(Property.Track) &&
@@ -147,22 +147,27 @@ namespace HighTreasonGame
                         || (htgo.Properties.Contains(Property.Aspect)))
                         && (htgo.Properties.Contains(usedJury.Aspects[0].Aspect) || htgo.Properties.Contains(usedJury.Aspects[1].Aspect) || htgo.Properties.Contains(usedJury.Aspects[2].Aspect)))
                         && ((Track)htgo).CanModifyByAction(modValue);
-                    }).Cast<Track>().ToList();
+                    });
 
-                Dictionary<Track, int> affectedTracks;
-                bool choiceMade = choiceHandler.ChooseActionUsage(choices, usedJury.ActionPoints, usedJury, game, out affectedTracks);
+                BoardChoices boardChoices;
+                choiceHandler.ChooseBoardObjects(choices,
+                    HTUtility.GenActionValidateChoicesFunc(usedJury.ActionPoints, usedJury),
+                    HTUtility.GenActionFilterChoicesFunc(usedJury.ActionPoints, usedJury),
+                    HTUtility.GenActionChoicesCompleteFunc(usedJury.ActionPoints, usedJury),
+                    game,
+                    out boardChoices);
 
-                if (choiceMade)
+                if (boardChoices.NotCancelled)
                 {
-                    foreach (Track track in affectedTracks.Keys)
+                    foreach (BoardObject bo in boardChoices.SelectedObjs.Keys)
                     {
-                        if (track.GetType() == typeof(AspectTrack))
+                        if (bo.GetType() == typeof(AspectTrack))
                         {
-                            ((AspectTrack)track).ModTrackByAction(modValue * affectedTracks[track]);
+                            ((AspectTrack)bo).ModTrackByAction(modValue * boardChoices.SelectedObjs[bo]);
                         }
                         else
                         {
-                            track.AddToValue(modValue * affectedTracks[track]);
+                            ((Track)bo).AddToValue(modValue * boardChoices.SelectedObjs[bo]);
                         }
                     }
 

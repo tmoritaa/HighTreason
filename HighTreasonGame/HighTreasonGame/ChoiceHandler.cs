@@ -18,9 +18,7 @@ namespace HighTreasonGame
         }
 
         public abstract void ChooseCardAndUsage(List<CardTemplate> cards, Game game, out Player.CardUsageParams outCardUsage);
-        public abstract bool ChooseActionUsage(List<Track> choices, int actionPts, Jury deliberationJury, Game game, out Dictionary<Track, int> outTracks);
         public abstract bool ChooseMomentOfInsightUse(Game game, out BoardChoices.MomentOfInsightInfo outMoIInfo);
-
         public abstract void ChooseBoardObjects(List<BoardObject> choices, 
             Func<Dictionary<BoardObject, int>, bool> validateChoices, 
             Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices,
