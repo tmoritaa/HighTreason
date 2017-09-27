@@ -30,8 +30,8 @@ public class TrackElement : GameUIElement
     {
         uniqueProperties.Add(Property.Track);
 
-        HTGameObject htgoElement = GameManager.Instance.Game.GetHTGOFromCondition(
-            (HTGameObject htgo) => {
+        BoardObject htgoElement = GameManager.Instance.Game.FindBO(
+            (BoardObject htgo) => {
                 bool retVal = true;
                 uniqueProperties.ForEach(p => retVal &= htgo.Properties.Contains(p));
                 return retVal;

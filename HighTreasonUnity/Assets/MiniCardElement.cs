@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 using HighTreasonGame;
 
-public class CardElement : MonoBehaviour 
+public class MiniCardElement : MonoBehaviour 
 {
     [SerializeField]
     private Text typing;
@@ -22,13 +22,14 @@ public class CardElement : MonoBehaviour
 
     void Awake()
     {
-        GetComponent<Button>().onClick.AddListener(TaskOnClick);
+        GetComponent<Button>().onClick.AddListener(OnClick);
     }
 
-    void TaskOnClick()
+    void OnClick()
     {
-        Debug.Log("asdf");
-        ChoiceHandlerDelegator.Instance.ChoiceComplete();
+        ViewManager.Instance.DisplayDetailedCardViewWithCard(CardTemplate);
+
+        //ChoiceHandlerDelegator.Instance.ChoiceComplete();
     }
 
     public void SetCardTemplate(CardTemplate _cardTemplate)

@@ -38,7 +38,7 @@ namespace HighTreasonGame
                 CardTemplates.Add(tmp1.Name, tmp1);
 
                 CardTemplate tmp2 = new PurelyConstitutionalCardTemplate();
-                tmp2.SetName(tmp2.Name + CardTemplates.Keys.Count);
+                tmp2.SetName(tmp2.Name + CardTemplates.Keys.Count.ToString().PadLeft(2, '0'));
                 CardTemplates.Add(tmp2.Name, tmp2);
             }
 

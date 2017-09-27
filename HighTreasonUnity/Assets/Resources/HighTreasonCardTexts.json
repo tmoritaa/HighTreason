@@ -7,38 +7,38 @@
 	},
 	"John W. Astley":{
 		"typing":"Prosecution Witness",
-		"jury_selection":["Reveal 3 Occupation OR 2 Religion."],
+		"jury_selection":["Reveal 3 Occupation;","OR 2 Religion."],
 		"trial_in_chief":["+1 Gui and 1-> to any one aspect."],
 		"summation":["1-> each to any three aspects except French."]
 	},
 	"Doctor James Wallace":{
 		"typing":"Prosecution Witness",
-		"jury_selection":["Reveal 3 Occupation OR 2 Religion."],
+		"jury_selection":["Reveal 3 Occupation;","OR 2 Religion."],
 		"trial_in_chief":["-1 Ins and 1 P.MoI."],
 		"summation":["2-> each to the English and Protestant aspects."]},
 	"Harold Ross":{
 		"typing":"Prosecution Witness",
-		"jury_selection":["Reveal 3 Occupation OR 4 Language."],
+		"jury_selection":["Reveal 3 Occupation;","OR 4 Language."],
 		"trial_in_chief":["-1 Ins and 1 MoI;","OR <-2-> to any one aspect."],
 		"summation":["2-> each to the English and Protestant aspects;","OR <- each to the Farmer and French aspects."]},
 	"\"A Purely Constitutional Movement\"":{
 		"typing":"Defense Evidence",
-		"jury_selection":["Reveal 1 Trait marker of each typing."],
+		"jury_selection":["Reveal 1 Trait marker of each type."],
 		"trial_in_chief":["Either +1 Ins and 1 D.MoI;","OR <-2 to the Farmer and <-2 to the French aspects."],
 		"summation":["+1 Ins"]},
 	"William Tompkins":{
 		"typing":"Prosecution Witness",
-		"jury_selection":["Reveal 3 Occupation, OR 2 Language, OR 1 Religion."],
+		"jury_selection":["Reveal 3 Occupation;","OR 2 Language;","OR 1 Religion."],
 		"trial_in_chief":["<-2-> to any Occupation Trait aspect, and 1 MoI"],
 		"summation":["<-2-> to the Government aspect, and <-2-> to the Merchant aspect, with 1 in the opposite direction to the Farmer aspect."]},
 	"Council of the Exovedate":{
 		"typing":"Defense Testimony",
-		"jury_selection":["Reveal any 2 Traits OR peek at any 1 Trait."],
+		"jury_selection":["Reveal any 2 Traits;","OR peek at any 1 Trait."],
 		"trial_in_chief":["Either <-2-> to the French aspect;","OR <-2-> to the English aspect;","OR <-1-> to the Merchant and Farmer aspects."],
 		"summation":["Either <-2-> to the French aspect;","OR <-2-> to the English aspect;","OR <-1-> to the Merchant and Farmer aspects."]},
 	"Father Vital Fourmond":{
 		"typing":"Defense Witness",
-		"jury_selection":["Reveal any 2 Traits OR peek at 1 Relgion."],
+		"jury_selection":["Reveal any 2 Traits;","OR peek at 1 Relgion."],
 		"trial_in_chief":["Either +1 Ins","OR peek at 3 Relgion Traits."],
 		"summation":["+1 Ins"]}
 }

@@ -14,16 +14,6 @@ public class UnityChoiceHandler : ChoiceHandler
         : base(Player.PlayerType.Human)
     {}
 
-    public override bool ChooseActionUsage(List<Track> choices, int actionPts, Jury deliberationJury, Game game, out Dictionary<Track, int> outTracks)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override bool ChooseAspectTracks(List<HTGameObject> choices, int numChoices, Game game, out List<AspectTrack> outAspectTracks)
-    {
-        throw new NotImplementedException();
-    }
-
     public void ChoiceInputMade()
     {
         waitForInput.Set();
@@ -37,17 +27,12 @@ public class UnityChoiceHandler : ChoiceHandler
         throw new NotImplementedException();
     }
 
-    public override bool ChooseJury(List<Jury> juries, Game game, out Jury outJury)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override bool ChooseJuryAspects(List<List<HTGameObject>> choicesList, List<int> numChoicesList, Game game, out List<Jury.JuryAspect> outJuryAspects)
-    {
-        throw new NotImplementedException();
-    }
-
     public override bool ChooseMomentOfInsightUse(Game game, out BoardChoices.MomentOfInsightInfo outMoIInfo)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void ChooseBoardObjects(List<BoardObject> choices, Func<Dictionary<BoardObject, int>, bool> validateChoices, Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices, Func<Dictionary<BoardObject, int>, bool> choicesComplete, Game game, out BoardChoices boardChoice)
     {
         throw new NotImplementedException();
     }

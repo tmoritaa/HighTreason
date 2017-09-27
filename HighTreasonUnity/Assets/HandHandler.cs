@@ -10,11 +10,11 @@ using HighTreasonGame;
 public class HandHandler : MonoBehaviour 
 {
     [SerializeField]
-    private CardElement cardElementPrefab;
+    private MiniCardElement cardElementPrefab;
 
     private Player displayingPlayer;
 
-    private List<CardElement> cardElements = new List<CardElement>();
+    private List<MiniCardElement> cardElements = new List<MiniCardElement>();
 
 	void Awake()
 	{
@@ -25,7 +25,7 @@ public class HandHandler : MonoBehaviour
 
     private void cardPlayed(Player.CardUsageParams usageParams)
     {
-        CardElement playedCard = cardElements.Find(ce => ce.CardTemplate == usageParams.card);
+        MiniCardElement playedCard = cardElements.Find(ce => ce.CardTemplate == usageParams.card);
         GameObject.Destroy(playedCard.gameObject);
 
         cardElements.Remove(playedCard);
@@ -70,7 +70,7 @@ public class HandHandler : MonoBehaviour
 
         foreach (CardTemplate card in displayingPlayer.Hand)
         {
-            CardElement element = GameObject.Instantiate<CardElement>(cardElementPrefab);
+            MiniCardElement element = GameObject.Instantiate<MiniCardElement>(cardElementPrefab);
             element.transform.SetParent(this.transform, false);
             cardElements.Add(element);
 
@@ -82,7 +82,7 @@ public class HandHandler : MonoBehaviour
 
     private void cleanup()
     {
-        foreach (CardElement element in cardElements)
+        foreach (MiniCardElement element in cardElements)
         {
             GameObject.Destroy(element.gameObject);
         }
