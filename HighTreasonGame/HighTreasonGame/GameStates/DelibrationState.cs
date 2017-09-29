@@ -8,7 +8,7 @@ namespace HighTreasonGame.GameStates
     public class DelibrationState : GameState
     {
         public DelibrationState(Game _game) 
-            : base(_game)
+            : base(GameStateType.Deliberation, _game)
         {}
 
         public override void StartState()
@@ -21,6 +21,11 @@ namespace HighTreasonGame.GameStates
             }
 
             mainLogic();
+        }
+
+        public override void GotoNextState()
+        {
+            game.SignifyEndGame();
         }
 
         private void handleGuiltTrackEffect(Game game)
@@ -117,11 +122,6 @@ namespace HighTreasonGame.GameStates
             {
                 GotoNextState();
             }
-        }
-
-        public override void GotoNextState()
-        {
-            game.SignifyEndGame();
         }
     }
 }

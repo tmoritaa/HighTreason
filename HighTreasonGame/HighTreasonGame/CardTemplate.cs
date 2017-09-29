@@ -71,22 +71,22 @@ namespace HighTreasonGame
 
         public bool PlayAsEvent(Game game, int idx, ChoiceHandler choiceHandler)
         {
-            Type curStateType = game.CurState.GetType();
+            GameState.GameStateType curStateType = game.CurState.StateType;
 
             CardChoice cardChoice = null;
             CardEffect cardEffect = null;
 
-            if (curStateType == typeof(JurySelectionState))
+            if (curStateType == GameState.GameStateType.JurySelection)
             {
                 cardChoice = SelectionEventChoices[idx];
                 cardEffect = SelectionEvents[idx];
             }
-            else if (curStateType == typeof(TrialInChiefState))
+            else if (curStateType == GameState.GameStateType.TrialInChief)
             {
                 cardChoice = TrialEventChoices[idx];
                 cardEffect = TrialEvents[idx];
             }
-            else if (curStateType == typeof(SummationState))
+            else if (curStateType == GameState.GameStateType.Summation)
             {
                 cardChoice = SummationEventChoices[idx];
                 cardEffect = SummationEvents[idx];
@@ -146,19 +146,19 @@ namespace HighTreasonGame
             return boardChoices.NotCancelled;
         }
 
-        public int GetNumberOfEventsInState(Type type)
+        public int GetNumberOfEventsInState(GameState.GameStateType type)
         {
             int num = 0;
 
-            if (type == typeof(JurySelectionState))
+            if (type == GameState.GameStateType.JurySelection)
             {
                 num = SelectionEventChoices.Count;
             }
-            else if (type == typeof(TrialInChiefState))
+            else if (type == GameState.GameStateType.TrialInChief)
             {
                 num = TrialEventChoices.Count;
             }
-            else if (type == typeof(SummationState))
+            else if (type == GameState.GameStateType.Summation)
             {
                 num = SummationEventChoices.Count;
             }

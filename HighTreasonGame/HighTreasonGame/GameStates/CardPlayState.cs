@@ -7,8 +7,8 @@ namespace HighTreasonGame.GameStates
 {
     public abstract class CardPlayState : GameState
     {
-        public CardPlayState(Game _game) 
-            : base(_game)
+        public CardPlayState(GameStateType _stateType, Game _game) 
+            : base(_stateType, _game)
         {}
 
         public override void StartState()

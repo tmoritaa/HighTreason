@@ -7,11 +7,27 @@ namespace HighTreasonGame
 {
     public abstract class GameState
     {
+        public enum GameStateType
+        {
+            JurySelection,
+            JuryDismissal,
+            TrialInChief,
+            Summation,
+            Deliberation,
+        }
+
         protected Game game;
 
-        public GameState(Game _game)
+        public GameStateType StateType
+        {
+            get; protected set;
+        }
+
+
+        public GameState(GameStateType _stateType, Game _game)
         {
             game = _game;
+            StateType = _stateType;
         }
 
         public abstract void GotoNextState();

@@ -26,12 +26,19 @@ public class ChoiceHandlerDelegator : MonoBehaviour
         curChoiceHandler = choiceHandler;
     }
 
-    public void ChoiceComplete()
+    public void ChoiceComplete(params object[] input)
     {
         if (curChoiceHandler != null)
         {
-            curChoiceHandler.ChoiceInputMade();
+            resetViews();
+
+            curChoiceHandler.ChoiceInputMade(input);
             curChoiceHandler = null;
         }
+    }
+
+    private void resetViews()
+    {
+        ViewManager.Instance.HideDetailedCardView();
     }
 }

@@ -10,7 +10,7 @@ namespace HighTreasonGame.GameStates
         private int numVisits = 0;
 
         public TrialInChiefState(Game _game) 
-            : base(_game)
+            : base(GameStateType.TrialInChief, _game)
         {}
 
         public override void StartState()
@@ -21,7 +21,7 @@ namespace HighTreasonGame.GameStates
 
         public override void GotoNextState()
         {
-            Type nextStateType = (numVisits < 2) ? typeof(TrialInChiefState) : typeof(SummationState);
+            GameState.GameStateType nextStateType = (numVisits < 2) ? GameState.GameStateType.TrialInChief : GameState.GameStateType.Summation;
             game.SetNextState(nextStateType);
         }
 

@@ -29,7 +29,7 @@ public class DetailedCardElement : MonoBehaviour
     private GameObject summationParent;
 
     [SerializeField]
-    private GameObject textFieldPrefab;
+    private EventCardUsageTrigger eventCardUsageTriggerPrefab;
 
     private CardTemplate displayedCard;
 
@@ -50,6 +50,7 @@ public class DetailedCardElement : MonoBehaviour
         cardName.text = cardInfo.name;
         actionPoints.text = displayedCard.ActionPts.ToString();
 
+        GameState.GameStateType[] stateTypes = new GameState.GameStateType[] { GameState.GameStateType.JurySelection, GameState.GameStateType.TrialInChief, GameState.GameStateType.Summation };
         List<string>[] cardTexts = new List<string>[] { cardInfo.jurySelectionTexts, cardInfo.trialInChiefTexts, cardInfo.summationTexts };
         GameObject[] parentGOs = new GameObject[] { jurySelectionParent, trialInChiefParent, summationParent };
 
@@ -61,10 +62,12 @@ public class DetailedCardElement : MonoBehaviour
             int size = textList.Count;
             for (int i = 0; i < textList.Count; ++i)
             {
-                GameObject textfield = GameObject.Instantiate(textFieldPrefab);
-                textfield.SetActive(true);
+                EventCardUsageTrigger eventObj = GameObject.Instantiate(eventCardUsageTriggerPrefab);
+                eventObj.gameObject.SetActive(true);
 
-                Text text = textfield.GetComponent<Text>();
+                eventObj.Init(stateTypes[j], i);
+
+                Text text = eventObj.GetComponent<Text>();
                 text.text = textList[i];
 
                 text.resizeTextMinSize = 30;
@@ -73,15 +76,13 @@ public class DetailedCardElement : MonoBehaviour
 
                 text.color = Color.black;
 
-                RectTransform rect = textfield.GetComponent<RectTransform>();
+                RectTransform rect = eventObj.GetComponent<RectTransform>();
                 rect.anchorMin = new Vector2(0, 1.0f - (float)(i + 1) / size);
                 rect.anchorMax = new Vector2(1, 1.0f - (float)i / size);
 
-                textfield.transform.SetParent(parentGO.transform, false);
+                eventObj.transform.SetParent(parentGO.transform, false);
             }
         }
-
-        
     }
 
     private void resetDisplay()

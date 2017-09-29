@@ -8,7 +8,7 @@ namespace HighTreasonGame.GameStates
     public class SummationState : CardPlayState
     {
         public SummationState(Game _game)
-            : base(_game)
+            : base(GameStateType.Summation, _game)
         {}
 
         public override void StartState()
@@ -31,7 +31,7 @@ namespace HighTreasonGame.GameStates
 
         public override void GotoNextState()
         {
-            game.SetNextState(typeof(DelibrationState));
+            game.SetNextState(GameState.GameStateType.Deliberation);
         }
 
         protected override void mainLoop()

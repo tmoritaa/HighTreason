@@ -6,16 +6,21 @@ using System.Text;
 
 using HighTreasonGame;
 
+using UnityEngine;
+
 public class UnityChoiceHandler : ChoiceHandler
 {
     private ManualResetEvent waitForInput = new ManualResetEvent(false);
+
+    object[] passedParams;
 
     public UnityChoiceHandler()
         : base(Player.PlayerType.Human)
     {}
 
-    public void ChoiceInputMade()
+    public void ChoiceInputMade(object[] _passedParams)
     {
+        passedParams = _passedParams;
         waitForInput.Set();
     }
 
@@ -24,7 +29,15 @@ public class UnityChoiceHandler : ChoiceHandler
         ChoiceHandlerDelegator.Instance.TriggerChoice(this);
         waitForInput.WaitOne();
 
-        throw new NotImplementedException();
+        outCardUsage = new Player.CardUsageParams();
+        outCardUsage.usage = (Player.CardUsageParams.UsageType)passedParams[0];
+        
+        for (int i = 1; i < passedParams.Length; ++i)
+        {
+            outCardUsage.misc.Add(passedParams[i]);
+        }
+
+        passedParams = null;
     }
 
     public override bool ChooseMomentOfInsightUse(Game game, out BoardChoices.MomentOfInsightInfo outMoIInfo)

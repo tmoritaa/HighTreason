@@ -22,14 +22,12 @@ public class MiniCardElement : MonoBehaviour
 
     void Awake()
     {
-        GetComponent<Button>().onClick.AddListener(OnClick);
+        GetComponent<Button>().onClick.AddListener(onClick);
     }
 
-    void OnClick()
+    void onClick()
     {
         ViewManager.Instance.DisplayDetailedCardViewWithCard(CardTemplate);
-
-        //ChoiceHandlerDelegator.Instance.ChoiceComplete();
     }
 
     public void SetCardTemplate(CardTemplate _cardTemplate)

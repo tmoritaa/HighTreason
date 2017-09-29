@@ -7,7 +7,8 @@ namespace HighTreasonGame.GameStates
 {
     public class JuryDismissalState : GameState
     {
-        public JuryDismissalState(Game _game) : base(_game)
+        public JuryDismissalState(Game _game) 
+            : base(GameStateType.JuryDismissal, _game)
         {}
 
         public override void StartState()
@@ -20,6 +21,11 @@ namespace HighTreasonGame.GameStates
             }
 
             mainLoop();
+        }
+
+        public override void GotoNextState()
+        {
+            game.SetNextState(GameState.GameStateType.TrialInChief);
         }
 
         private void mainLoop()
@@ -44,11 +50,6 @@ namespace HighTreasonGame.GameStates
             game.ShuffleDiscardBackToDeck();
 
             GotoNextState();
-        }
-
-        public override void GotoNextState()
-        {
-            game.SetNextState(typeof(TrialInChiefState));
         }
     }
 }

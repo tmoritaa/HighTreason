@@ -42,7 +42,7 @@ namespace HighTreasonGame
 
         private Dictionary<Player.PlayerSide, Player> players = new Dictionary<Player.PlayerSide, Player>();
 
-        private Dictionary<Type, GameState> states = new Dictionary<Type, GameState>();
+        private Dictionary<GameState.GameStateType, GameState> states = new Dictionary<GameState.GameStateType, GameState>();
         public GameState CurState
         {
             get; private set;
@@ -68,7 +68,7 @@ namespace HighTreasonGame
 
         public void StartGame()
         {
-            SetNextState(typeof(JurySelectionState));
+            SetNextState(GameState.GameStateType.JurySelection);
 
             while (CurState != null)
             {
@@ -76,7 +76,7 @@ namespace HighTreasonGame
             }
         }
 
-        public void SetNextState(Type stateType)
+        public void SetNextState(GameState.GameStateType stateType)
         {
             CurState = states[stateType];
         }
@@ -186,11 +186,11 @@ namespace HighTreasonGame
 
         private void initStates()
         {
-            states.Add(typeof(JurySelectionState), new JurySelectionState(this));
-            states.Add(typeof(JuryDismissalState), new JuryDismissalState(this));
-            states.Add(typeof(TrialInChiefState), new TrialInChiefState(this));
-            states.Add(typeof(SummationState), new SummationState(this));
-            states.Add(typeof(DelibrationState), new DelibrationState(this));
+            states.Add(GameState.GameStateType.JurySelection, new JurySelectionState(this));
+            states.Add(GameState.GameStateType.JuryDismissal, new JuryDismissalState(this));
+            states.Add(GameState.GameStateType.TrialInChief, new TrialInChiefState(this));
+            states.Add(GameState.GameStateType.Summation, new SummationState(this));
+            states.Add(GameState.GameStateType.Deliberation, new DelibrationState(this));
         }
     }
 }
