@@ -30,9 +30,10 @@ public class UnityChoiceHandler : ChoiceHandler
         waitForInput.WaitOne();
 
         outCardUsage = new Player.CardUsageParams();
-        outCardUsage.usage = (Player.CardUsageParams.UsageType)passedParams[0];
+        outCardUsage.card = (CardTemplate)passedParams[0];
+        outCardUsage.usage = (Player.CardUsageParams.UsageType)passedParams[1];
         
-        for (int i = 1; i < passedParams.Length; ++i)
+        for (int i = 2; i < passedParams.Length; ++i)
         {
             outCardUsage.misc.Add(passedParams[i]);
         }

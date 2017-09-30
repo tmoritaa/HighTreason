@@ -17,7 +17,7 @@ public class DetailedCardElement : MonoBehaviour
     private Text cardName;
 
     [SerializeField]
-    private Text actionPoints;
+    private ActionCardUsageTrigger actionPoints;
 
     [SerializeField]
     private GameObject jurySelectionParent;
@@ -48,7 +48,8 @@ public class DetailedCardElement : MonoBehaviour
 
         typing.text = cardInfo.typing;
         cardName.text = cardInfo.name;
-        actionPoints.text = displayedCard.ActionPts.ToString();
+        actionPoints.GetComponent<Text>().text = displayedCard.ActionPts.ToString();
+        actionPoints.Init(displayedCard);
 
         GameState.GameStateType[] stateTypes = new GameState.GameStateType[] { GameState.GameStateType.JurySelection, GameState.GameStateType.TrialInChief, GameState.GameStateType.Summation };
         List<string>[] cardTexts = new List<string>[] { cardInfo.jurySelectionTexts, cardInfo.trialInChiefTexts, cardInfo.summationTexts };
@@ -65,7 +66,7 @@ public class DetailedCardElement : MonoBehaviour
                 EventCardUsageTrigger eventObj = GameObject.Instantiate(eventCardUsageTriggerPrefab);
                 eventObj.gameObject.SetActive(true);
 
-                eventObj.Init(stateTypes[j], i);
+                eventObj.Init(displayedCard, stateTypes[j], i);
 
                 Text text = eventObj.GetComponent<Text>();
                 text.text = textList[i];

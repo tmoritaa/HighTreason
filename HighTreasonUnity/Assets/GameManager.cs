@@ -31,7 +31,17 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        Thread thread = new Thread(new ThreadStart(Game.StartGame));
+        Thread thread = new Thread(new ThreadStart(
+            () => {
+                try
+                {
+                    Game.StartGame();
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(e);
+                }
+            }));
 
         thread.Start();
     }

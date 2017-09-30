@@ -10,6 +10,7 @@ using UnityEngine.UI;
 
 public abstract class CardUsageTrigger : MonoBehaviour 
 {
+    protected CardTemplate card;
     protected Player.CardUsageParams.UsageType usageType;
 
     protected virtual void Awake()

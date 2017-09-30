@@ -9663,7 +9663,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   typing: {fileID: 74775686}
   cardName: {fileID: 1900555891}
-  actionPoints: {fileID: 888166116}
+  actionPoints: {fileID: 888166118}
   jurySelectionParent: {fileID: 2146159816}
   trialInChiefParent: {fileID: 436004841}
   summationParent: {fileID: 1805901129}
@@ -10309,18 +10309,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1640187275}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1292458979}
-        m_MethodName: HideDetailedCardView
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1640187278

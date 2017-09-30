@@ -16,9 +16,14 @@ public class ActionCardUsageTrigger : CardUsageTrigger
         usageType = Player.CardUsageParams.UsageType.Action;
     }
 
+    public void Init(CardTemplate _card)
+    {
+        card = _card;
+    }
+
     protected override void onClick()
     {
         if (GameManager.Instance.Game.CurState.StateType != GameState.GameStateType.JurySelection)
-        ChoiceHandlerDelegator.Instance.ChoiceComplete(usageType);
+        ChoiceHandlerDelegator.Instance.ChoiceComplete(card, usageType);
     }
 }

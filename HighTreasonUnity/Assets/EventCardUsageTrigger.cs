@@ -20,8 +20,9 @@ public class EventCardUsageTrigger : CardUsageTrigger
         usageType = Player.CardUsageParams.UsageType.Event;
     }
 
-    public void Init(GameState.GameStateType _usableState, int _eventIdx)
+    public void Init(CardTemplate _card, GameState.GameStateType _usableState, int _eventIdx)
     {
+        card = _card;
         usableState = _usableState;
         eventIdx = _eventIdx;
     }
@@ -30,7 +31,7 @@ public class EventCardUsageTrigger : CardUsageTrigger
     {
         if (GameManager.Instance.Game.CurState.StateType == usableState)
         {
-            ChoiceHandlerDelegator.Instance.ChoiceComplete(usageType, eventIdx);
+            ChoiceHandlerDelegator.Instance.ChoiceComplete(card, usageType, eventIdx);
         }
     }
 
