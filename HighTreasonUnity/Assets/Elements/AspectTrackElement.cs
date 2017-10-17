@@ -15,16 +15,15 @@ public class AspectTrackElement : TrackElement
 
     private AspectTrack aspectTrack;
 
-    public override void InitUIElement()
+    protected override void init()
     {
-        base.InitUIElement();
-
+        base.init();
         aspectTrack = (AspectTrack)track;
     }
 
-    protected override void updateUIElement()
+    protected override void updateUI()
     {
-        base.updateUIElement();
+        base.updateUI();
 
         numUsedText.text = aspectTrack.TimesAffectedByAction.ToString();
     }

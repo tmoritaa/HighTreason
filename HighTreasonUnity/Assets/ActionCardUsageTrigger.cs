@@ -23,7 +23,11 @@ public class ActionCardUsageTrigger : CardUsageTrigger
 
     protected override void onClick()
     {
-        if (GameManager.Instance.Game.CurState.StateType != GameState.GameStateType.JurySelection)
-        ChoiceHandlerDelegator.Instance.ChoiceComplete(card, usageType);
+        if (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.CardAndUsage 
+            && GameManager.Instance.Game.CurState.StateType != GameState.GameStateType.JurySelection)
+        {
+            Debug.Log("Action Choicecomplete");
+            ChoiceHandlerDelegator.Instance.ChoiceComplete(card, usageType);
+        }
     }
 }

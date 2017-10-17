@@ -8,7 +8,7 @@ using UnityEngine;
 using HighTreasonGame;
 using HighTreasonGame.GameStates;
 
-public class TrackElement : GameUIElement 
+public class TrackElement : BoardObjectElement 
 {
     [SerializeField]
     protected List<Property> uniqueProperties;
@@ -26,7 +26,7 @@ public class TrackElement : GameUIElement
 
     protected Track track;
 
-    public override void InitUIElement()
+    protected override void init()
     {
         uniqueProperties.Add(Property.Track);
 
@@ -36,6 +36,8 @@ public class TrackElement : GameUIElement
                 uniqueProperties.ForEach(p => retVal &= htgo.Properties.Contains(p));
                 return retVal;
             })[0];
+
+        setupBOAndGO(htgoElement);
 
         track = (Track)htgoElement;
 
@@ -55,11 +57,9 @@ public class TrackElement : GameUIElement
             trackBox.SetValue(i + track.MinValue);
             trackBoxes.Add(trackBox);
         }
-
-        base.InitUIElement();
     }
 
-    protected override void updateUIElement()
+    protected override void updateUI()
     {
         token.transform.position = trackBoxes[track.Value - track.MinValue].transform.position;
     }

@@ -29,8 +29,10 @@ public class EventCardUsageTrigger : CardUsageTrigger
 
     protected override void onClick()
     {
-        if (GameManager.Instance.Game.CurState.StateType == usableState)
+        if (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.CardAndUsage 
+            && GameManager.Instance.Game.CurState.StateType == usableState)
         {
+            Debug.Log("Event Choicecomplete");
             ChoiceHandlerDelegator.Instance.ChoiceComplete(card, usageType, eventIdx);
         }
     }

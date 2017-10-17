@@ -10,7 +10,14 @@ using UnityEngine;
 
 public class UnityChoiceHandler : ChoiceHandler
 {
-    private ManualResetEvent waitForInput = new ManualResetEvent(false);
+    public enum ChoiceType
+    {
+        NoChoice,
+        CardAndUsage,
+        PickBoardObject,
+    }
+
+    private AutoResetEvent waitForInput = new AutoResetEvent(false);
 
     object[] passedParams;
 
@@ -26,7 +33,7 @@ public class UnityChoiceHandler : ChoiceHandler
 
     public override void ChooseCardAndUsage(List<CardTemplate> cards, Game game, out Player.CardUsageParams outCardUsage)
     {
-        ChoiceHandlerDelegator.Instance.TriggerChoice(this);
+        ChoiceHandlerDelegator.Instance.TriggerChoice(this, ChoiceType.CardAndUsage);
         waitForInput.WaitOne();
 
         outCardUsage = new Player.CardUsageParams();
@@ -41,12 +48,17 @@ public class UnityChoiceHandler : ChoiceHandler
         passedParams = null;
     }
 
-    public override bool ChooseMomentOfInsightUse(Game game, out BoardChoices.MomentOfInsightInfo outMoIInfo)
+    public override void ChooseBoardObjects(List<BoardObject> choices, Func<Dictionary<BoardObject, int>, bool> validateChoices, Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices, Func<Dictionary<BoardObject, int>, bool> choicesComplete, Game game, out BoardChoices boardChoice)
     {
+        ChoiceHandlerDelegator.Instance.TriggerChoice(this, ChoiceType.PickBoardObject, choices);
+        waitForInput.WaitOne();
+
+        boardChoice = new BoardChoices();
+
         throw new NotImplementedException();
     }
 
-    public override void ChooseBoardObjects(List<BoardObject> choices, Func<Dictionary<BoardObject, int>, bool> validateChoices, Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices, Func<Dictionary<BoardObject, int>, bool> choicesComplete, Game game, out BoardChoices boardChoice)
+    public override bool ChooseMomentOfInsightUse(Game game, out BoardChoices.MomentOfInsightInfo outMoIInfo)
     {
         throw new NotImplementedException();
     }
