@@ -50,12 +50,13 @@ public class UnityChoiceHandler : ChoiceHandler
 
     public override void ChooseBoardObjects(List<BoardObject> choices, Func<Dictionary<BoardObject, int>, bool> validateChoices, Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices, Func<Dictionary<BoardObject, int>, bool> choicesComplete, Game game, out BoardChoices boardChoice)
     {
-        ChoiceHandlerDelegator.Instance.TriggerChoice(this, ChoiceType.PickBoardObject, choices);
+        ChoiceHandlerDelegator.Instance.TriggerChoice(this, ChoiceType.PickBoardObject, choices, validateChoices, filterChoices, choicesComplete);
         waitForInput.WaitOne();
 
         boardChoice = new BoardChoices();
+        boardChoice.SelectedObjs = (Dictionary<BoardObject, int>)passedParams[0];
 
-        throw new NotImplementedException();
+        passedParams = null;
     }
 
     public override bool ChooseMomentOfInsightUse(Game game, out BoardChoices.MomentOfInsightInfo outMoIInfo)

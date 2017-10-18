@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
         get; private set;
     }
 
+    private Thread gameThread;
+
     void Awake()
     {
         GameManager.instance = this;
@@ -31,7 +33,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        Thread thread = new Thread(new ThreadStart(
+        gameThread = new Thread(new ThreadStart(
             () => {
                 try
                 {
@@ -43,6 +45,11 @@ public class GameManager : MonoBehaviour
                 }
             }));
 
-        thread.Start();
+        gameThread.Start();
+    }
+
+    void OnDestroy()
+    {
+        gameThread.Abort();
     }
 }

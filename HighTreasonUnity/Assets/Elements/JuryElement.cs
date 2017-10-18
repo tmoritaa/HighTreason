@@ -28,6 +28,9 @@ public class JuryElement : BoardObjectElement
     {
         jury = (Jury)GameManager.Instance.Game.Board.Juries.Find(j => j.Id == id);
         setupBOAndGO(jury);
+
+        ownedJuryAspectElements.ForEach(e => e.InitJuryAspect(id));
+
         updateUI();
     }
 
@@ -35,7 +38,5 @@ public class JuryElement : BoardObjectElement
     {
         actionPtText.text = jury.ActionPoints + " Delibration Action Points";
         swayText.text = jury.SwayTrack.Value.ToString();
-
-        ownedJuryAspectElements.ForEach(e => e.InitJuryAspect(id));
     }
 }

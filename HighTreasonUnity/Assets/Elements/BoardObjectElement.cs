@@ -5,6 +5,7 @@ using System.Linq;
 using HighTreasonGame;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class BoardObjectElement : MonoBehaviour, IHighlightable
 {
@@ -23,6 +24,8 @@ public abstract class BoardObjectElement : MonoBehaviour, IHighlightable
     void Awake()
     {
         highlightGO = highlightGORef;
+
+        this.transform.Find("Background").GetComponent<Button>().onClick.AddListener(onClick);
     }
 
     void Start()
@@ -38,8 +41,16 @@ public abstract class BoardObjectElement : MonoBehaviour, IHighlightable
     }
 
     protected abstract void init();
-
     protected abstract void updateUI();
+    
+    protected void onClick()
+    {
+        if (highlightGO.activeSelf)
+        {
+            Debug.Log("BoardObject Choice Complete");
+            ChoiceHandlerDelegator.Instance.ChoiceMade(BoardObject);
+        }
+    }
 
     protected void setupBOAndGO(BoardObject bo)
     {

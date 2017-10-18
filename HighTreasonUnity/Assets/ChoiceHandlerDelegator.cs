@@ -16,13 +16,11 @@ public class ChoiceHandlerDelegator : MonoBehaviour
         get { return instance; }
     }
 
-    private UnityChoiceHandler curChoiceHandler;
     public UnityChoiceHandler.ChoiceType CurChoiceType {
         get; private set;
     }
 
-    List<BoardObject> curChoices;
-    bool highlightChoices = false;
+    private ChoiceTypeInputHandler inputHandler;
 
     void Awake()
     {
@@ -30,42 +28,50 @@ public class ChoiceHandlerDelegator : MonoBehaviour
         CurChoiceType = UnityChoiceHandler.ChoiceType.NoChoice;
     }
 
-    // TODO: think of a better way to do this.
     void Update()
     {
-        if (highlightChoices)
+        if (inputHandler != null)
         {
-            ViewManager.Instance.HighlightChoices(curChoices);
-            highlightChoices = false;
+            inputHandler.OnUpdate();
         }
     }
 
     public void TriggerChoice(UnityChoiceHandler choiceHandler, UnityChoiceHandler.ChoiceType choiceType, params object[] additionalParams)
-    {
-        curChoiceHandler = choiceHandler;
+    {      
         CurChoiceType = choiceType;
 
-        if (CurChoiceType == UnityChoiceHandler.ChoiceType.PickBoardObject)
+        switch (CurChoiceType)
         {
-            curChoices = (List<BoardObject>)additionalParams[0];
-            highlightChoices = true;
+            case UnityChoiceHandler.ChoiceType.CardAndUsage:
+                Debug.Log("CardAndUsage choice triggered");
+                inputHandler = new CardAndUsageInputHandler(choiceHandler, additionalParams);
+                break;
+            case UnityChoiceHandler.ChoiceType.PickBoardObject:
+                Debug.Log("PickBoardObject choice triggered");
+                inputHandler = new PickBoardObjectInputHandler(choiceHandler, additionalParams);
+                break;
         }
     }
 
-    public void ChoiceComplete(params object[] input)
+    public void ChoiceMade(params object[] input)
     {
-        if (curChoiceHandler != null)
+        if (inputHandler == null)
         {
-            resetViews();
+            return;
+        }
 
-            curChoiceHandler.ChoiceInputMade(input);
-            curChoiceHandler = null;
+        bool complete = inputHandler.HandleInput(input);
+        if (complete)
+        {
+            inputHandler = null;
             CurChoiceType = UnityChoiceHandler.ChoiceType.NoChoice;
+            resetViews();
         }
     }
 
     private void resetViews()
     {
         ViewManager.Instance.HideDetailedCardView();
+        ViewManager.Instance.UnhighlightAll();
     }
 }

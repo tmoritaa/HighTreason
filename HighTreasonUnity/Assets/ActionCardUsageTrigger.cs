@@ -26,8 +26,8 @@ public class ActionCardUsageTrigger : CardUsageTrigger
         if (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.CardAndUsage 
             && GameManager.Instance.Game.CurState.StateType != GameState.GameStateType.JurySelection)
         {
-            Debug.Log("Action Choicecomplete");
-            ChoiceHandlerDelegator.Instance.ChoiceComplete(card, usageType);
+            Debug.Log("Action Choice Complete");
+            ChoiceHandlerDelegator.Instance.ChoiceMade(card, usageType);
         }
     }
 }

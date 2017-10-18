@@ -25,7 +25,7 @@ public class ViewManager : MonoBehaviour
     [SerializeField]
     private GameObject trialAndSummationMainBoardGO;
 
-    private List<BoardObjectElement> boardElements = new List<BoardObjectElement>();
+    private Dictionary<BoardObject, BoardObjectElement> boardObjToElementMap = new Dictionary<BoardObject, BoardObjectElement>();
 
     void Awake()
     {
@@ -43,11 +43,12 @@ public class ViewManager : MonoBehaviour
     {
         if (GameManager.Instance.Game.CurState.StateType == HighTreasonGame.GameState.GameStateType.JurySelection)
         {
+            boardObjToElementMap.Clear();
             jurySelectionMainBoardGO.SetActive(true);
-            
         }
         else if (GameManager.Instance.Game.CurState.StateType == HighTreasonGame.GameState.GameStateType.TrialInChief)
         {
+            boardObjToElementMap.Clear();
             jurySelectionMainBoardGO.SetActive(false);
             trialAndSummationMainBoardGO.SetActive(true);
         }
@@ -64,25 +65,27 @@ public class ViewManager : MonoBehaviour
         detailedCardView.gameObject.SetActive(false);
     }
 
+    public void UnhighlightAll()
+    {
+        // First unhighlight everything.
+        foreach (IHighlightable highlightable in boardObjToElementMap.Values)
+        {
+            highlightable.Highlight(false);
+        }
+    }
+
     public void HighlightChoices(List<BoardObject> choices)
     {
+        UnhighlightAll();
+
         foreach (BoardObject choice in choices)
         {
-            BoardObjectElement boe = boardElements.Find(be => be.BoardObject == choice);
-            if (boe != null)
-            {
-                boe.Highlight(true);
-            }
+            boardObjToElementMap[choice].Highlight(true);
         }
     }
 
     public void RegisterBoardElement(BoardObjectElement boe)
     {
-        boardElements.Add(boe);
-    }
-
-    public void UnregisterBoardElement(BoardObjectElement boe)
-    {
-        boardElements.Remove(boe);
+        boardObjToElementMap.Add(boe.BoardObject, boe);
     }
 }

@@ -32,8 +32,8 @@ public class EventCardUsageTrigger : CardUsageTrigger
         if (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.CardAndUsage 
             && GameManager.Instance.Game.CurState.StateType == usableState)
         {
-            Debug.Log("Event Choicecomplete");
-            ChoiceHandlerDelegator.Instance.ChoiceComplete(card, usageType, eventIdx);
+            Debug.Log("Event Choice complete");
+            ChoiceHandlerDelegator.Instance.ChoiceMade(card, usageType, eventIdx);
         }
     }
 
