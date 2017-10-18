@@ -17,21 +17,9 @@ public class JuryAspectElement : BoardObjectElement
 
     private Jury.JuryAspect juryAspect;
 
-    public void InitJuryAspect(int id)
+    public void InitJuryAspect(Jury jury)
     {
-        List<Property> uniqueProps = new List<Property>() { Property.Jury, Property.Aspect, aspectProp };
-
-        juryAspect = (Jury.JuryAspect)GameManager.Instance.Game.FindBO(
-            (BoardObject htgo) => {
-                bool retVal = true;
-                uniqueProps.ForEach(p => retVal &= htgo.Properties.Contains(p));
-                if (retVal)
-                {
-                    retVal &= ((Jury.JuryAspect)htgo).Owner.Id == id;
-                }
-                return retVal;
-            })[0];
-
+        juryAspect = jury.Aspects.Find(ja => ja.Properties.Contains(aspectProp));
         setupBOAndGO(juryAspect);
         updateUI();
     }
@@ -46,7 +34,7 @@ public class JuryAspectElement : BoardObjectElement
         string str = string.Empty;
         if (juryAspect.IsVisibleToPlayer(GameManager.Instance.Game.CurPlayer.Side))
         {
-            str = juryAspect.Aspect.ToString()[0].ToString();
+            str = juryAspect.Aspect.ToString().Substring(0, 2);
 
             if (juryAspect.IsPeeked)
             {
