@@ -26,11 +26,15 @@ public class HandHandler : MonoBehaviour
     private void cardPlayed(Player.CardUsageParams usageParams)
     {
         MiniCardElement playedCard = cardElements.Find(ce => ce.CardTemplate == usageParams.card);
-        GameObject.Destroy(playedCard.gameObject);
 
-        cardElements.Remove(playedCard);
+        if (playedCard != null)
+        {
+            GameObject.Destroy(playedCard.gameObject);
 
-        updateCardPositions();
+            cardElements.Remove(playedCard);
+
+            updateCardPositions();
+        }
     }
 
     private void updateDisplayingPlayer()

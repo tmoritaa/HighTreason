@@ -38,7 +38,7 @@ namespace HighTreasonGame
             {
                 get
                 {
-                    return seenStatus[Player.PlayerSide.Prosecution] || seenStatus[Player.PlayerSide.Defense];
+                    return seenStatus[Player.PlayerSide.Prosecution] ^ seenStatus[Player.PlayerSide.Defense];
                 }
             }
             

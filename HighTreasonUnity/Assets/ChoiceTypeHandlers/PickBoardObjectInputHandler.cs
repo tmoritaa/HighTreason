@@ -26,7 +26,14 @@ public class PickBoardObjectInputHandler : ChoiceTypeInputHandler
 
         remainingChoices = new List<BoardObject>(choices);
 
-        highlightChoices = true;
+        if (remainingChoices.Count == 0)
+        {
+            curChoiceHandler.ChoiceInputMade(new object[] { new Dictionary<BoardObject, int>() });
+        }
+        else
+        {
+            highlightChoices = true;
+        }
     }
 
     public override bool HandleInput(params object[] input)
@@ -53,13 +60,13 @@ public class PickBoardObjectInputHandler : ChoiceTypeInputHandler
             }
 
             bool complete = choicesComplete(selected);
-            if (complete)
+            remainingChoices = filterChoices(remainingChoices, selected);
+
+            if (complete || remainingChoices.Count == 0)
             {
                 curChoiceHandler.ChoiceInputMade(new object[] { selected });
                 return true;
             }
-
-            remainingChoices = filterChoices(remainingChoices, selected);
 
             highlightChoices = true;
         }
