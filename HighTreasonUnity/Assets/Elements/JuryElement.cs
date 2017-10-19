@@ -11,9 +11,6 @@ using HighTreasonGame;
 public class JuryElement : BoardObjectElement 
 {
     [SerializeField]
-    private int idx;
-
-    [SerializeField]
     private Text actionPtText;
 
     [SerializeField]
@@ -21,12 +18,17 @@ public class JuryElement : BoardObjectElement
 
     [SerializeField]
     private List<JuryAspectElement> ownedJuryAspectElements;
-    
+
+    public int Idx
+    {
+        get; set;
+    }
+
     private Jury jury;
 
     protected override void init()
     {
-        jury = (Jury)GameManager.Instance.Game.Board.Juries[idx];
+        jury = (Jury)GameManager.Instance.Game.Board.Juries[Idx];
         setupBOAndGO(jury);
 
         ownedJuryAspectElements.ForEach(e => e.InitJuryAspect(jury));
