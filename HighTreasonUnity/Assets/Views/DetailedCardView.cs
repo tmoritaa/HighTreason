@@ -16,5 +16,4 @@ public class DetailedCardView : MonoBehaviour
     {
         cardElement.SetCardTemplate(card);
     }
-	
 }

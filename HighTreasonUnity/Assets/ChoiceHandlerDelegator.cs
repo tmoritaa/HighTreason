@@ -71,7 +71,7 @@ public class ChoiceHandlerDelegator : MonoBehaviour
 
     private void resetViews()
     {
-        ViewManager.Instance.HideDetailedCardView();
+        ViewManager.Instance.HideAllFullscreenViews();
         ViewManager.Instance.UnhighlightAll();
     }
 }
