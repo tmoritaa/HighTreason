@@ -2671,6 +2671,11 @@ Prefab:
       propertyPath: uniqueProperties.Array.data[1]
       value: 11
       objectReference: {fileID: 0}
+    - target: {fileID: 114234903366108124, guid: 657fa74011d9f9a4290512e561345817,
+        type: 2}
+      propertyPath: m_Text
+      value: 'Evidence of Guilt:'
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 657fa74011d9f9a4290512e561345817, type: 2}
   m_IsPrefabParent: 0
