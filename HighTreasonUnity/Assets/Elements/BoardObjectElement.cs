@@ -25,7 +25,7 @@ public abstract class BoardObjectElement : MonoBehaviour, IHighlightable
     {
         highlightGO = highlightGORef;
 
-        this.transform.Find("Background").GetComponent<Button>().onClick.AddListener(onClick);
+        this.GetComponent<Button>().onClick.AddListener(onClick);
     }
 
     void Start()
