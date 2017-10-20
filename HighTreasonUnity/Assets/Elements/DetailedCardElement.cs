@@ -31,9 +31,9 @@ public class DetailedCardElement : MonoBehaviour
     [SerializeField]
     private EventCardUsageTrigger eventCardUsageTriggerPrefab;
 
-    private CardTemplate displayedCard;
+    private Card displayedCard;
 
-    public void SetCardTemplate(CardTemplate card)
+    public void SetCardTemplate(Card card)
     {
         displayedCard = card;
 
@@ -44,11 +44,11 @@ public class DetailedCardElement : MonoBehaviour
     {
         resetDisplay();
 
-        var cardInfo = CardInfoManager.Instance.GetCardInfo(displayedCard.Name);
+        var cardInfo = CardInfoManager.Instance.GetCardInfo(displayedCard.Template.Name);
 
         typing.text = cardInfo.typing;
         cardName.text = cardInfo.name;
-        actionPoints.GetComponent<Text>().text = displayedCard.ActionPts.ToString();
+        actionPoints.GetComponent<Text>().text = displayedCard.Template.ActionPts.ToString();
         actionPoints.Init(displayedCard);
 
         GameState.GameStateType[] stateTypes = new GameState.GameStateType[] { GameState.GameStateType.JurySelection, GameState.GameStateType.TrialInChief, GameState.GameStateType.Summation };

@@ -30,12 +30,16 @@ namespace HighTreasonGame.CardTemplates
                     int modValue = calcModValueBasedOnSide(2, game);
 
                     AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.French));
-                            })[0];
+                        (Type t) =>
+                        {
+                            return (t == typeof(AspectTrack));
+                        },
+                        (BoardObject htgo) =>
+                        {
+                            return (htgo.Properties.Contains(Property.Track)
+                            && htgo.Properties.Contains(Property.Aspect)
+                            && htgo.Properties.Contains(Property.French));
+                        })[0];
 
                     aspectTrack.AddToValue(modValue);
                 });
@@ -48,12 +52,16 @@ namespace HighTreasonGame.CardTemplates
                     int modValue = calcModValueBasedOnSide(2, game);
 
                     AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.English));
-                            })[0];
+                        (Type t) =>
+                        {
+                            return (t == typeof(AspectTrack));
+                        },
+                        (BoardObject htgo) =>
+                        {
+                            return (htgo.Properties.Contains(Property.Track)
+                            && htgo.Properties.Contains(Property.Aspect)
+                            && htgo.Properties.Contains(Property.English));
+                        })[0];
 
                     aspectTrack.AddToValue(modValue);
                 });
@@ -64,12 +72,16 @@ namespace HighTreasonGame.CardTemplates
                     BoardChoices choices = new BoardChoices();
                     
                     AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.Merchant));
-                            })[0];
+                        (Type t) =>
+                        {
+                            return (t == typeof(AspectTrack));
+                        },
+                        (BoardObject htgo) =>
+                        {
+                            return (htgo.Properties.Contains(Property.Track)
+                            && htgo.Properties.Contains(Property.Aspect)
+                            && htgo.Properties.Contains(Property.Merchant));
+                        })[0];
 
                     choices.SelectedObjs.Keys.Cast<AspectTrack>().ToList().Add(aspectTrack);
 
@@ -82,12 +94,16 @@ namespace HighTreasonGame.CardTemplates
                     int modValue = calcModValueBasedOnSide(1, game);
 
                     AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.Merchant));
-                            })[0];
+                        (Type t) =>
+                        {
+                            return (t == typeof(AspectTrack));
+                        },
+                        (BoardObject htgo) =>
+                        {
+                            return (htgo.Properties.Contains(Property.Track)
+                            && htgo.Properties.Contains(Property.Aspect)
+                            && htgo.Properties.Contains(Property.Merchant));
+                        })[0];
 
                     aspectTrack.AddToValue(modValue);
                 });
@@ -102,12 +118,16 @@ namespace HighTreasonGame.CardTemplates
                     int modValue = calcModValueBasedOnSide(2, game);
 
                     AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.French));
-                            })[0];
+                        (Type t) =>
+                        {
+                            return (t == typeof(AspectTrack));
+                        },
+                        (BoardObject htgo) =>
+                        {
+                            return (htgo.Properties.Contains(Property.Track)
+                            && htgo.Properties.Contains(Property.Aspect)
+                            && htgo.Properties.Contains(Property.French));
+                        })[0];
 
                     aspectTrack.AddToValue(modValue);
                 });
@@ -119,12 +139,16 @@ namespace HighTreasonGame.CardTemplates
                     int modValue = calcModValueBasedOnSide(2, game);
 
                     AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.English));
-                            })[0];
+                        (Type t) =>
+                        {
+                            return (t == typeof(AspectTrack));
+                        },
+                        (BoardObject htgo) =>
+                        {
+                            return (htgo.Properties.Contains(Property.Track)
+                            && htgo.Properties.Contains(Property.Aspect)
+                            && htgo.Properties.Contains(Property.English));
+                        })[0];
 
                     aspectTrack.AddToValue(modValue);
                 });
@@ -136,12 +160,16 @@ namespace HighTreasonGame.CardTemplates
                     int modValue = calcModValueBasedOnSide(1, game);
 
                     AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.Merchant));
-                            })[0];
+                        (Type t) =>
+                        {
+                            return (t == typeof(AspectTrack));
+                        },
+                        (BoardObject htgo) =>
+                        {
+                            return (htgo.Properties.Contains(Property.Track)
+                            && htgo.Properties.Contains(Property.Aspect)
+                            && htgo.Properties.Contains(Property.Merchant));
+                        })[0];
 
                     aspectTrack.AddToValue(modValue);
                 });

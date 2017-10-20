@@ -15,7 +15,7 @@ namespace HighTreasonGame.GameStates
         {
             foreach (Player.PlayerSide side in new Player.PlayerSide[] { Player.PlayerSide.Prosecution, Player.PlayerSide.Defense })
             {
-                game.GetPlayerOfSide(side).SetupHand(game.Deck.DealCards(GameConstants.NUM_HAND_SIZE));
+                game.GetPlayerOfSide(side).Hand.SetupHand(game.Deck.DealCards(GameConstants.NUM_HAND_SIZE));
             }
 
             game.CurPlayer = game.GetPlayerOfSide(Player.PlayerSide.Prosecution);

@@ -24,7 +24,7 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        public Deck Deck
+        public DeckHolder Deck
         {
             get; private set;
         }
@@ -33,12 +33,12 @@ namespace HighTreasonGame
             get; set;
         }
         
-        public List<CardTemplate> Discards
+        public DiscardHolder Discards
         {
             get; private set;
         }
 
-        private List<BoardObject> boardObjects = new List<BoardObject>();
+        private Dictionary<Type, List<BoardObject>> boardObjects = new Dictionary<Type, List<BoardObject>>();
 
         private Dictionary<Player.PlayerSide, Player> players = new Dictionary<Player.PlayerSide, Player>();
 
@@ -51,8 +51,12 @@ namespace HighTreasonGame
         public Game(ChoiceHandler[] playerChoiceHandlers)
         {
             Board = new Board(this);
-            Deck = new Deck(this);
-            Discards = new List<CardTemplate>();
+
+            List<Card> cards = new List<Card>();
+            CardTemplateManager.Instance.GetAllCardTemplates().ForEach(c => cards.Add(new Card(this, c)));
+            Deck = new DeckHolder(cards);
+
+            Discards = new DiscardHolder();
 
             int idx = 0;
             foreach (Player.PlayerSide side in new Player.PlayerSide[] { Player.PlayerSide.Prosecution, Player.PlayerSide.Defense })
@@ -93,8 +97,8 @@ namespace HighTreasonGame
 
         public void ShuffleDiscardBackToDeck()
         {
-            Deck.AddCardsToDeck(Discards);
-            Discards.Clear();
+            Discards.MoveAllCardsToHolder(Deck);
+            Deck.Shuffle();
         }
 
         public Player.PlayerSide DetermineWinner()
@@ -139,18 +143,32 @@ namespace HighTreasonGame
 
         public void AddBoardObject(BoardObject bo)
         {
-            boardObjects.Add(bo);
+            if (!boardObjects.ContainsKey(bo.GetType()))
+            {
+                boardObjects.Add(bo.GetType(), new List<BoardObject>());
+            }
+            boardObjects[bo.GetType()].Add(bo);
         }
 
         public void RemoveBoardObject(BoardObject bo)
         {
             bo.RemoveChildrenBoardObjects();
-            boardObjects.Remove(bo);
+            boardObjects[bo.GetType()].Remove(bo);
         }
 
-        public List<BoardObject> FindBO(Func<BoardObject, bool> condition)
+        public List<BoardObject> FindBO(Func<Type, bool> typeFilterCond, Func<BoardObject, bool> condition)
         {
-            return boardObjects.FindAll(htgo => condition(htgo));
+            List<BoardObject> searchBos = new List<BoardObject>();
+
+            foreach (Type t in boardObjects.Keys)
+            {
+                if (typeFilterCond(t))
+                {
+                    searchBos.AddRange(boardObjects[t]);
+                }
+            }
+
+            return searchBos.FindAll(htgo => condition(htgo));
         }
 
         public EvidenceTrack GetInsanityTrack()
@@ -174,9 +192,9 @@ namespace HighTreasonGame
             }
 
             outStr += "Discard:\n";
-            foreach (CardTemplate card in Discards)
+            foreach (Card card in Discards.Cards)
             {
-                outStr += card.Name + "\n";
+                outStr += card.Template.Name + "\n";
             }
 
             outStr += Board.ToString();

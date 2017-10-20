@@ -57,7 +57,7 @@ public class ViewManager : MonoBehaviour
         }
     }
 
-    public void DisplayDetailedCardViewWithCard(CardTemplate card)
+    public void DisplayDetailedCardViewWithCard(Card card)
     {
         detailedCardView.gameObject.SetActive(true);
         detailedCardView.SetCardForDisplay(card);

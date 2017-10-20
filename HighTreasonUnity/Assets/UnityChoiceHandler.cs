@@ -31,13 +31,13 @@ public class UnityChoiceHandler : ChoiceHandler
         waitForInput.Set();
     }
 
-    public override void ChooseCardAndUsage(List<CardTemplate> cards, Game game, out Player.CardUsageParams outCardUsage)
+    public override void ChooseCardAndUsage(List<Card> cards, Game game, out Player.CardUsageParams outCardUsage)
     {
         ChoiceHandlerDelegator.Instance.TriggerChoice(this, ChoiceType.CardAndUsage);
         waitForInput.WaitOne();
 
         outCardUsage = new Player.CardUsageParams();
-        outCardUsage.card = (CardTemplate)passedParams[0];
+        outCardUsage.card = (Card)passedParams[0];
         outCardUsage.usage = (Player.CardUsageParams.UsageType)passedParams[1];
         
         for (int i = 2; i < passedParams.Length; ++i)

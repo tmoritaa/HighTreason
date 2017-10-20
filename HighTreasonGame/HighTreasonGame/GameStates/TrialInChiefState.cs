@@ -38,13 +38,13 @@ namespace HighTreasonGame.GameStates
 
                 int numPlayersFinished = 0;
                 List<Player> players = game.GetPlayers();
-                players.ForEach(p => numPlayersFinished += (p.Hand.Count == 2) ? 1 : 0);
+                players.ForEach(p => numPlayersFinished += (p.Hand.Cards.Count == 2) ? 1 : 0);
                 if (numPlayersFinished == players.Count)
                 {
                     break;
                 }
 
-                if (game.GetOtherPlayer().Hand.Count > 2)
+                if (game.GetOtherPlayer().Hand.Cards.Count > 2)
                 {
                     game.PassToNextPlayer();
                 }

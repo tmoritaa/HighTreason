@@ -47,12 +47,16 @@ namespace HighTreasonGame.CardTemplates
                 (Game game, BoardChoices choices) =>
                 {
                     List<BoardObject> options = game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && (htgo.Properties.Contains(Property.English) || htgo.Properties.Contains(Property.GovWorker)));
-                            });
+                        (Type t) =>
+                        {
+                            return (t == typeof(AspectTrack));
+                        },
+                        (BoardObject htgo) =>
+                        {
+                            return (htgo.Properties.Contains(Property.Track)
+                            && htgo.Properties.Contains(Property.Aspect)
+                            && (htgo.Properties.Contains(Property.English) || htgo.Properties.Contains(Property.GovWorker)));
+                        });
 
                     options.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(1));
                 });
@@ -63,12 +67,16 @@ namespace HighTreasonGame.CardTemplates
                 (Game game, BoardChoices choices) =>
                 {
                     List<BoardObject> options = game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && (htgo.Properties.Contains(Property.Farmer) || htgo.Properties.Contains(Property.French)));
-                            });
+                        (Type t) =>
+                        {
+                            return (t == typeof(AspectTrack));
+                        },
+                        (BoardObject htgo) =>
+                        {
+                            return (htgo.Properties.Contains(Property.Track)
+                            && htgo.Properties.Contains(Property.Aspect)
+                            && (htgo.Properties.Contains(Property.Farmer) || htgo.Properties.Contains(Property.French)));
+                        });
 
                     options.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(-1));
                 });

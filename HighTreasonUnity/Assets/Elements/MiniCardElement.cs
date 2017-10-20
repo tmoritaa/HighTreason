@@ -15,7 +15,7 @@ public class MiniCardElement : MonoBehaviour
     [SerializeField]
     private Text cardName;
 
-    public CardTemplate CardTemplate
+    public Card cardObj
     {
         get; private set;
     }
@@ -27,20 +27,20 @@ public class MiniCardElement : MonoBehaviour
 
     void onClick()
     {
-        ViewManager.Instance.DisplayDetailedCardViewWithCard(CardTemplate);
+        ViewManager.Instance.DisplayDetailedCardViewWithCard(cardObj);
     }
 
-    public void SetCardTemplate(CardTemplate _cardTemplate)
+    public void SetCard(Card _cardObj)
     {
-        CardTemplate = _cardTemplate;
+        cardObj = _cardObj;
 
         updateDisplay();
     }
 
     private void updateDisplay()
     {
-        Debug.Log("Setting up card " + CardTemplate.Name);
-        var cardInfo = CardInfoManager.Instance.GetCardInfo(CardTemplate.Name);
+        Debug.Log("Setting up card " + cardObj.Template.Name);
+        var cardInfo = CardInfoManager.Instance.GetCardInfo(cardObj.Template.Name);
 
         typing.text = cardInfo.typing;
         cardName.text = cardInfo.name;

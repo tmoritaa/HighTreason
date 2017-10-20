@@ -76,6 +76,10 @@ namespace HighTreasonGame
             public int CalculateGuiltScore(Game game)
             {
                 AspectTrack track = (AspectTrack)game.FindBO(
+                    (Type t) =>
+                    {
+                        return (t == typeof(AspectTrack));
+                    },
                     (BoardObject htgo) =>
                     {
                         return (htgo.Properties.Contains(Property.Track) && htgo.Properties.Contains(Property.Aspect)
@@ -125,13 +129,10 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        private static int nextUniqueId = 0;
-
-        public Jury(int swayMax, int _actionPoints, Game game, Property religionAspect, Property languageAspect, Property occupationAspect)
+        public Jury(int id, int swayMax, int _actionPoints, Game game, Property religionAspect, Property languageAspect, Property occupationAspect)
             : base(game, Property.Jury, Property.Religion, Property.Language, Property.Occupation)
         {
-            Id = nextUniqueId;
-            ++nextUniqueId;
+            Id = id;
 
             ActionPoints = _actionPoints;
 

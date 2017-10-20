@@ -32,6 +32,10 @@ namespace HighTreasonGame.CardTemplates
                 (Game game, ChoiceHandler choiceHandler) =>
                 {
                     List<BoardObject> options = game.FindBO(
+                        (Type t) =>
+                        {
+                            return (t == typeof(AspectTrack));
+                        },
                         (BoardObject htgo) =>
                         {
                             return (htgo.Properties.Contains(Property.Track)

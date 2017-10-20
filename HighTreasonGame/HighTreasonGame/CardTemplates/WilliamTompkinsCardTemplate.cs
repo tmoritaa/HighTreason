@@ -31,6 +31,10 @@ namespace HighTreasonGame.CardTemplates
                     int modValue = calcModValueBasedOnSide(2, game);
 
                     List<BoardObject> options = game.FindBO(
+                        (Type t) =>
+                        {
+                            return (t == typeof(AspectTrack));
+                        },
                         (BoardObject htgo) =>
                         {
                             return (htgo.Properties.Contains(Property.Track)
@@ -79,6 +83,10 @@ namespace HighTreasonGame.CardTemplates
                     int sign = (game.CurPlayer.Side == Player.PlayerSide.Prosecution ? 1 : -1);
 
                     List<AspectTrack> options = game.FindBO(
+                        (Type t) =>
+                        {
+                            return (t == typeof(AspectTrack));
+                        },
                         (BoardObject htgo) =>
                         {
                             return (htgo.Properties.Contains(Property.Track)

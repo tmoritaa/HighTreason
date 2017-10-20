@@ -31,14 +31,14 @@ public class DiscardView : MonoBehaviour
 
     void OnEnable()
     {
-        List<CardTemplate> cards = GameManager.Instance.Game.Discards;
+        List<Card> cards = GameManager.Instance.Game.Discards.Cards;
 
         int numCardsGend = 0;
 
-        foreach (CardTemplate card in cards)
+        foreach (Card card in cards)
         {
             MiniCardElement cardElement = Instantiate(cardPrefab);
-            cardElement.SetCardTemplate(card);
+            cardElement.SetCard(card);
 
             Vector2 anchor = cardStartPoint.GetComponent<RectTransform>().anchorMin + new Vector2((numCardsGend / cardsPerCol) * xAnchorStep, -(numCardsGend % cardsPerCol) * yAnchorStep);
 
@@ -57,5 +57,6 @@ public class DiscardView : MonoBehaviour
     void OnDisable()
     {
         cardElements.ForEach(e => Destroy(e.gameObject));
+        cardElements.Clear();
     }
 }

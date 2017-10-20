@@ -31,6 +31,10 @@ public class TrackElement : BoardObjectElement
         uniqueProperties.Add(Property.Track);
 
         BoardObject htgoElement = GameManager.Instance.Game.FindBO(
+            (Type t) =>
+            {
+                return (t != typeof(Card));
+            },
             (BoardObject htgo) => {
                 bool retVal = true;
                 uniqueProperties.ForEach(p => retVal &= htgo.Properties.Contains(p));

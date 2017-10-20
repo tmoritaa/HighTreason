@@ -17,7 +17,7 @@ namespace HighTreasonGame
             PlayerType = playerType;
         }
 
-        public abstract void ChooseCardAndUsage(List<CardTemplate> cards, Game game, out Player.CardUsageParams outCardUsage);
+        public abstract void ChooseCardAndUsage(List<Card> cards, Game game, out Player.CardUsageParams outCardUsage);
         public abstract bool ChooseMomentOfInsightUse(Game game, out BoardChoices.MomentOfInsightInfo outMoIInfo);
         public abstract void ChooseBoardObjects(List<BoardObject> choices, 
             Func<Dictionary<BoardObject, int>, bool> validateChoices, 

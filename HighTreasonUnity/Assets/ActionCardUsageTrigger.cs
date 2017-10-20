@@ -16,7 +16,7 @@ public class ActionCardUsageTrigger : CardUsageTrigger
         usageType = Player.CardUsageParams.UsageType.Action;
     }
 
-    public void Init(CardTemplate _card)
+    public void Init(Card _card)
     {
         card = _card;
     }
@@ -24,7 +24,8 @@ public class ActionCardUsageTrigger : CardUsageTrigger
     protected override void onClick()
     {
         if (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.CardAndUsage 
-            && GameManager.Instance.Game.CurState.StateType != GameState.GameStateType.JurySelection)
+            && GameManager.Instance.Game.CurState.StateType != GameState.GameStateType.JurySelection
+            && card.CanBePlayed)
         {
             Debug.Log("Action Choice Complete");
             ChoiceHandlerDelegator.Instance.ChoiceMade(card, usageType);

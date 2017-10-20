@@ -20,7 +20,7 @@ public class EventCardUsageTrigger : CardUsageTrigger
         usageType = Player.CardUsageParams.UsageType.Event;
     }
 
-    public void Init(CardTemplate _card, GameState.GameStateType _usableState, int _eventIdx)
+    public void Init(Card _card, GameState.GameStateType _usableState, int _eventIdx)
     {
         card = _card;
         usableState = _usableState;
@@ -30,7 +30,8 @@ public class EventCardUsageTrigger : CardUsageTrigger
     protected override void onClick()
     {
         if (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.CardAndUsage 
-            && GameManager.Instance.Game.CurState.StateType == usableState)
+            && GameManager.Instance.Game.CurState.StateType == usableState
+            && card.CanBePlayed)
         {
             Debug.Log("Event Choice complete");
             ChoiceHandlerDelegator.Instance.ChoiceMade(card, usageType, eventIdx);

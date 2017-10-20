@@ -110,6 +110,10 @@ namespace HighTreasonGame
 
             int modValue = (game.CurPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
             List<BoardObject> choices = game.FindBO(
+                (Type t) =>
+                {
+                    return (t != typeof(Card));
+                },
                 (BoardObject bo) =>
                 {
                     return (bo.Properties.Contains(Property.Track) &&
@@ -196,21 +200,25 @@ namespace HighTreasonGame
                 (Game game, ChoiceHandler choiceHandler) =>
                 {
                     List<BoardObject> options = game.FindBO(
-                    (BoardObject htgo) =>
-                    {
-                        HashSet<Property> props = new HashSet<Property>(optionProps);
-                        props.Add(Property.Aspect);
-                        props.Add(Property.Track);
-
-                        bool valid = true;
-                        foreach (Property prop in props)
+                        (Type t) =>
                         {
-                            valid &= htgo.Properties.Contains(prop);
-                        }
+                            return (t == typeof(AspectTrack));
+                        },
+                        (BoardObject htgo) =>
+                        {
+                            HashSet<Property> props = new HashSet<Property>(optionProps);
+                            props.Add(Property.Aspect);
+                            props.Add(Property.Track);
 
-                        int mod = affectedByPlayerSide ? calcModValueBasedOnSide(modValue, game) : modValue;
-                        return valid && ((Track)htgo).CanModify(mod);
-                    });
+                            bool valid = true;
+                            foreach (Property prop in props)
+                            {
+                                valid &= htgo.Properties.Contains(prop);
+                            }
+
+                            int mod = affectedByPlayerSide ? calcModValueBasedOnSide(modValue, game) : modValue;
+                            return valid && ((Track)htgo).CanModify(mod);
+                        });
 
                     BoardChoices boardChoices;
                     choiceHandler.ChooseBoardObjects(options,
@@ -239,20 +247,24 @@ namespace HighTreasonGame
                     List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
 
                     List<BoardObject> options = game.FindBO(
-                            (BoardObject htgo) =>
+                        (Type t) =>
+                        {
+                            return (t == typeof(Jury.JuryAspect));
+                        },
+                        (BoardObject htgo) =>
+                        {
+                            HashSet<Property> props = new HashSet<Property>(optionProps);
+                            props.Add(Property.Jury);
+                            props.Add(Property.Aspect);
+
+                            bool valid = true;
+                            foreach (Property prop in props)
                             {
-                                HashSet<Property> props = new HashSet<Property>(optionProps);
-                                props.Add(Property.Jury);
-                                props.Add(Property.Aspect);
+                                valid &= htgo.Properties.Contains(prop);
+                            }
 
-                                bool valid = true;
-                                foreach (Property prop in props)
-                                {
-                                    valid &= htgo.Properties.Contains(prop);
-                                }
-
-                                return valid && (isReveal ? !((Jury.JuryAspect)htgo).IsRevealed : !((Jury.JuryAspect)htgo).IsVisibleToPlayer(game.CurPlayer.Side));
-                            });
+                            return valid && (isReveal ? !((Jury.JuryAspect)htgo).IsRevealed : !((Jury.JuryAspect)htgo).IsVisibleToPlayer(game.CurPlayer.Side));
+                        });
 
                     BoardChoices boardChoices;
                     choiceHandler.ChooseBoardObjects(options,
@@ -307,11 +319,8 @@ namespace HighTreasonGame
             {
                 Player player = game.CurPlayer;
 
-                player.Hand.Remove(choices.MoIInfo.HandCard);
-                player.SummationDeck.RemoveCard(choices.MoIInfo.SummationCard);
-
-                player.Hand.Add(choices.MoIInfo.SummationCard);
-                player.SummationDeck.AddCard(choices.MoIInfo.HandCard);
+                player.SummationDeck.MoveCard(choices.MoIInfo.HandCard);
+                player.Hand.MoveCard(choices.MoIInfo.SummationCard);
             }
         }
         #endregion

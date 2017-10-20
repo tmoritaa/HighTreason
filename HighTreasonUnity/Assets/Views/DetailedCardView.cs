@@ -12,7 +12,7 @@ public class DetailedCardView : MonoBehaviour
     [SerializeField]
     DetailedCardElement cardElement;
 
-    public void SetCardForDisplay(CardTemplate card)
+    public void SetCardForDisplay(Card card)
     {
         cardElement.SetCardTemplate(card);
     }

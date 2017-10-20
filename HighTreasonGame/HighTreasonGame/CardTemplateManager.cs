@@ -26,7 +26,7 @@ namespace HighTreasonGame
             private set;
         }
 
-        public List<CardTemplate> GetAllCards()
+        public List<CardTemplate> GetAllCardTemplates()
         {
             List<CardTemplate> cards = CardTemplates.Values.ToList();
 

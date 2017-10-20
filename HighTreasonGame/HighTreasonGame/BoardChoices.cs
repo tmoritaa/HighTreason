@@ -17,8 +17,8 @@ namespace HighTreasonGame
             }
 
             public MomentOfInsightUse Use;
-            public CardTemplate SummationCard;
-            public CardTemplate HandCard;
+            public Card SummationCard;
+            public Card HandCard;
         }
 
         public Dictionary<BoardObject, int> SelectedObjs = new Dictionary<BoardObject, int>();

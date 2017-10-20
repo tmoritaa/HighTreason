@@ -28,7 +28,7 @@ namespace HighTreasonGame
                 Action,
             }
 
-            public CardTemplate card;
+            public Card card;
             public UsageType usage;
             public List<object> misc = new List<object>();
         }
@@ -49,12 +49,12 @@ namespace HighTreasonGame
         private Game game;
         private ChoiceHandler choiceHandler;
 
-        public List<CardTemplate> Hand
+        public HandHolder Hand
         {
             get; private set;
         }
         
-        public SummationDeck SummationDeck
+        public SummationDeckHolder SummationDeck
         {
             get; private set;
         }
@@ -64,12 +64,8 @@ namespace HighTreasonGame
             game = _game;
             Side = _side;
             choiceHandler = _choiceHandler;
-            SummationDeck = new SummationDeck();
-        }
-
-        public void SetupHand(List<CardTemplate> _hand)
-        {
-            Hand = _hand;
+            SummationDeck = new SummationDeckHolder();
+            Hand = new HandHolder();
         }
 
         public void PlayCard()
@@ -78,35 +74,32 @@ namespace HighTreasonGame
             while (!cardPlayed)
             {
                 CardUsageParams cardUsage;
-                choiceHandler.ChooseCardAndUsage(Hand, game, out cardUsage);
+                choiceHandler.ChooseCardAndUsage(Hand.SelectableCards, game, out cardUsage);
 
                 // Remove card being used from hand.
-                Hand.Remove(cardUsage.card);
+                cardUsage.card.BeingPlayed = true;
 
                 if (cardUsage.usage == CardUsageParams.UsageType.Event)
                 {
-                    cardPlayed = cardUsage.card.PlayAsEvent(game, (int)cardUsage.misc[0], choiceHandler);
+                    cardPlayed = cardUsage.card.Template.PlayAsEvent(game, (int)cardUsage.misc[0], choiceHandler);
                 }
                 else if (cardUsage.usage == CardUsageParams.UsageType.Action)
                 {
-                    cardPlayed = cardUsage.card.PlayAsAction(game, choiceHandler);
+                    cardPlayed = cardUsage.card.Template.PlayAsAction(game, choiceHandler);
                 }
 
                 if (cardPlayed)
-                {
+                {                    
                     if (game.NotifyPlayedCard != null)
                     {
                         game.NotifyPlayedCard(cardUsage);
                     }
                     
                     // Move used card to discard.
-                    game.Discards.Add(cardUsage.card);
+                    game.Discards.MoveCard(cardUsage.card);
                 }
-                else
-                {
-                    // Readd card to hand since undoing selection.
-                    Hand.Add(cardUsage.card);
-                }
+                
+                cardUsage.card.BeingPlayed = false;
             }
         }
 
@@ -121,14 +114,13 @@ namespace HighTreasonGame
 
         public void AddHandToSummation()
         {
-            Hand.ForEach(c => SummationDeck.AddCard(c));
-            Hand.Clear();
+            Hand.MoveAllCardsToHolder(SummationDeck);
         }
 
         public void RevealCardInSummation()
         {
-            CardTemplate revealedCard = SummationDeck.RevealRandomCardInSummation();
-            Console.WriteLine(revealedCard.Name + " revealed in summation");
+            Card revealedCard = SummationDeck.RevealRandomCardInSummation();
+            Console.WriteLine(revealedCard.Template.Name + " revealed in summation");
         }
 
         public Jury PerformJuryForDeliberation(List<Jury> juries)
@@ -140,6 +132,10 @@ namespace HighTreasonGame
 
                 int modValue = (this.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
                 List<BoardObject> choices = game.FindBO(
+                    (Type t) =>
+                    {
+                        return (t != typeof(Card));
+                    },
                     (BoardObject htgo) =>
                     {
                         return (htgo.Properties.Contains(Property.Track) &&
@@ -183,24 +179,23 @@ namespace HighTreasonGame
             string outStr = Side + " player:\n";
 
             outStr += "Hand = \n";
-            foreach (CardTemplate card in Hand)
+            foreach (Card card in Hand.Cards)
             {
-                outStr += card.Name + "\n";
+                outStr += card.Template.Name + "\n";
             }
 
             outStr += "Summation = \n";
-            foreach (CardTemplate card in SummationDeck.AllCards)
+            foreach (Card card in SummationDeck.Cards)
             {
-                outStr += card.Name + "\n";
+                outStr += card.Template.Name + "\n";
             }
 
             return outStr;
         }
 
-        private void discardCard(CardTemplate card)
+        private void discardCard(Card card)
         {
-            Hand.Remove(card);
-            game.Discards.Add(card);
+            game.Discards.MoveCard(card);
         }
 
         private Jury ChooseJuryChoice()

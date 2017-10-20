@@ -25,7 +25,7 @@ public class HandHandler : MonoBehaviour
 
     private void cardPlayed(Player.CardUsageParams usageParams)
     {
-        MiniCardElement playedCard = cardElements.Find(ce => ce.CardTemplate == usageParams.card);
+        MiniCardElement playedCard = cardElements.Find(ce => ce.cardObj == usageParams.card);
 
         if (playedCard != null)
         {
@@ -72,13 +72,13 @@ public class HandHandler : MonoBehaviour
     {
         cleanup();
 
-        foreach (CardTemplate card in displayingPlayer.Hand)
+        foreach (Card card in displayingPlayer.Hand.Cards)
         {
             MiniCardElement element = GameObject.Instantiate<MiniCardElement>(cardElementPrefab);
             element.transform.SetParent(this.transform, false);
             cardElements.Add(element);
 
-            element.SetCardTemplate(card);
+            element.SetCard(card);
         }
 
         updateCardPositions();
