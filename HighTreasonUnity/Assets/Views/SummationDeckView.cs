@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
-using UnityEngine;
-
+using System.Text;
 using HighTreasonGame;
 
-public class DiscardView : CardHolderView 
+public class SummationDeckView : CardHolderView
 {
     protected override CardHolder RetrieveCardHolder()
     {
-        return GameManager.Instance.Game.Discards;
+        return GameManager.Instance.Game.CurPlayer.SummationDeck;
     }
 }

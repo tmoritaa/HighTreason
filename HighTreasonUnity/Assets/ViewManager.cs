@@ -23,6 +23,9 @@ public class ViewManager : MonoBehaviour
     private DiscardView discardView;
 
     [SerializeField]
+    private SummationDeckView summationView;
+
+    [SerializeField]
     private GameObject jurySelectionMainBoardGO;
 
     [SerializeField]
@@ -68,10 +71,16 @@ public class ViewManager : MonoBehaviour
         discardView.gameObject.SetActive(true);
     }
 
+    public void DisplaySummationDeckView()
+    {
+        summationView.gameObject.SetActive(true);
+    }
+
     public void HideAllFullscreenViews()
     {
         HideDetailedCardView();
         HideDiscardView();
+        HideSummationDeckView();
     }
 
     public void HideDetailedCardView()
@@ -82,6 +91,11 @@ public class ViewManager : MonoBehaviour
     public void HideDiscardView()
     {
         discardView.gameObject.SetActive(false);
+    }
+
+    public void HideSummationDeckView()
+    {
+        summationView.gameObject.SetActive(false);
     }
 
     public void UnhighlightAll()
