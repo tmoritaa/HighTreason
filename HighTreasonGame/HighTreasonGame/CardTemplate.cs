@@ -106,7 +106,7 @@ namespace HighTreasonGame
 
         public bool PlayAsAction(Game game, ChoiceHandler choiceHandler)
         {
-            bool isSummation = game.CurState.GetType() == typeof(SummationState);
+            bool isSummation = game.CurState.StateType == GameState.GameStateType.Summation;
 
             int modValue = (game.CurPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
             List<BoardObject> choices = game.FindBO(

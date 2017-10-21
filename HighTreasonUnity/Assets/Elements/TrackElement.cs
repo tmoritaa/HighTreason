@@ -65,6 +65,8 @@ public class TrackElement : BoardObjectElement
 
     protected override void updateUI()
     {
+        base.updateUI();
+
         token.transform.position = trackBoxes[track.Value - track.MinValue].transform.position;
     }
 }
