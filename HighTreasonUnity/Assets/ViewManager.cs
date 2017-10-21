@@ -98,22 +98,22 @@ public class ViewManager : MonoBehaviour
         summationView.gameObject.SetActive(false);
     }
 
-    public void UnhighlightAll()
+    // TODO: should probably move mark stuff to somewhere else.
+    public void MarkAllAsUnselectable()
     {
-        // First unhighlight everything.
-        foreach (IHighlightable highlightable in boardObjToElementMap.Values)
+        foreach (ISelectable selectable in boardObjToElementMap.Values)
         {
-            highlightable.Highlight(false);
+            selectable.SetSelectable(false);
         }
     }
 
-    public void HighlightChoices(List<BoardObject> choices)
+    public void MarkChoicesAsSelectable(List<BoardObject> choices)
     {
-        UnhighlightAll();
+        MarkAllAsUnselectable();
 
         foreach (BoardObject choice in choices)
         {
-            boardObjToElementMap[choice].Highlight(true);
+            boardObjToElementMap[choice].SetSelectable(true);
         }
     }
 

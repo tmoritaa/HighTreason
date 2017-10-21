@@ -14,7 +14,7 @@ public class JuryElement : BoardObjectElement
     private Text actionPtText;
 
     [SerializeField]
-    private Text swayText;
+    private SwayTrackElement swayTrackElement;
 
     [SerializeField]
     private List<JuryAspectElement> ownedJuryAspectElements;
@@ -32,13 +32,15 @@ public class JuryElement : BoardObjectElement
         setupBOAndGO(jury);
 
         ownedJuryAspectElements.ForEach(e => e.InitJuryAspect(jury));
+        swayTrackElement.InitSwayTrack(jury);
 
         updateUI();
     }
 
     protected override void updateUI()
     {
+        base.updateUI();
+
         actionPtText.text = jury.ActionPoints + " Delibration Action Points";
-        swayText.text = jury.SwayTrack.Value.ToString();
     }
 }

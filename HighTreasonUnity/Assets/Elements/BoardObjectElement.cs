@@ -7,11 +7,16 @@ using HighTreasonGame;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class BoardObjectElement : MonoBehaviour, IHighlightable
+public abstract class BoardObjectElement : MonoBehaviour, IHighlightable, ISelectable
 {
     public BoardObject BoardObject
     {
         get; protected set;
+    }
+
+    public bool Selectable
+    {
+        get; set;
     }
 
     [SerializeField]
@@ -21,17 +26,17 @@ public abstract class BoardObjectElement : MonoBehaviour, IHighlightable
         get; set;
     }
 
-    void Awake()
+    protected void Awake()
     {
         highlightGO = highlightGORef;
+        this.SetSelectable(false);
+        this.Highlight(false);
 
         this.GetComponent<Button>().onClick.AddListener(onClick);
     }
 
     void Start()
-    {
-        this.Highlight(false);
-
+    {        
         init();
     }
 
@@ -41,15 +46,23 @@ public abstract class BoardObjectElement : MonoBehaviour, IHighlightable
     }
 
     protected abstract void init();
-    protected abstract void updateUI();
+
+    protected virtual void updateUI()
+    {
+        if (Selectable && !this.highlightGO.activeSelf)
+        {
+            this.Highlight(true);
+        }
+        else if (!Selectable && this.highlightGO.activeSelf)
+        {
+            this.Highlight(false);
+        }
+    }
     
     protected void onClick()
     {
-        if (highlightGO.activeSelf)
-        {
-            Debug.Log("BoardObject Choice Complete");
-            ChoiceHandlerDelegator.Instance.ChoiceMade(BoardObject);
-        }
+        Debug.Log("BoardObject Choice Complete");
+        ChoiceHandlerDelegator.Instance.ChoiceMade(BoardObject);
     }
 
     protected void setupBOAndGO(BoardObject bo)

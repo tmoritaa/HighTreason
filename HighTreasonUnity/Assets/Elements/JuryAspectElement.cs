@@ -31,6 +31,8 @@ public class JuryAspectElement : BoardObjectElement
 
     protected override void updateUI()
     {
+        base.updateUI();
+
         string str = string.Empty;
         if (juryAspect.IsVisibleToPlayer(GameManager.Instance.Game.CurPlayer.Side))
         {
