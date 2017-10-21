@@ -65,13 +65,13 @@ public class ChoiceHandlerDelegator : MonoBehaviour
         {
             inputHandler = null;
             CurChoiceType = UnityChoiceHandler.ChoiceType.NoChoice;
-            resetViews();
+            resetChoiceUI();
         }
     }
 
-    private void resetViews()
+    private void resetChoiceUI()
     {
         ViewManager.Instance.HideAllFullscreenViews();
-        ViewManager.Instance.MarkAllAsUnselectable();
+        BoardObjectElementManager.Instance.MarkAllAsUnselectable();
     }
 }

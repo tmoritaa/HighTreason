@@ -68,6 +68,6 @@ public abstract class BoardObjectElement : MonoBehaviour, IHighlightable, ISelec
     protected void setupBOAndGO(BoardObject bo)
     {
         BoardObject = bo;
-        ViewManager.Instance.RegisterBoardElement(this);
+        BoardObjectElementManager.Instance.RegisterBoardElement(this);
     }
 }

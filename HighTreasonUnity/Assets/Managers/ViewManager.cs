@@ -31,8 +31,6 @@ public class ViewManager : MonoBehaviour
     [SerializeField]
     private GameObject trialAndSummationMainBoardGO;
 
-    private Dictionary<BoardObject, BoardObjectElement> boardObjToElementMap = new Dictionary<BoardObject, BoardObjectElement>();
-
     void Awake()
     {
         ViewManager.instance = this;
@@ -43,21 +41,6 @@ public class ViewManager : MonoBehaviour
     void Start()
     {
         HideAllFullscreenViews();
-    }
-
-    public void handleNotifyStateStart()
-    {
-        if (GameManager.Instance.Game.CurState.StateType == HighTreasonGame.GameState.GameStateType.JurySelection)
-        {
-            boardObjToElementMap.Clear();
-            jurySelectionMainBoardGO.SetActive(true);
-        }
-        else if (GameManager.Instance.Game.CurState.StateType == HighTreasonGame.GameState.GameStateType.TrialInChief)
-        {
-            boardObjToElementMap.Clear();
-            jurySelectionMainBoardGO.SetActive(false);
-            trialAndSummationMainBoardGO.SetActive(true);
-        }
     }
 
     public void DisplayDetailedCardViewWithCard(Card card)
@@ -98,27 +81,18 @@ public class ViewManager : MonoBehaviour
         summationView.gameObject.SetActive(false);
     }
 
-    // TODO: should probably move mark stuff to somewhere else.
-    public void MarkAllAsUnselectable()
+    private void handleNotifyStateStart()
     {
-        foreach (ISelectable selectable in boardObjToElementMap.Values)
+        BoardObjectElementManager.Instance.HandleStateChange();
+
+        if (GameManager.Instance.Game.CurState.StateType == HighTreasonGame.GameState.GameStateType.JurySelection)
         {
-            selectable.SetSelectable(false);
+            jurySelectionMainBoardGO.SetActive(true);
         }
-    }
-
-    public void MarkChoicesAsSelectable(List<BoardObject> choices)
-    {
-        MarkAllAsUnselectable();
-
-        foreach (BoardObject choice in choices)
+        else if (GameManager.Instance.Game.CurState.StateType == HighTreasonGame.GameState.GameStateType.TrialInChief)
         {
-            boardObjToElementMap[choice].SetSelectable(true);
+            jurySelectionMainBoardGO.SetActive(false);
+            trialAndSummationMainBoardGO.SetActive(true);
         }
-    }
-
-    public void RegisterBoardElement(BoardObjectElement boe)
-    {
-        boardObjToElementMap.Add(boe.BoardObject, boe);
     }
 }

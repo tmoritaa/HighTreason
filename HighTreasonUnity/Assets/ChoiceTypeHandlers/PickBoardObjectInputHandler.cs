@@ -78,7 +78,7 @@ public class PickBoardObjectInputHandler : ChoiceTypeInputHandler
     {
         if (highlightChoices)
         {
-            ViewManager.Instance.MarkChoicesAsSelectable(remainingChoices);
+            BoardObjectElementManager.Instance.MarkChoicesAsSelectable(remainingChoices);
             highlightChoices = false;
         }
     }
