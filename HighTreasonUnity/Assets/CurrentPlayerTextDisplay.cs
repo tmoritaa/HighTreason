@@ -8,7 +8,7 @@ using HighTreasonGame;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HeaderTmpScript : MonoBehaviour 
+public class CurrentPlayerTextDisplay : MonoBehaviour 
 {
     private Text text;
 
