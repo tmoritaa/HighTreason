@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 using HighTreasonGame;
 
@@ -16,12 +17,19 @@ public class HandHandler : MonoBehaviour
 
     private List<MiniCardElement> cardElements = new List<MiniCardElement>();
 
+    private Image background; 
+
 	void Awake()
 	{
         EventDelegator.Instance.NotifyStateStart += updateDisplayingPlayer;
         EventDelegator.Instance.NotifyStartOfTurn += updateDisplayingPlayer;
         EventDelegator.Instance.NotifyPlayedCard += cardPlayed;
 	}
+
+    void Start()
+    {
+        background = GetComponent<Image>();
+    }
 
     private void cardPlayed(Player.CardUsageParams usageParams)
     {
@@ -44,6 +52,8 @@ public class HandHandler : MonoBehaviour
         if (curPlayer.ChoiceType == Player.PlayerType.Human && curPlayer != displayingPlayer)
         {
             displayingPlayer = curPlayer;
+
+            background.color = (curPlayer.Side == Player.PlayerSide.Prosecution) ? new Color(1, 0, 0) : new Color(0, 0, 1);
 
             initHandDisplay();
         }
