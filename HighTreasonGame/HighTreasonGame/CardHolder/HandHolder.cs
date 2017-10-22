@@ -11,7 +11,7 @@ namespace HighTreasonGame
         {
             get
             {
-                return Cards.FindAll(c => c.BeingPlayed);
+                return Cards.FindAll(c => !c.BeingPlayed);
             }
         }
 

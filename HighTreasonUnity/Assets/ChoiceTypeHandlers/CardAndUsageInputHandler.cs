@@ -5,12 +5,12 @@ using System.Text;
 
 public class CardAndUsageInputHandler : ChoiceTypeInputHandler
 {
-    public CardAndUsageInputHandler(UnityChoiceHandler _curChoiceHandler, object[] _additionalParams) : base(_curChoiceHandler, _additionalParams)
+    public CardAndUsageInputHandler(object[] _additionalParams) : base(_additionalParams)
     {}
 
-    public override bool HandleInput(params object[] input)
+    public override bool VerifyInput(out object[] validOutput, params object[] input)
     {
-        curChoiceHandler.ChoiceInputMade(input);
+        validOutput = input;
         return true;
     }
 

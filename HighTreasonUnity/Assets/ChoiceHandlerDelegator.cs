@@ -22,6 +22,10 @@ public class ChoiceHandlerDelegator : MonoBehaviour
 
     private ChoiceTypeInputHandler inputHandler;
 
+    private UnityChoiceHandler curChoiceHandler;
+
+    private bool checkIfShouldSkip = false;
+
     void Awake()
     {
         ChoiceHandlerDelegator.instance = this;
@@ -30,6 +34,19 @@ public class ChoiceHandlerDelegator : MonoBehaviour
 
     void Update()
     {
+        if (checkIfShouldSkip)
+        {
+            object[] validOutput;
+            if (inputHandler.SkipChoiceIfNoValid(out validOutput))
+            {
+                Debug.Log("Skipping choice since no valid choices");
+                cleanupAfterChoice();
+                curChoiceHandler.ChoiceInputMade(validOutput);
+            }
+
+            checkIfShouldSkip = false;
+        }
+
         if (inputHandler != null)
         {
             inputHandler.OnUpdate();
@@ -37,20 +54,23 @@ public class ChoiceHandlerDelegator : MonoBehaviour
     }
 
     public void TriggerChoice(UnityChoiceHandler choiceHandler, UnityChoiceHandler.ChoiceType choiceType, params object[] additionalParams)
-    {      
+    {
         CurChoiceType = choiceType;
+        curChoiceHandler = choiceHandler;
 
         switch (CurChoiceType)
         {
             case UnityChoiceHandler.ChoiceType.CardAndUsage:
                 Debug.Log("CardAndUsage choice triggered");
-                inputHandler = new CardAndUsageInputHandler(choiceHandler, additionalParams);
+                inputHandler = new CardAndUsageInputHandler(additionalParams);
                 break;
             case UnityChoiceHandler.ChoiceType.PickBoardObject:
                 Debug.Log("PickBoardObject choice triggered");
-                inputHandler = new PickBoardObjectInputHandler(choiceHandler, additionalParams);
+                inputHandler = new PickBoardObjectInputHandler(additionalParams);
                 break;
         }
+
+        checkIfShouldSkip = true;
     }
 
     public void ChoiceMade(params object[] input)
@@ -60,13 +80,21 @@ public class ChoiceHandlerDelegator : MonoBehaviour
             return;
         }
 
-        bool complete = inputHandler.HandleInput(input);
+        object[] validOutput;
+        bool complete = inputHandler.VerifyInput(out validOutput, input);
         if (complete)
         {
-            inputHandler = null;
-            CurChoiceType = UnityChoiceHandler.ChoiceType.NoChoice;
-            resetChoiceUI();
+            Debug.Log("ChoiceMade complete");
+            cleanupAfterChoice();
+            curChoiceHandler.ChoiceInputMade(validOutput);
         }
+    }
+
+    private void cleanupAfterChoice()
+    {
+        CurChoiceType = UnityChoiceHandler.ChoiceType.NoChoice;
+        resetChoiceUI();
+        inputHandler = null;
     }
 
     private void resetChoiceUI()

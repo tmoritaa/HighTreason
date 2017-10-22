@@ -17,7 +17,7 @@ public class PickBoardObjectInputHandler : ChoiceTypeInputHandler
     Dictionary<BoardObject, int> selected = new Dictionary<BoardObject, int>();
     List<BoardObject> remainingChoices;
 
-    public PickBoardObjectInputHandler(UnityChoiceHandler _curChoiceHandler, object[] _additionalParams) : base(_curChoiceHandler, _additionalParams)
+    public PickBoardObjectInputHandler(object[] _additionalParams) : base(_additionalParams)
     {
         choices = (List<BoardObject>)additionalParams[0];
         validateChoices = (Func<Dictionary<BoardObject, int>, bool>)additionalParams[1];
@@ -26,18 +26,29 @@ public class PickBoardObjectInputHandler : ChoiceTypeInputHandler
 
         remainingChoices = new List<BoardObject>(choices);
 
-        if (remainingChoices.Count == 0)
-        {
-            curChoiceHandler.ChoiceInputMade(new object[] { new Dictionary<BoardObject, int>() });
-        }
-        else
+        if (remainingChoices.Count != 0)
         {
             highlightChoices = true;
         }
     }
 
-    public override bool HandleInput(params object[] input)
+    public override bool SkipChoiceIfNoValid(out object[] validOutput)
     {
+        validOutput = new object[] { };
+
+        bool skipChoice = remainingChoices.Count == 0;
+        if (skipChoice)
+        {
+            validOutput = new object[] { new Dictionary<BoardObject, int>() };
+        }
+
+        return skipChoice;
+    }
+
+    public override bool VerifyInput(out object[] validOutput, params object[] input)
+    {
+        validOutput = new object[] { };
+
         BoardObject obj = (BoardObject)input[0];
         if (remainingChoices.Contains(obj))
         {
@@ -64,7 +75,7 @@ public class PickBoardObjectInputHandler : ChoiceTypeInputHandler
 
             if (complete || remainingChoices.Count == 0)
             {
-                curChoiceHandler.ChoiceInputMade(new object[] { selected });
+                validOutput = new object[] { selected };
                 return true;
             }
 

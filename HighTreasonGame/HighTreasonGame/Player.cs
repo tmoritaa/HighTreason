@@ -76,7 +76,6 @@ namespace HighTreasonGame
                 CardUsageParams cardUsage;
                 choiceHandler.ChooseCardAndUsage(Hand.SelectableCards, game, out cardUsage);
 
-                // Remove card being used from hand.
                 cardUsage.card.BeingPlayed = true;
 
                 if (cardUsage.usage == CardUsageParams.UsageType.Event)
