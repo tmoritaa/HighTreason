@@ -59,13 +59,19 @@ namespace HighTreasonGame.GameStates
                 game.NotifyStartOfTurn();
             }
 
+            // Reveal all jury aspects.
+            foreach (Jury jury in game.Board.Juries)
+            {
+                jury.Aspects.ForEach(a => a.Reveal());
+            }
+
             EvidenceTrack guiltTrack = game.GetGuiltTrack();
 
             if (guiltTrack.Value < 2)
             {
                 if (game.NotifyGameEnd != null)
                 {
-                    game.NotifyGameEnd.Invoke(Player.PlayerSide.Defense);
+                    game.NotifyGameEnd(Player.PlayerSide.Defense, true, 0);
                 }
                 
                 goto GameEnd;
@@ -111,11 +117,19 @@ namespace HighTreasonGame.GameStates
                 }
             }
 
-            Player.PlayerSide winningSide = game.DetermineWinner();
+            // Calculate winning player.
+            int totalScore = 0;
+            foreach (Jury jury in game.Board.Juries)
+            {
+                int score = jury.CalculateGuiltScore();
+                totalScore += score;
+            }
+
+            Player.PlayerSide winningPlayer = totalScore >= GameConstants.PROSECUTION_SCORE_THRESHOLD ? Player.PlayerSide.Prosecution : Player.PlayerSide.Defense;
 
             if (game.NotifyGameEnd != null)
             {
-                game.NotifyGameEnd(winningSide);
+                game.NotifyGameEnd(winningPlayer, false, totalScore);
             }
 
             GameEnd:

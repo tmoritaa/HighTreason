@@ -9,6 +9,13 @@ using HighTreasonGame;
 
 public class EventDelegator : MonoBehaviour 
 {
+    private class GameResultArgs
+    {
+        public Player.PlayerSide winningPlayer;
+        public bool notEnoughGuiltVictory;
+        public int finalScore;
+    }
+
     private static EventDelegator instance;
 
     public static EventDelegator Instance
@@ -27,7 +34,7 @@ public class EventDelegator : MonoBehaviour
     private bool doNotifyGameEnd = false;
 
     private Player.CardUsageParams usageParamsArg;
-    private Player.PlayerSide winningPlayerArg;
+    private GameResultArgs gameResultArg;
 
     void Awake()
     {
@@ -73,9 +80,10 @@ public class EventDelegator : MonoBehaviour
         {
             if (NotifyGameEnd != null)
             {
-                NotifyGameEnd(winningPlayerArg);
+                NotifyGameEnd(gameResultArg.winningPlayer, gameResultArg.notEnoughGuiltVictory, gameResultArg.finalScore);
             }
             doNotifyGameEnd = false;
+            gameResultArg = null;
         }
     }
 
@@ -95,11 +103,12 @@ public class EventDelegator : MonoBehaviour
         usageParamsArg = usageParams;
     }
 
-    private void triggerGameEnd(Player.PlayerSide winningPlayerSide)
+    private void triggerGameEnd(Player.PlayerSide winningPlayerSide, bool winByNotEnoughGuilt, int finalScore)
     {
         doNotifyGameEnd = true;
-        winningPlayerArg = winningPlayerSide;
+        gameResultArg = new GameResultArgs();
+        gameResultArg.winningPlayer = winningPlayerSide;
+        gameResultArg.notEnoughGuiltVictory = winByNotEnoughGuilt;
+        gameResultArg.finalScore = finalScore;
     }
-
-
 }

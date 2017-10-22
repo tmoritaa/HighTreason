@@ -12,7 +12,7 @@ namespace HighTreasonGame
         public delegate void StateStartEvent();
         public delegate void StartOfTurnEvent();
         public delegate void PlayedCardEvent(Player.CardUsageParams usageParams);
-        public delegate void GameEndEvent(Player.PlayerSide winningPlayerSide);
+        public delegate void GameEndEvent(Player.PlayerSide winningPlayerSide, bool winByNotEnoughGuilt, int finalScore);
 
         public StateStartEvent NotifyStateStart;
         public StartOfTurnEvent NotifyStartOfTurn;
@@ -48,6 +48,8 @@ namespace HighTreasonGame
             get; private set;
         }
 
+        private bool gameEnd = false;
+
         public Game(ChoiceHandler[] playerChoiceHandlers)
         {
             Board = new Board(this);
@@ -74,7 +76,7 @@ namespace HighTreasonGame
         {
             SetNextState(GameState.GameStateType.JurySelection);
 
-            while (CurState != null)
+            while (!gameEnd)
             {
                 CurState.StartState();
             }
@@ -87,7 +89,7 @@ namespace HighTreasonGame
 
         public void SignifyEndGame()
         {
-            CurState = null;
+            gameEnd = true;
         }
 
         public void PassToNextPlayer()
@@ -99,24 +101,6 @@ namespace HighTreasonGame
         {
             Discards.MoveAllCardsToHolder(Deck);
             Deck.Shuffle();
-        }
-
-        public Player.PlayerSide DetermineWinner()
-        {
-            int totalScore = 0;
-            foreach (Jury jury in Board.Juries)
-            {
-                int score = jury.CalculateGuiltScore();
-                totalScore += score;
-                // TODO: debug log. Remove later.
-                Console.WriteLine("Jury " + jury.Id + " contributed " + score + " guilt score");
-            }
-
-            // TODO: debug log. Remove later.
-            Console.WriteLine("Total guilt score is " + totalScore);
-
-            Player.PlayerSide winningPlayer = totalScore >= GameConstants.PROSECUTION_SCORE_THRESHOLD ? Player.PlayerSide.Prosecution : Player.PlayerSide.Defense;
-            return winningPlayer;
         }
 
         public void RemoveJury(Jury jury)
