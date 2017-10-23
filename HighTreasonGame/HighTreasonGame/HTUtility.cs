@@ -98,7 +98,25 @@ namespace HighTreasonGame
                         filtChoices = filtChoices.Where(bo => (bo.GetType() == typeof(SwayTrack)) || (bo.GetType() == typeof(AspectTrack) && !selected.ContainsKey(bo))).ToList();
                     }
 
-                    return filtChoices;
+                    // Filter out any swayTracks that have been selected and by result can no longer be affected.
+                    List<BoardObject> finalChoices = new List<BoardObject>();
+                    foreach (BoardObject obj in filtChoices)
+                    {
+                        if (obj.GetType() == typeof(SwayTrack) && selected.ContainsKey(obj))
+                        {
+                            SwayTrack track = (SwayTrack)obj;
+                            if ((selected[obj] + Math.Abs(track.Value)) < track.MaxValue)
+                            {
+                                finalChoices.Add(obj);
+                            }
+                        }
+                        else
+                        {
+                            finalChoices.Add(obj);
+                        }
+                    }
+
+                    return finalChoices;
                 };
         }
 
