@@ -23,7 +23,7 @@ public class HandHandler : MonoBehaviour
 	{
         EventDelegator.Instance.NotifyStateStart += updateDisplayingPlayer;
         EventDelegator.Instance.NotifyStartOfTurn += updateDisplayingPlayer;
-        EventDelegator.Instance.NotifyPlayedCard += cardPlayed;
+        EventDelegator.Instance.NotifyPlayerActionPerformed += playerActionPerformed;
 	}
 
     void Start()
@@ -31,18 +31,9 @@ public class HandHandler : MonoBehaviour
         background = GetComponent<Image>();
     }
 
-    private void cardPlayed(Player.CardUsageParams usageParams)
+    private void playerActionPerformed(Player.PlayerActionParams usageParams)
     {
-        MiniCardElement playedCard = cardElements.Find(ce => ce.cardObj == usageParams.card);
-
-        if (playedCard != null)
-        {
-            GameObject.Destroy(playedCard.gameObject);
-
-            cardElements.Remove(playedCard);
-
-            updateCardPositions();
-        }
+        initHandDisplay();
     }
 
     private void updateDisplayingPlayer()

@@ -7,17 +7,19 @@ using HighTreasonGame;
 
 using UnityEngine;
 
-public class EventCardUsageTrigger : CardUsageTrigger 
+public class EventCardUsageTrigger : UsageTrigger 
 {
     private GameState.GameStateType usableState;
 
     private int eventIdx;
 
+    private Card card;
+
     protected override void Awake()
     {
         base.Awake();
 
-        usageType = Player.CardUsageParams.UsageType.Event;
+        usageType = Player.PlayerActionParams.UsageType.Event;
     }
 
     public void Init(Card _card, GameState.GameStateType _usableState, int _eventIdx)
@@ -34,8 +36,7 @@ public class EventCardUsageTrigger : CardUsageTrigger
             && card.CanBePlayed)
         {
             Debug.Log("Event Choice complete");
-            ChoiceHandlerDelegator.Instance.ChoiceMade(card, usageType, eventIdx);
+            ChoiceHandlerDelegator.Instance.ChoiceMade(usageType, card, eventIdx);
         }
     }
-
 }

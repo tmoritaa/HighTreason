@@ -34,7 +34,7 @@ namespace HighTreasonGame.GameStates
                     game.NotifyStartOfTurn();
                 }
 
-                game.CurPlayer.PlayCard();
+                game.CurPlayer.PerformPlayerAction();
 
                 int numPlayersFinished = 0;
                 List<Player> players = game.GetPlayers();

@@ -31,18 +31,22 @@ public class UnityChoiceHandler : ChoiceHandler
         waitForInput.Set();
     }
 
-    public override void ChooseCardAndUsage(List<Card> cards, Game game, out Player.CardUsageParams outCardUsage)
+    public override void ChoosePlayerAction(List<Card> cards, Game game, out Player.PlayerActionParams outPlayerAction)
     {
         ChoiceHandlerDelegator.Instance.TriggerChoice(this, ChoiceType.CardAndUsage);
         waitForInput.WaitOne();
 
-        outCardUsage = new Player.CardUsageParams();
-        outCardUsage.card = (Card)passedParams[0];
-        outCardUsage.usage = (Player.CardUsageParams.UsageType)passedParams[1];
-        
-        for (int i = 2; i < passedParams.Length; ++i)
+        outPlayerAction = new Player.PlayerActionParams();
+        outPlayerAction.usage = (Player.PlayerActionParams.UsageType)passedParams[0];
+
+        if (outPlayerAction.usage != Player.PlayerActionParams.UsageType.Mulligan)
         {
-            outCardUsage.misc.Add(passedParams[i]);
+            outPlayerAction.card = (Card)passedParams[1];
+
+            for (int i = 2; i < passedParams.Length; ++i)
+            {
+                outPlayerAction.misc.Add(passedParams[i]);
+            }
         }
 
         passedParams = null;

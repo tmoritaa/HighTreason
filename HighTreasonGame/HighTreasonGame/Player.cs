@@ -20,12 +20,13 @@ namespace HighTreasonGame
             Defense
         }
 
-        public class CardUsageParams
+        public class PlayerActionParams
         {
             public enum UsageType
             {
                 Event,
                 Action,
+                Mulligan,
             }
 
             public Card card;
@@ -46,9 +47,6 @@ namespace HighTreasonGame
             }
         }
 
-        private Game game;
-        private ChoiceHandler choiceHandler;
-
         public HandHolder Hand
         {
             get; private set;
@@ -59,6 +57,14 @@ namespace HighTreasonGame
             get; private set;
         }
 
+        public bool PerformedMulligan
+        {
+            get; private set;
+        }
+
+        private Game game;
+        private ChoiceHandler choiceHandler;
+
         public Player(PlayerSide _side, ChoiceHandler _choiceHandler, Game _game)
         {
             game = _game;
@@ -66,39 +72,56 @@ namespace HighTreasonGame
             choiceHandler = _choiceHandler;
             SummationDeck = new SummationDeckHolder();
             Hand = new HandHolder();
+            PerformedMulligan = false;
         }
 
-        public void PlayCard()
+        public void PerformPlayerAction()
         {
-            bool cardPlayed = false;
-            while (!cardPlayed)
+            bool actionPerformed = false;
+            while (!actionPerformed)
             {
-                CardUsageParams cardUsage;
-                choiceHandler.ChooseCardAndUsage(Hand.SelectableCards, game, out cardUsage);
+                PlayerActionParams playerAction;
+                choiceHandler.ChoosePlayerAction(Hand.SelectableCards, game, out playerAction);
 
-                cardUsage.card.BeingPlayed = true;
-
-                if (cardUsage.usage == CardUsageParams.UsageType.Event)
+                bool cardPlayed = false;
+                if (playerAction.usage == PlayerActionParams.UsageType.Mulligan 
+                    && game.CurState.StateType == GameState.GameStateType.TrialInChief 
+                    && !PerformedMulligan)
                 {
-                    cardPlayed = cardUsage.card.Template.PlayAsEvent(game, (int)cardUsage.misc[0], choiceHandler);
+                    performMulligan();
+                    actionPerformed = true;
                 }
-                else if (cardUsage.usage == CardUsageParams.UsageType.Action)
+                else if (playerAction.usage == PlayerActionParams.UsageType.Event)
                 {
-                    cardPlayed = cardUsage.card.Template.PlayAsAction(game, choiceHandler);
+                    playerAction.card.BeingPlayed = true;
+                    actionPerformed = playerAction.card.Template.PlayAsEvent(game, (int)playerAction.misc[0], choiceHandler);
+                    cardPlayed = true;
+                }
+                else if (playerAction.usage == PlayerActionParams.UsageType.Action)
+                {
+                    playerAction.card.BeingPlayed = true;
+                    actionPerformed = playerAction.card.Template.PlayAsAction(game, choiceHandler);
+                    cardPlayed = true;
+                }
+
+                if (actionPerformed)
+                {
+                    if (game.NotifyPlayerActionPerformed != null)
+                    {
+                        game.NotifyPlayerActionPerformed(playerAction);
+                    }
+
+                    if (cardPlayed)
+                    {
+                        // Move used card to discard.
+                        game.Discards.MoveCard(playerAction.card);
+                    }
                 }
 
                 if (cardPlayed)
-                {                    
-                    if (game.NotifyPlayedCard != null)
-                    {
-                        game.NotifyPlayedCard(cardUsage);
-                    }
-                    
-                    // Move used card to discard.
-                    game.Discards.MoveCard(cardUsage.card);
+                {
+                    playerAction.card.BeingPlayed = false;
                 }
-                
-                cardUsage.card.BeingPlayed = false;
             }
         }
 
@@ -190,6 +213,16 @@ namespace HighTreasonGame
             }
 
             return outStr;
+        }
+
+        private void performMulligan()
+        {
+            int prevHandSize = Hand.Cards.Count;
+
+            Hand.MoveAllCardsToHolder(game.Discards);
+            Hand.SetupHand(game.Deck.DealCards(prevHandSize - 1));
+
+            PerformedMulligan = true;
         }
 
         private void discardCard(Card card)

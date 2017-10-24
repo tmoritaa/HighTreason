@@ -25,15 +25,15 @@ public class EventDelegator : MonoBehaviour
 
     public Game.StateStartEvent NotifyStateStart;
     public Game.StartOfTurnEvent NotifyStartOfTurn;
-    public Game.PlayedCardEvent NotifyPlayedCard;
+    public Game.PlayedCardEvent NotifyPlayerActionPerformed;
     public Game.GameEndEvent NotifyGameEnd;
 
     private bool doNotifyStateStart = false;
     private bool doNotifyStartOfTurn = false;
-    private bool doNotifyPlayedCard = false;
+    private bool doNotifyPlayerActionPerformed = false;
     private bool doNotifyGameEnd = false;
 
-    private Player.CardUsageParams usageParamsArg;
+    private Player.PlayerActionParams usageParamsArg;
     private GameResultArgs gameResultArg;
 
     void Awake()
@@ -42,7 +42,7 @@ public class EventDelegator : MonoBehaviour
 
         GameManager.Instance.Game.NotifyStateStart += triggerStateStart;
         GameManager.Instance.Game.NotifyStartOfTurn += triggerStartOfTurn;
-        GameManager.Instance.Game.NotifyPlayedCard += triggerPlayedCard;
+        GameManager.Instance.Game.NotifyPlayerActionPerformed += triggerPlayerActionPerformed;
         GameManager.Instance.Game.NotifyGameEnd += triggerGameEnd;
     }
 
@@ -66,13 +66,13 @@ public class EventDelegator : MonoBehaviour
             doNotifyStartOfTurn = false;
         }
 
-        if (doNotifyPlayedCard)
+        if (doNotifyPlayerActionPerformed)
         {
-            if (NotifyPlayedCard != null)
+            if (NotifyPlayerActionPerformed != null)
             {
-                NotifyPlayedCard(usageParamsArg);
+                NotifyPlayerActionPerformed(usageParamsArg);
             }
-            doNotifyPlayedCard = false;
+            doNotifyPlayerActionPerformed = false;
             usageParamsArg = null;
         }
 
@@ -97,9 +97,9 @@ public class EventDelegator : MonoBehaviour
         doNotifyStartOfTurn = true;
     }
 
-    private void triggerPlayedCard(Player.CardUsageParams usageParams)
+    private void triggerPlayerActionPerformed(Player.PlayerActionParams usageParams)
     {
-        doNotifyPlayedCard = true;
+        doNotifyPlayerActionPerformed = true;
         usageParamsArg = usageParams;
     }
 

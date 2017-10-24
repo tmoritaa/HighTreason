@@ -8,10 +8,9 @@ using HighTreasonGame;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class CardUsageTrigger : MonoBehaviour 
-{
-    protected Card card;
-    protected Player.CardUsageParams.UsageType usageType;
+public abstract class UsageTrigger : MonoBehaviour 
+{    
+    protected Player.PlayerActionParams.UsageType usageType;
 
     protected virtual void Awake()
     {

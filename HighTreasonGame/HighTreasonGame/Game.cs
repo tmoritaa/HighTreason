@@ -11,12 +11,12 @@ namespace HighTreasonGame
     {
         public delegate void StateStartEvent();
         public delegate void StartOfTurnEvent();
-        public delegate void PlayedCardEvent(Player.CardUsageParams usageParams);
+        public delegate void PlayedCardEvent(Player.PlayerActionParams usageParams);
         public delegate void GameEndEvent(Player.PlayerSide winningPlayerSide, bool winByNotEnoughGuilt, int finalScore);
 
         public StateStartEvent NotifyStateStart;
         public StartOfTurnEvent NotifyStartOfTurn;
-        public PlayedCardEvent NotifyPlayedCard;
+        public PlayedCardEvent NotifyPlayerActionPerformed;
         public GameEndEvent NotifyGameEnd;
 
         public Board Board 
