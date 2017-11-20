@@ -6,9 +6,17 @@ using System.Linq;
 using HighTreasonGame;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EventCardUsageTrigger : UsageTrigger 
 {
+    [SerializeField]
+    private Text textUI;
+    public Text TextUI
+    {
+        get { return textUI; }
+    }
+
     private GameState.GameStateType usableState;
 
     private int eventIdx;

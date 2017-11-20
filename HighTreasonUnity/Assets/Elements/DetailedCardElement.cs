@@ -52,36 +52,52 @@ public class DetailedCardElement : MonoBehaviour
         actionPoints.Init(displayedCard);
 
         GameState.GameStateType[] stateTypes = new GameState.GameStateType[] { GameState.GameStateType.JurySelection, GameState.GameStateType.TrialInChief, GameState.GameStateType.Summation };
-        List<string>[] cardTexts = new List<string>[] { cardInfo.jurySelectionTexts, cardInfo.trialInChiefTexts, cardInfo.summationTexts };
+        List<object>[] cardObjs = new List<object>[] { cardInfo.jurySelectionTexts.Cast<object>().ToList(), cardInfo.trialInChiefPairs.Cast<object>().ToList(), cardInfo.summationPairs.Cast<object>().ToList() };
         GameObject[] parentGOs = new GameObject[] { jurySelectionParent, trialInChiefParent, summationParent };
 
-        for (int j = 0; j < cardTexts.Length; ++j)
+        for (int j = 0; j < stateTypes.Length; ++j)
         {
-            List<string> textList = cardTexts[j];
+            List<object> objList = cardObjs[j];
             GameObject parentGO = parentGOs[j];
+            GameState.GameStateType stateType = stateTypes[j];
 
-            int size = textList.Count;
-            for (int i = 0; i < textList.Count; ++i)
+            int size = objList.Count;
+            for (int i = 0; i < size; ++i)
             {
                 EventCardUsageTrigger eventObj = GameObject.Instantiate(eventCardUsageTriggerPrefab);
                 eventObj.gameObject.SetActive(true);
 
-                eventObj.Init(displayedCard, stateTypes[j], i);
-
-                Text text = eventObj.GetComponent<Text>();
-                text.text = textList[i];
-
-                text.resizeTextMinSize = 30;
-                text.resizeTextMaxSize = 50;
-                text.resizeTextForBestFit = true;
-
-                text.color = Color.black;
+                eventObj.Init(displayedCard, stateType, i);
 
                 RectTransform rect = eventObj.GetComponent<RectTransform>();
                 rect.anchorMin = new Vector2(0, 1.0f - (float)(i + 1) / size);
                 rect.anchorMax = new Vector2(1, 1.0f - (float)i / size);
 
                 eventObj.transform.SetParent(parentGO.transform, false);
+
+                if (stateType == GameState.GameStateType.JurySelection)
+                {
+                    eventObj.TextUI.text = (string)objList[i];
+                    eventObj.GetComponent<Image>().color = Color.yellow;
+                }
+                else
+                {
+                    CardInfoManager.CardInfo.EffectPair ep = (CardInfoManager.CardInfo.EffectPair)objList[i];
+                    eventObj.TextUI.text = ep.Text;
+
+                    switch (ep.Type)
+                    {
+                        case CardInfoManager.CardInfo.EffectPair.EffectType.Prosecution:
+                            eventObj.GetComponent<Image>().color = Color.red;
+                            break;
+                        case CardInfoManager.CardInfo.EffectPair.EffectType.Defense:
+                            eventObj.GetComponent<Image>().color = Color.blue;
+                            break;
+                        case CardInfoManager.CardInfo.EffectPair.EffectType.Neutral:
+                            eventObj.GetComponent<Image>().color = Color.green;
+                            break;
+                    }
+                }
             }
         }
     }

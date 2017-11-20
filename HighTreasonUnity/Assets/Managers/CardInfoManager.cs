@@ -13,11 +13,42 @@ public class CardInfoManager : MonoBehaviour
 {
     public class CardInfo
     {
+        public class EffectPair
+        {
+            public enum EffectType
+            {
+                Prosecution,
+                Defense,
+                Neutral
+            };
+
+            public EffectType Type { get; private set; }
+            public string Text { get; private set; }
+
+            public EffectPair(string typeStr, string text)
+            {
+                switch (typeStr)
+                {
+                    case "prosecution":
+                        Type = CardInfo.EffectPair.EffectType.Prosecution;
+                        break;
+                    case "defense":
+                        Type = CardInfo.EffectPair.EffectType.Defense;
+                        break;
+                    case "neutral":
+                        Type = CardInfo.EffectPair.EffectType.Neutral;
+                        break;
+                }
+
+                Text = text;
+            }
+        }
+
         public string name;
         public string typing;
         public List<string> jurySelectionTexts = new List<string>();
-        public List<string> trialInChiefTexts = new List<string>();
-        public List<string> summationTexts = new List<string>();
+        public List<EffectPair> trialInChiefPairs = new List<EffectPair>();
+        public List<EffectPair> summationPairs = new List<EffectPair>();
 
         public override string ToString()
         {
@@ -30,14 +61,14 @@ public class CardInfoManager : MonoBehaviour
                 outStr += txt + "\n";
             }
             outStr += "TrialInChief:\n";
-            foreach (string txt in trialInChiefTexts)
+            foreach (EffectPair ep in trialInChiefPairs)
             {
-                outStr += txt + "\n";
+                outStr += "type:" + ep.Type + " text:" + ep.Text + "\n";
             }
             outStr += "Summation:\n";
-            foreach (string txt in summationTexts)
+            foreach (EffectPair ep in summationPairs)
             {
-                outStr += txt + "\n";
+                outStr += "type:" + ep.Type + " text:" + ep.Text + "\n";
             }
 
             return outStr;
@@ -73,14 +104,14 @@ public class CardInfoManager : MonoBehaviour
                 cardInfo.jurySelectionTexts.Add((string)txt);
             }
 
-            foreach (var txt in kv.Value["trial_in_chief"])
+            foreach (JObject eo in kv.Value["trial_in_chief"])
             {
-                cardInfo.trialInChiefTexts.Add((string)txt);
+                cardInfo.trialInChiefPairs.Add(new CardInfo.EffectPair(eo.Value<string>("type"), eo.Value<string>("text")));
             }
 
-            foreach (var txt in kv.Value["summation"])
+            foreach (JObject eo in kv.Value["summation"])
             {
-                cardInfo.summationTexts.Add((string)txt);
+                cardInfo.summationPairs.Add(new CardInfo.EffectPair(eo.Value<string>("type"), eo.Value<string>("text")));
             }
 
             cardInfos[cardInfo.name] = cardInfo;
