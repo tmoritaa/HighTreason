@@ -30,7 +30,7 @@ public class OpponentInfoDisplay : MonoBehaviour
 	{
         Player p = GameManager.Instance.Game.GetOtherPlayer();
 
-        background.color = (p.Side == Player.PlayerSide.Prosecution) ? new Color(1, 0, 0) : new Color(0, 0, 1);
+        background.color = (p.Side == Player.PlayerSide.Prosecution) ? ViewManager.Instance.ProsecutionColor : ViewManager.Instance.DefenseColor;
 
         roleText.text = p.Side.ToString();
         handText.text = "Hand Size=" + p.Hand.Cards.Count.ToString();

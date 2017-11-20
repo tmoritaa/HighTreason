@@ -44,7 +44,7 @@ public class HandHandler : MonoBehaviour
         {
             displayingPlayer = curPlayer;
 
-            background.color = (curPlayer.Side == Player.PlayerSide.Prosecution) ? new Color(1, 0, 0) : new Color(0, 0, 1);
+            background.color = (curPlayer.Side == Player.PlayerSide.Prosecution) ? ViewManager.Instance.ProsecutionColor : ViewManager.Instance.DefenseColor;
 
             initHandDisplay();
         }

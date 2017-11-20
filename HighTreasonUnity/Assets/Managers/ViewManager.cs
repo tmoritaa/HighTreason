@@ -19,6 +19,22 @@ public class ViewManager : MonoBehaviour
     private GameState.GameStateType curStateShown;
 
     [SerializeField]
+    private Color prosecutionColor;
+    public Color ProsecutionColor { get { return prosecutionColor; } }
+
+    [SerializeField]
+    private Color defenseColor;
+    public Color DefenseColor { get { return defenseColor; } }
+
+    [SerializeField]
+    private Color neutralColor;
+    public Color NeutralColor { get { return neutralColor; } }
+
+    [SerializeField]
+    private Color jurySelectColor;
+    public Color JurySelectColor { get { return jurySelectColor; } }
+
+    [SerializeField]
     private DetailedCardView detailedCardView;
 
     [SerializeField]

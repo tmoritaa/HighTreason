@@ -78,7 +78,7 @@ public class DetailedCardElement : MonoBehaviour
                 if (stateType == GameState.GameStateType.JurySelection)
                 {
                     eventObj.TextUI.text = (string)objList[i];
-                    eventObj.GetComponent<Image>().color = Color.yellow;
+                    eventObj.GetComponent<Image>().color = ViewManager.Instance.JurySelectColor;
                 }
                 else
                 {
@@ -88,13 +88,13 @@ public class DetailedCardElement : MonoBehaviour
                     switch (ep.Type)
                     {
                         case CardInfoManager.CardInfo.EffectPair.EffectType.Prosecution:
-                            eventObj.GetComponent<Image>().color = Color.red;
+                            eventObj.GetComponent<Image>().color = ViewManager.Instance.ProsecutionColor;
                             break;
                         case CardInfoManager.CardInfo.EffectPair.EffectType.Defense:
-                            eventObj.GetComponent<Image>().color = Color.blue;
+                            eventObj.GetComponent<Image>().color = ViewManager.Instance.DefenseColor;
                             break;
                         case CardInfoManager.CardInfo.EffectPair.EffectType.Neutral:
-                            eventObj.GetComponent<Image>().color = Color.green;
+                            eventObj.GetComponent<Image>().color = ViewManager.Instance.NeutralColor;
                             break;
                     }
                 }
