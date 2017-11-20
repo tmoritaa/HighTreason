@@ -37,7 +37,7 @@ public class TrackElement : BoardObjectElement
                 return retVal;
             })[0];
 
-        setupBOAndGO(htgoElement);
+        registerObj(htgoElement);
 
         track = (Track)htgoElement;
 

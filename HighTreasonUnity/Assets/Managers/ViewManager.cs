@@ -16,6 +16,8 @@ public class ViewManager : MonoBehaviour
         get { return instance; }
     }
 
+    private GameState.GameStateType curStateShown;
+
     [SerializeField]
     private DetailedCardView detailedCardView;
 
@@ -83,13 +85,20 @@ public class ViewManager : MonoBehaviour
 
     private void handleNotifyStateStart()
     {
-        BoardObjectElementManager.Instance.HandleStateChange();
+        bool isJurySelect = GameManager.Instance.Game.CurState.StateType == GameState.GameStateType.JurySelection;
+        bool isFirstTrialInChief = (curStateShown == GameState.GameStateType.JurySelection && GameManager.Instance.Game.CurState.StateType == GameState.GameStateType.TrialInChief);
 
-        if (GameManager.Instance.Game.CurState.StateType == HighTreasonGame.GameState.GameStateType.JurySelection)
+        if (isJurySelect || isFirstTrialInChief)
+        {
+            SelectableElementManager.Instance.Reset();
+            curStateShown = GameManager.Instance.Game.CurState.StateType;
+        }
+
+        if (isJurySelect)
         {
             jurySelectionMainBoardGO.SetActive(true);
         }
-        else if (GameManager.Instance.Game.CurState.StateType == HighTreasonGame.GameState.GameStateType.TrialInChief)
+        else if (isFirstTrialInChief)
         {
             jurySelectionMainBoardGO.SetActive(false);
             trialAndSummationMainBoardGO.SetActive(true);

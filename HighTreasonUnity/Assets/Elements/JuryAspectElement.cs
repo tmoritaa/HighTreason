@@ -20,7 +20,7 @@ public class JuryAspectElement : BoardObjectElement
     public void InitJuryAspect(Jury jury)
     {
         juryAspect = jury.Aspects.Find(ja => ja.Properties.Contains(aspectProp));
-        setupBOAndGO(juryAspect);
+        registerObj(juryAspect);
         updateUI();
     }
 

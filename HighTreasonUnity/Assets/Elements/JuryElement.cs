@@ -29,7 +29,7 @@ public class JuryElement : BoardObjectElement
     protected override void init()
     {
         jury = (Jury)GameManager.Instance.Game.Board.Juries[Idx];
-        setupBOAndGO(jury);
+        registerObj(jury);
 
         ownedJuryAspectElements.ForEach(e => e.InitJuryAspect(jury));
         swayTrackElement.InitSwayTrack(jury);

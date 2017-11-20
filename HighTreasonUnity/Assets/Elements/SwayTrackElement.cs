@@ -17,7 +17,7 @@ public class SwayTrackElement : BoardObjectElement
     public void InitSwayTrack(Jury jury)
     {
         swayTrack = jury.SwayTrack;
-        setupBOAndGO(swayTrack);
+        registerObj(swayTrack);
         updateUI();
     }
 
