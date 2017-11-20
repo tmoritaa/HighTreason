@@ -76,10 +76,6 @@ namespace HighTreasonGame
             public int CalculateGuiltScore(Game game)
             {
                 AspectTrack track = (AspectTrack)game.FindBO(
-                    (Type t) =>
-                    {
-                        return (t == typeof(AspectTrack));
-                    },
                     (BoardObject htgo) =>
                     {
                         return (htgo.Properties.Contains(Property.Track) && htgo.Properties.Contains(Property.Aspect)

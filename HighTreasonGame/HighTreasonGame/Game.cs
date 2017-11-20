@@ -38,7 +38,7 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        private Dictionary<Type, List<BoardObject>> boardObjects = new Dictionary<Type, List<BoardObject>>();
+        private List<BoardObject> boardObjects = new List<BoardObject>();
 
         private Dictionary<Player.PlayerSide, Player> players = new Dictionary<Player.PlayerSide, Player>();
 
@@ -55,7 +55,7 @@ namespace HighTreasonGame
             Board = new Board(this);
 
             List<Card> cards = new List<Card>();
-            CardTemplateManager.Instance.GetAllCardTemplates().ForEach(c => cards.Add(new Card(this, c)));
+            CardTemplateManager.Instance.GetAllCardTemplates().ForEach(c => cards.Add(new Card(c)));
             Deck = new DeckHolder(cards);
 
             Discards = new DiscardHolder();
@@ -127,32 +127,18 @@ namespace HighTreasonGame
 
         public void AddBoardObject(BoardObject bo)
         {
-            if (!boardObjects.ContainsKey(bo.GetType()))
-            {
-                boardObjects.Add(bo.GetType(), new List<BoardObject>());
-            }
-            boardObjects[bo.GetType()].Add(bo);
+            boardObjects.Add(bo);
         }
 
         public void RemoveBoardObject(BoardObject bo)
         {
             bo.RemoveChildrenBoardObjects();
-            boardObjects[bo.GetType()].Remove(bo);
+            boardObjects.Remove(bo);
         }
 
-        public List<BoardObject> FindBO(Func<Type, bool> typeFilterCond, Func<BoardObject, bool> condition)
+        public List<BoardObject> FindBO(Func<BoardObject, bool> condition)
         {
-            List<BoardObject> searchBos = new List<BoardObject>();
-
-            foreach (Type t in boardObjects.Keys)
-            {
-                if (typeFilterCond(t))
-                {
-                    searchBos.AddRange(boardObjects[t]);
-                }
-            }
-
-            return searchBos.FindAll(htgo => condition(htgo));
+            return boardObjects.FindAll(htgo => condition(htgo));
         }
 
         public EvidenceTrack GetInsanityTrack()

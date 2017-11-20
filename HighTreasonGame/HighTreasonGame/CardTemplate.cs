@@ -110,10 +110,6 @@ namespace HighTreasonGame
 
             int modValue = (game.CurPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
             List<BoardObject> choices = game.FindBO(
-                (Type t) =>
-                {
-                    return (t != typeof(Card));
-                },
                 (BoardObject bo) =>
                 {
                     return (bo.Properties.Contains(Property.Track) &&
@@ -182,7 +178,7 @@ namespace HighTreasonGame
             return choices;
         }
 
-        protected bool handleMomentOfInsightChoice(List<Player.PlayerSide> supportedSides, Game game, ChoiceHandler choiceHandler, out BoardChoices.MomentOfInsightInfo moiInfo)
+        protected bool handleMomentOfInsightChoice(Player.PlayerSide[] supportedSides, Game game, ChoiceHandler choiceHandler, out BoardChoices.MomentOfInsightInfo moiInfo)
         {
             moiInfo = new BoardChoices.MomentOfInsightInfo();
             if (!supportedSides.Contains(game.CurPlayer.Side))
@@ -200,10 +196,6 @@ namespace HighTreasonGame
                 (Game game, ChoiceHandler choiceHandler) =>
                 {
                     List<BoardObject> options = game.FindBO(
-                        (Type t) =>
-                        {
-                            return (t == typeof(AspectTrack));
-                        },
                         (BoardObject htgo) =>
                         {
                             HashSet<Property> props = new HashSet<Property>(optionProps);
@@ -247,10 +239,6 @@ namespace HighTreasonGame
                     List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
 
                     List<BoardObject> options = game.FindBO(
-                        (Type t) =>
-                        {
-                            return (t == typeof(Jury.JuryAspect));
-                        },
                         (BoardObject htgo) =>
                         {
                             HashSet<Property> props = new HashSet<Property>(optionProps);

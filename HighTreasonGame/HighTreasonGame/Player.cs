@@ -127,7 +127,7 @@ namespace HighTreasonGame
 
         public void DismissJury()
         {
-            Jury jury = ChooseJuryChoice(game.Board.Juries);
+            Jury jury = chooseJuryChoice(game.Board.Juries);
 
             Console.WriteLine("Dismissed Jury\n" + jury);
 
@@ -150,14 +150,10 @@ namespace HighTreasonGame
             Jury usedJury;
             while (true)
             {
-                usedJury = ChooseJuryChoice(juries);
+                usedJury = chooseJuryChoice(juries);
 
                 int modValue = (this.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
                 List<BoardObject> choices = game.FindBO(
-                    (Type t) =>
-                    {
-                        return (t != typeof(Card));
-                    },
                     (BoardObject htgo) =>
                     {
                         return (htgo.Properties.Contains(Property.Track) &&
@@ -230,7 +226,7 @@ namespace HighTreasonGame
             game.Discards.MoveCard(card);
         }
 
-        private Jury ChooseJuryChoice(List<Jury> juries)
+        private Jury chooseJuryChoice(List<Jury> juries)
         {
             Jury jury = null;
             while (jury == null)

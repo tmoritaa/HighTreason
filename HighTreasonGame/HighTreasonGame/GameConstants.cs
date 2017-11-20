@@ -19,7 +19,6 @@
         Aspect,
         Evidence,
         Track,
-        Card,
     }
 
     public static class GameConstants

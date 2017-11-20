@@ -46,7 +46,7 @@ namespace HighTreasonGame.CardTemplates
                 (Game game, ChoiceHandler choiceHandler) =>
                 {
                     BoardChoices choices = new BoardChoices();
-                    choices.NotCancelled = handleMomentOfInsightChoice(new List<Player.PlayerSide>() { Player.PlayerSide.Defense }, game, choiceHandler, out choices.MoIInfo);
+                    choices.NotCancelled = handleMomentOfInsightChoice(new Player.PlayerSide[] { Player.PlayerSide.Defense }, game, choiceHandler, out choices.MoIInfo);
                     return choices;
                 });
             TrialEvents.Add(
@@ -61,10 +61,6 @@ namespace HighTreasonGame.CardTemplates
                 (Game game, BoardChoices choices) => 
                 {
                     List<BoardObject> options = game.FindBO(
-                        (Type t) =>
-                        {
-                            return (t == typeof(AspectTrack));
-                        },
                         (BoardObject htgo) =>
                         {
                             return (htgo.Properties.Contains(Property.Track)

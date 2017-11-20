@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HighTreasonGame
 {
-    public class Card : BoardObject
+    public class Card
     {
         public CardTemplate Template
         {
@@ -27,7 +27,7 @@ namespace HighTreasonGame
 
         public bool BeingPlayed = false;
 
-        public Card(Game _game, CardTemplate _cardTemplate) : base(_game, Property.Card)
+        public Card(CardTemplate _cardTemplate)
         {
             Template = _cardTemplate;
         }

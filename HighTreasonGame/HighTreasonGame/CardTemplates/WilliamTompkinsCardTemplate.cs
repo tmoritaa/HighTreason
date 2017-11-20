@@ -31,10 +31,6 @@ namespace HighTreasonGame.CardTemplates
                     int modValue = calcModValueBasedOnSide(2, game);
 
                     List<BoardObject> options = game.FindBO(
-                        (Type t) =>
-                        {
-                            return (t == typeof(AspectTrack));
-                        },
                         (BoardObject htgo) =>
                         {
                             return (htgo.Properties.Contains(Property.Track)
@@ -57,7 +53,7 @@ namespace HighTreasonGame.CardTemplates
                     
                     if (boardChoices.NotCancelled)
                     {
-                        boardChoices.NotCancelled = handleMomentOfInsightChoice(new List<Player.PlayerSide>() { Player.PlayerSide.Prosecution, Player.PlayerSide.Defense },
+                        boardChoices.NotCancelled = handleMomentOfInsightChoice(new Player.PlayerSide[] { Player.PlayerSide.Prosecution, Player.PlayerSide.Defense },
                             game, choiceHandler, out boardChoices.MoIInfo);
                     }
 
@@ -83,10 +79,6 @@ namespace HighTreasonGame.CardTemplates
                     int sign = (game.CurPlayer.Side == Player.PlayerSide.Prosecution ? 1 : -1);
 
                     List<AspectTrack> options = game.FindBO(
-                        (Type t) =>
-                        {
-                            return (t == typeof(AspectTrack));
-                        },
                         (BoardObject htgo) =>
                         {
                             return (htgo.Properties.Contains(Property.Track)
