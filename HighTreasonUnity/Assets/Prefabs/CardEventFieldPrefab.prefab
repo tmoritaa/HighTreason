@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 114190312527445326}
   - component: {fileID: 114610463688557242}
   m_Layer: 0
-  m_Name: TextFieldPrefab
+  m_Name: CardEventFieldPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1896870824024898}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8822b2f719fb09b4db68092089e68107, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d29c6e63021fbd4381800471fc9ea10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   highlightPrefab: {fileID: 1224098941512400, guid: 631a5d3da0e9f3e4abbe508a3a9d90f8,

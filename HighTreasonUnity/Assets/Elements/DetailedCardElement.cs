@@ -29,7 +29,7 @@ public class DetailedCardElement : MonoBehaviour
     private GameObject summationParent;
 
     [SerializeField]
-    private CardEventUsageFieldElement eventCardUsageTriggerPrefab;
+    private CardEventUsageFieldElement cardEventFieldElementPrefab;
 
     private Card displayedCard;
 
@@ -48,7 +48,6 @@ public class DetailedCardElement : MonoBehaviour
 
         typing.text = cardInfo.typing;
         cardName.text = cardInfo.name;
-        actionPoints.GetComponent<Text>().text = displayedCard.Template.ActionPts.ToString();
         actionPoints.Init(displayedCard);
 
         GameState.GameStateType[] stateTypes = new GameState.GameStateType[] { GameState.GameStateType.JurySelection, GameState.GameStateType.TrialInChief, GameState.GameStateType.Summation };
@@ -64,7 +63,7 @@ public class DetailedCardElement : MonoBehaviour
             int size = pairList.Count;
             for (int i = 0; i < size; ++i)
             {
-                CardEventUsageFieldElement eventObj = GameObject.Instantiate(eventCardUsageTriggerPrefab);
+                CardEventUsageFieldElement eventObj = GameObject.Instantiate(cardEventFieldElementPrefab);
                 eventObj.gameObject.SetActive(true);
 
                 eventObj.Init(displayedCard, stateType, i, pairList[i]);

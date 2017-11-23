@@ -2389,7 +2389,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 888166114}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f88dfa683177ed84f903b918edf09941, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a6b2a535520c5c439df2338396dc83a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   highlightPrefab: {fileID: 1224098941512400, guid: 631a5d3da0e9f3e4abbe508a3a9d90f8,
@@ -3617,7 +3617,7 @@ MonoBehaviour:
   jurySelectionParent: {fileID: 2146159816}
   trialInChiefParent: {fileID: 436004841}
   summationParent: {fileID: 1805901129}
-  eventCardUsageTriggerPrefab: {fileID: 114989009603556272, guid: b9fee76b5a7ada5499bb5400a895611a,
+  cardEventFieldElementPrefab: {fileID: 114989009603556272, guid: b9fee76b5a7ada5499bb5400a895611a,
     type: 2}
 --- !u!1 &1638698454
 GameObject:

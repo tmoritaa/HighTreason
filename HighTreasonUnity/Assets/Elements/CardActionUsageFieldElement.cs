@@ -6,6 +6,7 @@ using System.Linq;
 using HighTreasonGame;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CardActionUsageFieldElement : CardUsageFieldElement
 {
@@ -14,6 +15,7 @@ public class CardActionUsageFieldElement : CardUsageFieldElement
     public void Init(Card _card)
     {
         card = _card;
+        this.GetComponent<Text>().text = card.Template.ActionPts.ToString();
     }
 
     protected override void onValidClick()
