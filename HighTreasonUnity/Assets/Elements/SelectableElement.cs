@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class SelectableElement : MonoBehaviour, ISelectable, IHighlightable
+public abstract class SelectableElement : HighlightElement, ISelectable
 {
     public object ObjRef
     {
@@ -17,18 +17,11 @@ public abstract class SelectableElement : MonoBehaviour, ISelectable, IHighlight
         get; set;
     }
 
-    [SerializeField]
-    protected GameObject highlightGORef;
-    public GameObject highlightGO
+    protected override void Awake()
     {
-        get; set;
-    }
+        base.Awake();
 
-    protected void Awake()
-    {
-        highlightGO = highlightGORef;
         this.SetSelectable(false);
-        this.Highlight(false);
 
         this.GetComponent<Button>().onClick.AddListener(onClick);
     }
