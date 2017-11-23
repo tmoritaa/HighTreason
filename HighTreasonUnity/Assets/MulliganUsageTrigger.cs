@@ -7,40 +7,41 @@ using UnityEngine.UI;
 
 using HighTreasonGame;
 
-public class MulliganUsageTrigger : UsageTrigger
+public class MulliganUsageTrigger : MonoBehaviour
 {
     private Image image;
 
-    protected override void Awake()
+    void Awake()
     {
-        base.Awake();
-
-        usageType = Player.PlayerActionParams.UsageType.Mulligan;
-
+        GetComponent<Button>().onClick.AddListener(onClick);
         image = GetComponent<Image>();
     }
 
     void Update()
     {
-        if (ChoiceHandlerDelegator.Instance.CurChoiceType != UnityChoiceHandler.ChoiceType.CardAndUsage
-            || GameManager.Instance.Game.CurState.StateType != GameState.GameStateType.TrialInChief
-            || GameManager.Instance.Game.CurPlayer.PerformedMulligan)
-        {
-            image.color = Color.grey;
-        }
-        else
+        if (canMulligan())
         {
             image.color = Color.white;
         }
+        else
+        {
+            image.color = Color.grey;
+        }
     }
 
-    protected override void onClick()
+    protected void onClick()
     {
-        if (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.CardAndUsage
-            && GameManager.Instance.Game.CurState.StateType == GameState.GameStateType.TrialInChief)
+        if (canMulligan())
         {
             Debug.Log("Mulligan Choice complete");
-            ChoiceHandlerDelegator.Instance.ChoiceMade(usageType);
+            ChoiceHandlerDelegator.Instance.ChoiceMade(Player.PlayerActionParams.UsageType.Mulligan);
         }
+    }
+
+    private bool canMulligan()
+    {
+        return ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.CardAndUsage
+            && GameManager.Instance.Game.CurState.StateType == GameState.GameStateType.TrialInChief
+            && !GameManager.Instance.Game.CurPlayer.PerformedMulligan;
     }
 }

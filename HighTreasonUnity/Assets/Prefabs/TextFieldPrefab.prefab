@@ -159,7 +159,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8822b2f719fb09b4db68092089e68107, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textUI: {fileID: 114431267342192150}
+  highlightPrefab: {fileID: 1224098941512400, guid: 631a5d3da0e9f3e4abbe508a3a9d90f8,
+    type: 2}
 --- !u!222 &222120477826058132
 CanvasRenderer:
   m_ObjectHideFlags: 1
