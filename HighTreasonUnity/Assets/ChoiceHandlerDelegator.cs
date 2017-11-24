@@ -53,22 +53,11 @@ public class ChoiceHandlerDelegator : MonoBehaviour
         }
     }
 
-    public void TriggerChoice(UnityChoiceHandler choiceHandler, UnityChoiceHandler.ChoiceType choiceType, params object[] additionalParams)
+    public void TriggerChoice(UnityChoiceHandler choiceHandler, ChoiceTypeInputHandler _inputHandler)
     {
-        CurChoiceType = choiceType;
+        inputHandler = _inputHandler;
         curChoiceHandler = choiceHandler;
-
-        switch (CurChoiceType)
-        {
-            case UnityChoiceHandler.ChoiceType.CardAndUsage:
-                Debug.Log("CardAndUsage choice triggered");
-                inputHandler = new CardAndUsageInputHandler(additionalParams);
-                break;
-            case UnityChoiceHandler.ChoiceType.PickBoardObject:
-                Debug.Log("PickBoardObject choice triggered");
-                inputHandler = new PickBoardObjectInputHandler(additionalParams);
-                break;
-        }
+        CurChoiceType = inputHandler.choiceType;
 
         checkIfShouldSkip = true;
     }

@@ -5,7 +5,7 @@ using System.Text;
 
 public class CardAndUsageInputHandler : ChoiceTypeInputHandler
 {
-    public CardAndUsageInputHandler(object[] _additionalParams) : base(_additionalParams)
+    public CardAndUsageInputHandler() : base(UnityChoiceHandler.ChoiceType.CardAndUsage)
     {}
 
     public override bool VerifyInput(out object[] validOutput, params object[] input)

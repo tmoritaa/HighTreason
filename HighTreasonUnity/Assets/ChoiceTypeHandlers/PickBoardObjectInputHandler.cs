@@ -10,19 +10,23 @@ public class PickBoardObjectInputHandler : ChoiceTypeInputHandler
 
     private List<BoardObject> choices;
 
-    Func<Dictionary<BoardObject, int>, bool> validateChoices;
-    Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices;
-    Func<Dictionary<BoardObject, int>, bool> choicesComplete;
+    private Func<Dictionary<BoardObject, int>, bool> validateChoices;
+    private Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices;
+    private Func<Dictionary<BoardObject, int>, bool> choicesComplete;
 
-    Dictionary<BoardObject, int> selected = new Dictionary<BoardObject, int>();
-    List<BoardObject> remainingChoices;
+    private Dictionary<BoardObject, int> selected = new Dictionary<BoardObject, int>();
+    private List<BoardObject> remainingChoices;
 
-    public PickBoardObjectInputHandler(object[] _additionalParams) : base(_additionalParams)
+    public PickBoardObjectInputHandler(List<BoardObject> _choices,
+        Func<Dictionary<BoardObject, int>, bool> _validateChoices,
+        Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> _filterChoices,
+        Func<Dictionary<BoardObject, int>, bool> _choicesComplete) 
+        : base(UnityChoiceHandler.ChoiceType.PickBoardObject)
     {
-        choices = (List<BoardObject>)additionalParams[0];
-        validateChoices = (Func<Dictionary<BoardObject, int>, bool>)additionalParams[1];
-        filterChoices = (Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> )additionalParams[2];
-        choicesComplete = (Func<Dictionary<BoardObject, int>, bool>)additionalParams[3];
+        choices = _choices;
+        validateChoices = _validateChoices;
+        filterChoices = _filterChoices;
+        choicesComplete = _choicesComplete;
 
         remainingChoices = new List<BoardObject>(choices);
 
