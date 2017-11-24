@@ -9,6 +9,13 @@ using UnityEngine;
 
 public class ViewManager : MonoBehaviour 
 {
+    public enum PopupType
+    {
+        DetailedCard,
+        SummationDeck,
+        Discard,
+    };
+
     private static ViewManager instance;
 
     public static ViewManager Instance
@@ -49,6 +56,8 @@ public class ViewManager : MonoBehaviour
     [SerializeField]
     private GameObject trialAndSummationMainBoardGO;
 
+    private Stack<GameObject> displayedPopups = new Stack<GameObject>();
+
     void Awake()
     {
         ViewManager.instance = this;
@@ -58,45 +67,61 @@ public class ViewManager : MonoBehaviour
 
     void Start()
     {
-        HideAllFullscreenViews();
-    }
-
-    public void DisplayDetailedCardViewWithCard(Card card)
-    {
-        detailedCardView.gameObject.SetActive(true);
-        detailedCardView.SetCardForDisplay(card);
-    }
-
-    public void DisplayDiscardView()
-    {
-        discardView.gameObject.SetActive(true);
+        detailedCardView.gameObject.SetActive(false);
+        summationView.gameObject.SetActive(false);
+        discardView.gameObject.SetActive(false);
     }
 
     public void DisplaySummationDeckView()
     {
-        summationView.gameObject.SetActive(true);
+        DisplayView(PopupType.SummationDeck);
     }
 
-    public void HideAllFullscreenViews()
+    public void DisplayDiscardView()
     {
-        HideDetailedCardView();
-        HideDiscardView();
-        HideSummationDeckView();
+        DisplayView(PopupType.Discard);
     }
 
-    public void HideDetailedCardView()
+    public void DisplayView(PopupType ptype, params object[] args)
     {
-        detailedCardView.gameObject.SetActive(false);
+        GameObject displayedView = null;
+
+        switch (ptype)
+        {
+            case PopupType.DetailedCard:
+                Card card = (Card)args[0];
+                detailedCardView.gameObject.SetActive(true);
+                detailedCardView.SetCardForDisplay(card);
+                displayedView = detailedCardView.gameObject;
+                break;
+            case PopupType.SummationDeck:
+                summationView.gameObject.SetActive(true);
+                displayedView = summationView.gameObject;
+                break;
+            case PopupType.Discard:
+                discardView.gameObject.SetActive(true);
+                displayedView = discardView.gameObject;
+                break;
+        }
+
+        if (displayedView != null)
+        {
+            displayedPopups.Push(displayedView);
+        }
+    }
+    
+    public void HideAllViews()
+    {
+        while (displayedPopups.Count > 0)
+        {
+            GameObject go = displayedPopups.Pop();
+            go.SetActive(false);
+        }
     }
 
-    public void HideDiscardView()
+    public void HideTopView()
     {
-        discardView.gameObject.SetActive(false);
-    }
-
-    public void HideSummationDeckView()
-    {
-        summationView.gameObject.SetActive(false);
+        displayedPopups.Pop().SetActive(false);
     }
 
     private void handleNotifyStateStart()

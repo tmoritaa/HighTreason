@@ -27,7 +27,7 @@ public class MiniCardElement : MonoBehaviour
 
     void onClick()
     {
-        ViewManager.Instance.DisplayDetailedCardViewWithCard(cardObj);
+        ViewManager.Instance.DisplayView(ViewManager.PopupType.DetailedCard, cardObj);
     }
 
     public void SetCard(Card _cardObj)

@@ -99,7 +99,7 @@ public class ChoiceHandlerDelegator : MonoBehaviour
 
     private void resetChoiceUI()
     {
-        ViewManager.Instance.HideAllFullscreenViews();
+        ViewManager.Instance.HideAllViews();
         SelectableElementManager.Instance.MarkAllAsUnselectable();
     }
 }
