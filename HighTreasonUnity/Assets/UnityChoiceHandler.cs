@@ -66,7 +66,28 @@ public class UnityChoiceHandler : ChoiceHandler
 
     public override bool ChooseMomentOfInsightUse(Game game, out BoardChoices.MomentOfInsightInfo outMoIInfo)
     {
-        throw new NotImplementedException();
-        // ChoiceHandlerDelegator.Instance.TriggerChoice();
+        ChoiceHandlerDelegator.Instance.TriggerChoice(this, new MoIInputHandler());
+        waitForInput.WaitOne();
+
+        outMoIInfo = new BoardChoices.MomentOfInsightInfo();
+
+        if (passedParams.Length == 0)
+        {
+            outMoIInfo.Use = BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.NotChosen;
+        }
+        else
+        {
+            outMoIInfo.Use = (BoardChoices.MomentOfInsightInfo.MomentOfInsightUse)passedParams[0];
+
+            if (outMoIInfo.Use == BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Swap)
+            {
+                outMoIInfo.HandCard = (Card)passedParams[1];
+                outMoIInfo.SummationCard = (Card)passedParams[2];
+            }
+        }
+
+        passedParams = null;
+
+        return true;
     }
 }

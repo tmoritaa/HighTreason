@@ -20,8 +20,11 @@ public class CardActionUsageFieldElement : CardUsageFieldElement
 
     protected override void onValidClick()
     {
-        Debug.Log("Action Choice Complete");
-        ChoiceHandlerDelegator.Instance.ChoiceMade(Player.PlayerActionParams.UsageType.Action, card);
+        if (canUse())
+        {
+            Debug.Log("Action Choice Complete");
+            ChoiceHandlerDelegator.Instance.ChoiceMade(Player.PlayerActionParams.UsageType.Action, card);
+        }
     }
 
     protected override bool canUse()

@@ -10,17 +10,24 @@ using UnityEngine;
 public class ChoiceHandlerDelegator : MonoBehaviour 
 {
     private static ChoiceHandlerDelegator instance;
-
     public static ChoiceHandlerDelegator Instance
     {
         get { return instance; }
     }
 
     public UnityChoiceHandler.ChoiceType CurChoiceType {
-        get; private set;
+        get
+        {
+            if (inputHandler != null)
+            {
+                return inputHandler.ChoiceType;
+            }
+
+            return UnityChoiceHandler.ChoiceType.NoChoice;
+        }
     }
 
-    private ChoiceTypeInputHandler inputHandler;
+    private ChoiceTypeInputHandler inputHandler = null;
 
     private UnityChoiceHandler curChoiceHandler;
 
@@ -29,7 +36,6 @@ public class ChoiceHandlerDelegator : MonoBehaviour
     void Awake()
     {
         ChoiceHandlerDelegator.instance = this;
-        CurChoiceType = UnityChoiceHandler.ChoiceType.NoChoice;
     }
 
     void Update()
@@ -57,7 +63,6 @@ public class ChoiceHandlerDelegator : MonoBehaviour
     {
         inputHandler = _inputHandler;
         curChoiceHandler = choiceHandler;
-        CurChoiceType = inputHandler.choiceType;
 
         checkIfShouldSkip = true;
     }
@@ -81,7 +86,6 @@ public class ChoiceHandlerDelegator : MonoBehaviour
 
     private void cleanupAfterChoice()
     {
-        CurChoiceType = UnityChoiceHandler.ChoiceType.NoChoice;
         resetChoiceUI();
         inputHandler = null;
     }

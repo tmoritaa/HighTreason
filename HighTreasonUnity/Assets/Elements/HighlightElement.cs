@@ -7,13 +7,12 @@ using UnityEngine;
 
 public abstract class HighlightElement : MonoBehaviour
 {
-    [SerializeField]
-    protected GameObject highlightPrefab;
-
     protected GameObject highlightGO;
 
     protected virtual void Awake()
     {
+        GameObject highlightPrefab = (GameObject)Resources.Load("Highlight");
+
         highlightGO = GameObject.Instantiate(highlightPrefab);
 
         highlightGO.transform.SetParent(this.transform, false);

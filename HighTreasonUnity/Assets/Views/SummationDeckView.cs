@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
 using HighTreasonGame;
 
 public class SummationDeckView : CardHolderView
 {
+    private Player playerToDisplay;
+
+    public void SetPlayerForDisplay(Player player)
+    {
+        playerToDisplay = player;
+    }
+
     protected override CardHolder RetrieveCardHolder()
     {
-        return GameManager.Instance.Game.CurPlayer.SummationDeck;
+        return playerToDisplay.SummationDeck;
     }
 }

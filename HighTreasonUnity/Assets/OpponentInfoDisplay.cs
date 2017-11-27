@@ -33,7 +33,7 @@ public class OpponentInfoDisplay : MonoBehaviour
         background.color = (p.Side == Player.PlayerSide.Prosecution) ? ViewManager.Instance.ProsecutionColor : ViewManager.Instance.DefenseColor;
 
         roleText.text = p.Side.ToString();
-        handText.text = "Hand Size=" + p.Hand.Cards.Count.ToString();
-        summationDeckText.text = "Summation Size=" + p.SummationDeck.Cards.Count.ToString();
+        handText.text = "Hand: " + p.Hand.Cards.Count.ToString();
+        summationDeckText.text = "Summation: " + p.SummationDeck.Cards.Count.ToString();
     }
 }

@@ -27,6 +27,8 @@ namespace HighTreasonGame
 
         public bool BeingPlayed = false;
 
+        public bool Revealed = false;
+
         public Card(CardTemplate _cardTemplate)
         {
             Template = _cardTemplate;

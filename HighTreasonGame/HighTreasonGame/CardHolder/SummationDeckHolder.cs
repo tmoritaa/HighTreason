@@ -30,7 +30,7 @@ namespace HighTreasonGame
             base.RemoveCard(card);
         }
 
-        public Card RevealRandomCardInSummation()
+        public void RevealRandomCardInSummation()
         {
             List<Card> hiddenCards = new List<Card>();
 
@@ -45,7 +45,7 @@ namespace HighTreasonGame
             int randIdx = GlobalRandom.GetRandomNumber(0, hiddenCards.Count);
             Card card = hiddenCards[randIdx];
 
-            return card;
+            card.Revealed = true;
         }
     }
 }

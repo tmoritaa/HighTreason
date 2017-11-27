@@ -141,8 +141,7 @@ namespace HighTreasonGame
 
         public void RevealCardInSummation()
         {
-            Card revealedCard = SummationDeck.RevealRandomCardInSummation();
-            Console.WriteLine(revealedCard.Template.Name + " revealed in summation");
+            SummationDeck.RevealRandomCardInSummation();
         }
 
         public Jury PerformJuryForDeliberation(List<Jury> juries)

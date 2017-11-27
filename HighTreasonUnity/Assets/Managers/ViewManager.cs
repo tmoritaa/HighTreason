@@ -72,9 +72,9 @@ public class ViewManager : MonoBehaviour
         discardView.gameObject.SetActive(false);
     }
 
-    public void DisplaySummationDeckView()
+    public void DisplaySummationDeckViewForCurPlayer()
     {
-        DisplayView(PopupType.SummationDeck);
+        DisplayView(PopupType.SummationDeck, GameManager.Instance.Game.CurPlayer);
     }
 
     public void DisplayDiscardView()
@@ -89,12 +89,12 @@ public class ViewManager : MonoBehaviour
         switch (ptype)
         {
             case PopupType.DetailedCard:
-                Card card = (Card)args[0];
+                detailedCardView.SetCardForDisplay((Card)args[0]);
                 detailedCardView.gameObject.SetActive(true);
-                detailedCardView.SetCardForDisplay(card);
                 displayedView = detailedCardView.gameObject;
                 break;
             case PopupType.SummationDeck:
+                summationView.SetPlayerForDisplay((Player)args[0]);
                 summationView.gameObject.SetActive(true);
                 displayedView = summationView.gameObject;
                 break;

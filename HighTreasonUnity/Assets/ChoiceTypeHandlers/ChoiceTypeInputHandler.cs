@@ -6,19 +6,19 @@ using HighTreasonGame;
 
 public abstract class ChoiceTypeInputHandler
 {
-    public UnityChoiceHandler.ChoiceType choiceType
+    public UnityChoiceHandler.ChoiceType ChoiceType
     {
         get; protected set;
     }
 
     public ChoiceTypeInputHandler(UnityChoiceHandler.ChoiceType _choiceType)
     {
-        choiceType = _choiceType;
+        ChoiceType = _choiceType;
     }
 
-    public virtual bool SkipChoiceIfNoValid(out object[] emptyOutput)
+    public virtual bool SkipChoiceIfNoValid(out object[] validOutput)
     {
-        emptyOutput = new object[] { };
+        validOutput = new object[] { };
         return false;
     }
 

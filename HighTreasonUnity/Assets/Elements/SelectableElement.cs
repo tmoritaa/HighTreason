@@ -21,8 +21,7 @@ public abstract class SelectableElement : HighlightElement, ISelectable
     {
         base.Awake();
 
-        this.SetSelectable(false);
-
+        this.InitISelectable();
         this.GetComponent<Button>().onClick.AddListener(onClick);
     }
 
@@ -33,10 +32,10 @@ public abstract class SelectableElement : HighlightElement, ISelectable
 
     protected override void Update()
     {
-        bool keyIsSelectable = SelectableElementManager.Instance.KeyIsSelectable(SelectKey);
-        if (Selectable != keyIsSelectable)
+        bool selectableRes = isSelectable();
+        if (Selectable != selectableRes)
         {
-            this.SetSelectable(keyIsSelectable);
+            this.SetSelectable(selectableRes);
         }
 
         base.Update();
@@ -47,9 +46,5 @@ public abstract class SelectableElement : HighlightElement, ISelectable
     protected abstract void init();
     protected abstract void updateUI();
     protected abstract void onClick();
-
-    protected override bool shouldHighlight()
-    {
-        return Selectable;
-    }
+    protected abstract bool isSelectable();
 }

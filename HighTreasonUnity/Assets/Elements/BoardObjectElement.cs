@@ -19,7 +19,20 @@ public abstract class BoardObjectElement : SelectableElement
     
     protected override void onClick()
     {
-        Debug.Log("BoardObject Choice Complete");
-        ChoiceHandlerDelegator.Instance.ChoiceMade(BoardObject);
+        if (isSelectable())
+        {
+            Debug.Log("BoardObject Choice Complete");
+            ChoiceHandlerDelegator.Instance.ChoiceMade(BoardObject);
+        }
+    }
+
+    protected override bool shouldHighlight()
+    {
+        return Selectable;
+    }
+
+    protected override bool isSelectable()
+    {
+        return SelectableElementManager.Instance.KeyIsSelectable(SelectKey);
     }
 }
