@@ -11,6 +11,11 @@ public interface ISelectable
     {
         get; set;
     }
+
+    object SelectKey
+    {
+        get; set;
+    }
 }
 
 public static class SelectableExtension

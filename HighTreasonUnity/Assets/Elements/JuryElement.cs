@@ -29,7 +29,7 @@ public class JuryElement : BoardObjectElement
     protected override void init()
     {
         jury = (Jury)GameManager.Instance.Game.Board.Juries[Idx];
-        registerObj(jury);
+        SelectKey = jury;
 
         ownedJuryAspectElements.ForEach(e => e.InitJuryAspect(jury));
         swayTrackElement.InitSwayTrack(jury);
@@ -39,8 +39,6 @@ public class JuryElement : BoardObjectElement
 
     protected override void updateUI()
     {
-        base.updateUI();
-
         actionPtText.text = jury.ActionPoints + " Delibration Action Points";
     }
 }

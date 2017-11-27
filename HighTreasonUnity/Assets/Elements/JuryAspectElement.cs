@@ -20,7 +20,7 @@ public class JuryAspectElement : BoardObjectElement
     public void InitJuryAspect(Jury jury)
     {
         juryAspect = jury.Aspects.Find(ja => ja.Properties.Contains(aspectProp));
-        registerObj(juryAspect);
+        SelectKey = juryAspect;
         updateUI();
     }
 
@@ -31,8 +31,6 @@ public class JuryAspectElement : BoardObjectElement
 
     protected override void updateUI()
     {
-        base.updateUI();
-
         string str = string.Empty;
         if (juryAspect.IsVisibleToPlayer(GameManager.Instance.Game.CurPlayer.Side))
         {

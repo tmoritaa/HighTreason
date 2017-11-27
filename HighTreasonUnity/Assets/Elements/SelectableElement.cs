@@ -7,12 +7,12 @@ using UnityEngine.UI;
 
 public abstract class SelectableElement : HighlightElement, ISelectable
 {
-    public object ObjRef
+    public bool Selectable
     {
-        get; protected set;
+        get; set;
     }
 
-    public bool Selectable
+    public object SelectKey
     {
         get; set;
     }
@@ -31,31 +31,25 @@ public abstract class SelectableElement : HighlightElement, ISelectable
         init();
     }
 
-    void Update()
+    protected override void Update()
     {
+        bool keyIsSelectable = SelectableElementManager.Instance.KeyIsSelectable(SelectKey);
+        if (Selectable != keyIsSelectable)
+        {
+            this.SetSelectable(keyIsSelectable);
+        }
+
+        base.Update();
+
         updateUI();
     }
 
     protected abstract void init();
-
-    protected virtual void updateUI()
-    {
-        if (Selectable && !this.highlightGO.activeSelf)
-        {
-            this.Highlight(true);
-        }
-        else if (!Selectable && this.highlightGO.activeSelf)
-        {
-            this.Highlight(false);
-        }
-    }
-
+    protected abstract void updateUI();
     protected abstract void onClick();
 
-    protected void registerObj(object obj)
+    protected override bool shouldHighlight()
     {
-        ObjRef = obj;
-        SelectableElementManager.Instance.RegisterSelectableElement(this);
+        return Selectable;
     }
-
 }

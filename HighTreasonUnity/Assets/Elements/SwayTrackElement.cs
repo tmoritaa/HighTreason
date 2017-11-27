@@ -17,7 +17,7 @@ public class SwayTrackElement : BoardObjectElement
     public void InitSwayTrack(Jury jury)
     {
         swayTrack = jury.SwayTrack;
-        registerObj(swayTrack);
+        SelectKey = swayTrack;
         updateUI();
     }
 
@@ -28,8 +28,6 @@ public class SwayTrackElement : BoardObjectElement
 
     protected override void updateUI()
     {
-        base.updateUI();
-
         text.text = swayTrack.Value.ToString();
     }
 }

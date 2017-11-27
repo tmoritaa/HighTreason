@@ -13,7 +13,7 @@ public abstract class BoardObjectElement : SelectableElement
     {
         get
         {
-            return (BoardObject)ObjRef;
+            return (BoardObject)SelectKey;
         }
     }
     

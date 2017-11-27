@@ -37,7 +37,7 @@ public class TrackElement : BoardObjectElement
                 return retVal;
             })[0];
 
-        registerObj(htgoElement);
+        SelectKey = htgoElement;
 
         track = (Track)htgoElement;
 
@@ -61,8 +61,6 @@ public class TrackElement : BoardObjectElement
 
     protected override void updateUI()
     {
-        base.updateUI();
-
         token.transform.position = trackBoxes[track.Value - track.MinValue].transform.position;
     }
 }

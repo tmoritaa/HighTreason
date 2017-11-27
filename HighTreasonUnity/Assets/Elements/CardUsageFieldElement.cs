@@ -16,24 +16,17 @@ public abstract class CardUsageFieldElement : HighlightElement
         GetComponent<Button>().onClick.AddListener(triggerClick);
     }
 
-    void Update()
-    {
-        if (canUse() && !this.highlightGO.activeSelf)
-        {
-            this.Highlight(true);
-        }
-        else if (!canUse() && this.highlightGO.activeSelf)
-        {
-            this.Highlight(false);
-        }
-    }
-
     void triggerClick()
     {
         if (canUse())
         {
             onValidClick();
         }
+    }
+
+    protected override bool shouldHighlight()
+    {
+        return canUse();
     }
 
     protected abstract bool canUse();

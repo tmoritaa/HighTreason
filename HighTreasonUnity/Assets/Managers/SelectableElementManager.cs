@@ -15,38 +15,30 @@ public class SelectableElementManager : MonoBehaviour
         get { return instance; }
     }
 
-    private Dictionary<object, SelectableElement> objToSelectableMap = new Dictionary<object, SelectableElement>();
+    private Dictionary<object, bool> objIsSelectableTable = new Dictionary<object, bool>();
 
     void Awake()
     {
         SelectableElementManager.instance = this;
     }
 
-    public void MarkAllAsUnselectable()
-    {
-        foreach (ISelectable selectable in objToSelectableMap.Values)
-        {
-            selectable.SetSelectable(false);
-        }
-    }
-
     public void MarkObjsAsSelectable(object[] choices)
     {
-        MarkAllAsUnselectable();
+        Reset();
 
         foreach (object choice in choices)
         {
-            objToSelectableMap[choice].SetSelectable(true);
+            objIsSelectableTable[choice] = true;
         }
-    }
-
-    public void RegisterSelectableElement(SelectableElement se)
-    {
-        objToSelectableMap.Add(se.ObjRef, se);
     }
 
     public void Reset()
     {
-        objToSelectableMap.Clear();
+        objIsSelectableTable.Clear();
+    }
+
+    public bool KeyIsSelectable(object key)
+    {
+        return objIsSelectableTable.ContainsKey(key) && objIsSelectableTable[key];
     }
 }
