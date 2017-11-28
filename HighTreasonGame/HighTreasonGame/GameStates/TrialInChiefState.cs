@@ -27,7 +27,8 @@ namespace HighTreasonGame.GameStates
 
         protected override void mainLoop()
         {
-            while (true)
+            int numPlayersFinished = 0;
+            while (numPlayersFinished < 2)
             {
                 if (game.NotifyStartOfTurn != null)
                 {
@@ -36,12 +37,10 @@ namespace HighTreasonGame.GameStates
 
                 game.CurPlayer.PerformPlayerAction();
 
-                int numPlayersFinished = 0;
-                List<Player> players = game.GetPlayers();
-                players.ForEach(p => numPlayersFinished += (p.Hand.Cards.Count == 2) ? 1 : 0);
-                if (numPlayersFinished == players.Count)
+                if (game.CurPlayer.Hand.Cards.Count == 2)
                 {
-                    break;
+                    numPlayersFinished += 1;
+                    game.CurPlayer.AddHandToSummation();
                 }
 
                 if (game.GetOtherPlayer().Hand.Cards.Count > 2)
@@ -49,8 +48,6 @@ namespace HighTreasonGame.GameStates
                     game.PassToNextPlayer();
                 }
             }
-
-            game.GetPlayers().ForEach(p => p.AddHandToSummation());
 
             GotoNextState();
         }
