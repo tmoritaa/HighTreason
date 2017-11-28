@@ -31,24 +31,20 @@ public class DetailedCardElement : MonoBehaviour
     [SerializeField]
     private CardEventUsageFieldElement cardEventFieldElementPrefab;
 
-    private Card displayedCard;
-
     public void SetCardTemplate(Card card)
     {
-        displayedCard = card;
-
-        updateDisplay();
+        updateDisplay(card);
     }
 
-    private void updateDisplay()
+    private void updateDisplay(Card card)
     {
         resetDisplay();
 
-        var cardInfo = CardInfoManager.Instance.GetCardInfo(displayedCard.Template.Name);
+        var cardInfo = CardInfoManager.Instance.GetCardInfo(card.Template.Name);
 
         typing.text = cardInfo.typing;
         cardName.text = cardInfo.name;
-        actionPoints.Init(displayedCard);
+        actionPoints.Init(card);
 
         GameState.GameStateType[] stateTypes = new GameState.GameStateType[] { GameState.GameStateType.JurySelection, GameState.GameStateType.TrialInChief, GameState.GameStateType.Summation };
         List<CardInfo.EffectPair>[] cardEffectPairs = new List<CardInfo.EffectPair>[] { cardInfo.jurySelectionPairs, cardInfo.trialInChiefPairs, cardInfo.summationPairs };
@@ -66,7 +62,7 @@ public class DetailedCardElement : MonoBehaviour
                 CardEventUsageFieldElement eventObj = GameObject.Instantiate(cardEventFieldElementPrefab);
                 eventObj.gameObject.SetActive(true);
 
-                eventObj.Init(displayedCard, stateType, i, pairList[i]);
+                eventObj.Init(card, stateType, i, pairList[i], true);
 
                 RectTransform rect = eventObj.GetComponent<RectTransform>();
                 rect.anchorMin = new Vector2(0, 1.0f - (float)(i + 1) / size);

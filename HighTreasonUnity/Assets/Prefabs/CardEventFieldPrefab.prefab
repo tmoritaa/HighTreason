@@ -112,7 +112,7 @@ MonoBehaviour:
     m_FontSize: 30
     m_FontStyle: 0
     m_BestFit: 1
-    m_MinSize: 30
+    m_MinSize: 10
     m_MaxSize: 50
     m_Alignment: 3
     m_AlignByGeometry: 0
@@ -159,8 +159,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d29c6e63021fbd4381800471fc9ea10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlightPrefab: {fileID: 1224098941512400, guid: 631a5d3da0e9f3e4abbe508a3a9d90f8,
-    type: 2}
 --- !u!222 &222120477826058132
 CanvasRenderer:
   m_ObjectHideFlags: 1

@@ -11,11 +11,18 @@ using HighTreasonGame;
 public class MiniCardElement : SelectableElement
 {
     [SerializeField]
-    private Text typing;
-    [SerializeField]
     private Text cardName;
 
-    public Card CardObj
+    [SerializeField]
+    private Text actionPoints;
+
+    [SerializeField]
+    private GameObject eventFieldParent;
+
+    [SerializeField]
+    private CardEventUsageFieldElement cardEventFieldElementPrefab;
+
+    public Card DisplayedCard
     {
         get
         {
@@ -23,12 +30,12 @@ public class MiniCardElement : SelectableElement
         }
     }
 
-    public void SetCard(Card _cardObj)
+    public void SetCard(Card _displayedCard)
     {
-        SelectKey = _cardObj;
+        SelectKey = _displayedCard;
 
-        Debug.Log("Setting up card " + CardObj.Template.Name);
-        updateUI();
+        Debug.Log("Setting up card " + _displayedCard.Template.Name);
+        initCardDisplay(_displayedCard);
     }
 
     protected override bool shouldHighlight()
@@ -49,13 +56,13 @@ public class MiniCardElement : SelectableElement
 
     protected override void onClick()
     {
-        if (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.CardAndUsage && cardCanBeDisplayed())
+        if (cardCanBeDisplayed())
         {
-            ViewManager.Instance.DisplayView(ViewManager.PopupType.DetailedCard, CardObj);
+            ViewManager.Instance.DisplayView(ViewManager.PopupType.DetailedCard, DisplayedCard);
         }
         else if (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.MomentOfInsight)
         {
-            ChoiceHandlerDelegator.Instance.ChoiceMade(BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Swap, CardObj);
+            ChoiceHandlerDelegator.Instance.ChoiceMade(BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Swap, DisplayedCard);
         }
     }
 
@@ -66,21 +73,71 @@ public class MiniCardElement : SelectableElement
 
     protected override void updateUI()
     {
-        if (CardObj != null)
-        {   
-            if (cardCanBeDisplayed())
-            {
-                var cardInfo = CardInfoManager.Instance.GetCardInfo(CardObj.Template.Name);
+        // Do nothing.
+    }
 
-                typing.text = cardInfo.typing;
-                cardName.text = cardInfo.name;
+    private void initCardDisplay(Card card)
+    {
+        resetDisplay();
+
+        if (cardCanBeDisplayed())
+        {
+            var cardInfo = CardInfoManager.Instance.GetCardInfo(card.Template.Name);
+
+            cardName.text = cardInfo.name;
+            actionPoints.text = card.Template.ActionPts.ToString();
+
+            bool handled = true;
+            GameState.GameStateType stateType = GameManager.Instance.Game.CurState.StateType;
+            List<CardInfo.EffectPair> cardEffectPair = null;
+
+            switch (stateType)
+            {
+                case GameState.GameStateType.JurySelection:
+                    cardEffectPair = cardInfo.jurySelectionPairs;
+                    break;
+                case GameState.GameStateType.TrialInChief:
+                    cardEffectPair = cardInfo.trialInChiefPairs;
+                    break;
+                case GameState.GameStateType.Summation:
+                    cardEffectPair = cardInfo.summationPairs;
+                    break;
+                default:
+                    handled = false;
+                    break;
             }
+
+            if (handled)
+            {
+                int size = cardEffectPair.Count;
+                for (int i = 0; i < size; ++i)
+                {
+                    CardEventUsageFieldElement eventObj = GameObject.Instantiate(cardEventFieldElementPrefab);
+                    eventObj.gameObject.SetActive(true);
+
+                    eventObj.Init(card, stateType, i, cardEffectPair[i], false);
+
+                    RectTransform rect = eventObj.GetComponent<RectTransform>();
+                    rect.anchorMin = new Vector2(0, 1.0f - (float)(i + 1) / size);
+                    rect.anchorMax = new Vector2(1, 1.0f - (float)i / size);
+
+                    eventObj.transform.SetParent(eventFieldParent.transform, false);
+                }
+            }
+        }
+    }
+
+    private void resetDisplay()
+    {
+        foreach (Transform child in eventFieldParent.transform)
+        {
+            Destroy(child.gameObject);
         }
     }
 
     private bool cardCanBeDisplayed()
     {
         Player curPlayer = GameManager.Instance.Game.CurPlayer;
-        return CardObj.Revealed || CardObj.CardHolder.Id == CardHolder.HolderId.Discard || curPlayer.Hand == CardObj.CardHolder || curPlayer.SummationDeck == CardObj.CardHolder;
+        return DisplayedCard.Revealed || DisplayedCard.CardHolder.Id == CardHolder.HolderId.Discard || curPlayer.Hand == DisplayedCard.CardHolder || curPlayer.SummationDeck == DisplayedCard.CardHolder;
     }
 }

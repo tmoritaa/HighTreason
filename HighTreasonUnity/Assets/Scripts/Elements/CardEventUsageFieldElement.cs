@@ -8,6 +8,7 @@ using HighTreasonGame;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Image))]
 public class CardEventUsageFieldElement : CardUsageFieldElement 
 {
     private GameState.GameStateType usableState;
@@ -16,7 +17,9 @@ public class CardEventUsageFieldElement : CardUsageFieldElement
 
     private Card card;
 
-    public void Init(Card _card, GameState.GameStateType _usableState, int _eventIdx, CardInfo.EffectPair ep)
+    private bool isClickable;
+
+    public void Init(Card _card, GameState.GameStateType _usableState, int _eventIdx, CardInfo.EffectPair ep, bool _isClickable)
     {
         card = _card;
         usableState = _usableState;
@@ -40,7 +43,11 @@ public class CardEventUsageFieldElement : CardUsageFieldElement
                 color = ViewManager.Instance.JurySelectColor;
                 break;
         }
+
         this.GetComponent<Image>().color = color;
+
+        isClickable = _isClickable;
+        this.GetComponent<Graphic>().raycastTarget = isClickable;
     }
 
     protected override void onValidClick()
@@ -52,7 +59,8 @@ public class CardEventUsageFieldElement : CardUsageFieldElement
     protected override bool canUse()
     {
         return
-            ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.CardAndUsage
+            isClickable
+            && ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.CardAndUsage
             && GameManager.Instance.Game.CurState.StateType == usableState
             && card.CanBePlayed;
     }
