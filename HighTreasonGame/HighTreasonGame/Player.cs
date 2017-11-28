@@ -27,6 +27,7 @@ namespace HighTreasonGame
                 Event,
                 Action,
                 Mulligan,
+                Cancelled,
             }
 
             public Card card;
@@ -82,6 +83,11 @@ namespace HighTreasonGame
             {
                 PlayerActionParams playerAction;
                 choiceHandler.ChoosePlayerAction(Hand.SelectableCards, game, out playerAction);
+
+                if (playerAction.usage == PlayerActionParams.UsageType.Cancelled)
+                {
+                    continue;
+                }
 
                 bool cardPlayed = false;
                 if (playerAction.usage == PlayerActionParams.UsageType.Mulligan 

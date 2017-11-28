@@ -38,15 +38,23 @@ public class UnityChoiceHandler : ChoiceHandler
         waitForInput.WaitOne();
 
         outPlayerAction = new Player.PlayerActionParams();
-        outPlayerAction.usage = (Player.PlayerActionParams.UsageType)passedParams[0];
 
-        if (outPlayerAction.usage != Player.PlayerActionParams.UsageType.Mulligan)
+        if (passedParams == null)
         {
-            outPlayerAction.card = (Card)passedParams[1];
+            outPlayerAction.usage = Player.PlayerActionParams.UsageType.Cancelled;
+        }
+        else
+        {
+            outPlayerAction.usage = (Player.PlayerActionParams.UsageType)passedParams[0];
 
-            for (int i = 2; i < passedParams.Length; ++i)
+            if (outPlayerAction.usage != Player.PlayerActionParams.UsageType.Mulligan)
             {
-                outPlayerAction.misc.Add(passedParams[i]);
+                outPlayerAction.card = (Card)passedParams[1];
+
+                for (int i = 2; i < passedParams.Length; ++i)
+                {
+                    outPlayerAction.misc.Add(passedParams[i]);
+                }
             }
         }
 
@@ -59,7 +67,15 @@ public class UnityChoiceHandler : ChoiceHandler
         waitForInput.WaitOne();
 
         boardChoice = new BoardChoices();
-        boardChoice.SelectedObjs = (Dictionary<BoardObject, int>)passedParams[0];
+
+        if (passedParams == null)
+        {
+            boardChoice.NotCancelled = false;
+        }
+        else
+        {
+            boardChoice.SelectedObjs = (Dictionary<BoardObject, int>)passedParams[0];
+        }
 
         passedParams = null;
     }
@@ -71,7 +87,12 @@ public class UnityChoiceHandler : ChoiceHandler
 
         outMoIInfo = new BoardChoices.MomentOfInsightInfo();
 
-        if (passedParams.Length == 0)
+        bool notCancelled = true;
+        if (passedParams == null)
+        {
+            notCancelled = false;
+        }
+        else if (passedParams.Length == 0)
         {
             outMoIInfo.Use = BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.NotChosen;
         }
@@ -88,6 +109,6 @@ public class UnityChoiceHandler : ChoiceHandler
 
         passedParams = null;
 
-        return true;
+        return notCancelled;
     }
 }

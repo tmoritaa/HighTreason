@@ -74,13 +74,22 @@ public class ChoiceHandlerDelegator : MonoBehaviour
             return;
         }
 
-        object[] validOutput;
-        bool complete = inputHandler.VerifyInput(out validOutput, input);
-        if (complete)
+        if (input.Length == 1 && input[0].GetType() == typeof(string) && ((string)input[0]).Equals("cancel"))
         {
-            Debug.Log("ChoiceMade complete");
+            Debug.Log("Cancelled choice complete");
             cleanupAfterChoice();
-            curChoiceHandler.ChoiceInputMade(validOutput);
+            curChoiceHandler.ChoiceInputMade(null);
+        }
+        else
+        {
+            object[] validOutput;
+            bool complete = inputHandler.VerifyInput(out validOutput, input);
+            if (complete)
+            {
+                Debug.Log("ChoiceMade complete");
+                cleanupAfterChoice();
+                curChoiceHandler.ChoiceInputMade(validOutput);
+            }
         }
     }
 
