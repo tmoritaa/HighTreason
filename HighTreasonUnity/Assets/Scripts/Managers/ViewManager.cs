@@ -6,6 +6,7 @@ using System.Linq;
 using HighTreasonGame;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ViewManager : MonoBehaviour 
 {
@@ -55,6 +56,9 @@ public class ViewManager : MonoBehaviour
 
     [SerializeField]
     private GameObject trialAndSummationMainBoardGO;
+
+    [SerializeField]
+    private TextHolderElement curActionDesc;
 
     private Stack<GameObject> displayedPopups = new Stack<GameObject>();
 
@@ -122,6 +126,17 @@ public class ViewManager : MonoBehaviour
     public void HideTopView()
     {
         displayedPopups.Pop().SetActive(false);
+    }
+
+    public void HideCurActionText()
+    {
+        curActionDesc.gameObject.SetActive(false);
+    }
+
+    public void UpdateActionText(string desc)
+    {
+        curActionDesc.SetText(desc);
+        curActionDesc.gameObject.SetActive(true);
     }
 
     private void handleNotifyStateStart()

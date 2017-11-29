@@ -24,6 +24,7 @@ namespace HighTreasonGame
             Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices,
             Func<Dictionary<BoardObject, int>, bool> choicesComplete,
             Game game,
+            string description,
             out BoardChoices boardChoice);
     }
 }

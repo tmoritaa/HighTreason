@@ -15,7 +15,8 @@ namespace HighTreasonGame.CardTemplates
 
         protected override void addSelectionEventsAndChoices()
         {
-            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>(), 2, true, null,
+            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>(), 2, true, this.CardInfo.JurySelectionPairs[0].Description,
+                null,
                 (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
                 {
                     List<BoardObject> newChoices = new List<BoardObject>(remainingChoices);
@@ -44,7 +45,7 @@ namespace HighTreasonGame.CardTemplates
 
         protected override void addTrialEventsAndChoices()
         {
-            TrialEventChoices.Add(genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 1, false));
+            TrialEventChoices.Add(genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 1, false, this.CardInfo.TrialInChiefPairs[0].Description));
             TrialEvents.Add(raiseGuiltAndOneAspectEffect);
         }
 

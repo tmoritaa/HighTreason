@@ -16,9 +16,13 @@ public class CardInfo
 
         public EffectType Type { get; private set; }
         public string Text { get; private set; }
+        public string Description { get; private set; }
 
-        public EffectPair(string typeStr, string text)
+        public EffectPair(string typeStr, string text, string desc)
         {
+            Text = text;
+            Description = desc;
+
             switch (typeStr)
             {
                 case "prosecution":
@@ -35,14 +39,13 @@ public class CardInfo
                     break;
 
             }
-
-            Text = text;
         }
 
-        public EffectPair(EffectType type, string text)
+        public EffectPair(EffectType type, string text, string desc)
         {
             Type = type;
             Text = text;
+            Description = desc;
         }
     }
 

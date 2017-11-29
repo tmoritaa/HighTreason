@@ -5,17 +5,12 @@ using System.Text;
 
 public class CardAndUsageInputHandler : ChoiceTypeInputHandler
 {
-    public CardAndUsageInputHandler() : base(UnityChoiceHandler.ChoiceType.CardAndUsage)
+    public CardAndUsageInputHandler() : base(UnityChoiceHandler.ChoiceType.CardAndUsage, "Select action to perform")
     {}
 
     public override bool VerifyInput(out object[] validOutput, params object[] input)
     {
         validOutput = input;
         return true;
-    }
-
-    public override void OnUpdate()
-    {
-        // Do Nothing.
     }
 }

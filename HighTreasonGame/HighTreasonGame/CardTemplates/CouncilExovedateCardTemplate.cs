@@ -15,10 +15,10 @@ namespace HighTreasonGame.CardTemplates
 
         protected override void addSelectionEventsAndChoices()
         {
-            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>(), 2, true));
+            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>(), 2, true, this.CardInfo.JurySelectionPairs[0].Description));
             SelectionEvents.Add(revealAllAspects);
 
-            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>(), 1, false));
+            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>(), 1, false, this.CardInfo.JurySelectionPairs[1].Description));
             SelectionEvents.Add(peekAllAspects);
         }
 

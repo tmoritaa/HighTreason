@@ -1,50 +1,50 @@
 {
 	"Thomas McKay":{
 		"typing":"Prosecution Witness",
-		"jury_selection":["Reveal any 2 different Traits."],
-		"trial_in_chief":[{"type":"prosecution", "text":"+1 Guilt and 1-> to any one aspect."}],
-		"summation":[{"type":"prosecution", "text":"2-> to the English aspect."}]
+		"jury_selection":[{"text":"Reveal any 2 different Traits.", "desc":"Select 2 different Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"+1 Guilt and 1-> to any one aspect.", "desc":"Select 1 aspect"}],
+		"summation":[{"type":"prosecution", "text":"2-> to the English aspect.", "desc":""}]
 	},
 	"John W. Astley":{
 		"typing":"Prosecution Witness",
-		"jury_selection":["Reveal 3 Occupation;","OR 2 Religion."],
-		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui and 1-> to any one aspect."}],
-		"summation":[{"type":"prosecution", "text":"1-> each to any three aspects except French."}]
+		"jury_selection":[{"text":"Reveal 3 Occupation;", "desc":"Select 3 Occupation Traits"}, {"text":"OR 2 Religion.", "desc":"Select 2 Religion Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui and 1-> to any one aspect.", "desc":"Select 1 aspect"}],
+		"summation":[{"type":"prosecution", "text":"1-> each to any three aspects except French.", "desc":"Select 3 non-French Aspects"}]
 	},
 	"Doctor James Wallace":{
 		"typing":"Prosecution Witness",
-		"jury_selection":["Reveal 3 Occupation;","OR 2 Religion."],
-		"trial_in_chief":[{"type":"prosecution", "text":"-1 Ins and 1 P.MoI."}],
-		"summation":[{"type":"prosecution", "text":"2-> each to the English and Protestant aspects."}]
+		"jury_selection":[{"text":"Reveal 3 Occupation;", "desc":"Select 3 Occupation Traits"}, {"text":"OR 2 Religion.", "desc":"Select 2 Religion Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"-1 Ins and 1 P.MoI.", "desc":""}],
+		"summation":[{"type":"prosecution", "text":"2-> each to the English and Protestant aspects.", "desc":""}]
 	},
 	"Harold Ross":{
 		"typing":"Prosecution Witness",
-		"jury_selection":["Reveal 3 Occupation;","OR 4 Language."],
-		"trial_in_chief":[{"type":"prosecution", "text":"-1 Ins and 1 MoI;"}, {"type":"neutral", "text":"OR <-2-> to any one aspect."}],
-		"summation":[{"type":"prosecution", "text":"2-> each to the English and Protestant aspects;"}, {"type":"defense", "text":"OR <- each to the Farmer and French aspects."}]
+		"jury_selection":[{"text":"Reveal 3 Occupation;", "desc":"Select 3 Occupation Traits"},{"text":"OR 4 Language.", "desc":"Select 4 Language Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"-1 Ins and 1 MoI;", "desc":""}, {"type":"neutral", "text":"OR <-2-> to any one aspect.", "desc":"Select 1 Aspect"}],
+		"summation":[{"type":"prosecution", "text":"2-> each to the English and Protestant aspects;", "desc":""}, {"type":"defense", "text":"OR 1<- each to the Farmer and French aspects.", "desc":""}]
 	},
 	"\"A Purely Constitutional Movement\"":{
 		"typing":"Defense Evidence",
-		"jury_selection":["Reveal 1 Trait marker of each type."],
-		"trial_in_chief":[{"type":"defense", "text":"Either +1 Ins and 1 D.MoI;"}, {"type":"defense", "text":"OR <-2 to the Farmer and <-2 to the French aspects."}],
-		"summation":[{"type":"defense", "text":"+1 Ins"}]
+		"jury_selection":[{"text":"Reveal 1 Trait marker of each type.", "desc":"Select 1 Trait of each type"}],
+		"trial_in_chief":[{"type":"defense", "text":"Either +1 Ins and 1 D.MoI;", "desc":""}, {"type":"defense", "text":"OR <-2 to the Farmer and <-2 to the French aspects.", "desc":""}],
+		"summation":[{"type":"defense", "text":"+1 Ins", "desc":""}]
 	},
 	"William Tompkins":{
 		"typing":"Prosecution Witness",
-		"jury_selection":["Reveal 3 Occupation;","OR 2 Language;","OR 1 Religion."],
-		"trial_in_chief":[{"type":"neutral", "text":"<-2-> to any Occupation Trait aspect, and 1 MoI"}],
-		"summation":[{"type":"neutral", "text":"<-2-> to the Government aspect, and <-2-> to the Merchant aspect, with 1 in the opposite direction to the Farmer aspect."}]
+		"jury_selection":[{"text":"Reveal 3 Occupation;", "desc":"Select 3 Occupation Traits"}, {"text":"OR 2 Language;", "desc":"Select 2 Language Traits"}, {"text":"OR 1 Religion.", "desc":"Select 1 Religion Trait"}],
+		"trial_in_chief":[{"type":"neutral", "text":"<-2-> to any Occupation Trait aspect, and 1 MoI", "desc":"Select 1 Occupation Aspect"}],
+		"summation":[{"type":"neutral", "text":"<-2-> to the Government aspect, and <-2-> to the Merchant aspect, with 1 in the opposite direction to the Farmer aspect.", "desc":""}]
 	},
 	"Council of the Exovedate":{
 		"typing":"Defense Testimony",
-		"jury_selection":["Reveal any 2 Traits;","OR peek at any 1 Trait."],
-		"trial_in_chief":[{"type":"neutral", "text":"Either <-2-> to the French aspect;"}, {"type":"neutral", "text":"OR <-2-> to the English aspect;"}, {"type":"neutral", "text":"OR <-1-> to the Merchant and Farmer aspects."}],
-		"summation":[{"type":"neutral", "text":"Either <-2-> to the French aspect;"}, {"type":"neutral", "text":"OR <-2-> to the English aspect;"}, {"type":"neutral", "text":"OR <-1-> to the Merchant and Farmer aspects."}]
+		"jury_selection":[{"text":"Reveal any 2 Traits;", "desc":"Select any 2 Traits"}, {"text":"OR peek at any 1 Trait.", "desc":"Select any 1 Trait"}],
+		"trial_in_chief":[{"type":"neutral", "text":"Either <-2-> to the French aspect;", "desc":""}, {"type":"neutral", "text":"OR <-2-> to the English aspect;", "desc":""}, {"type":"neutral", "text":"OR <-1-> to the Merchant and Farmer aspects.", "desc":""}],
+		"summation":[{"type":"neutral", "text":"Either <-2-> to the French aspect;", "desc":""}, {"type":"neutral", "text":"OR <-2-> to the English aspect;", "desc":""}, {"type":"neutral", "text":"OR <-1-> to the Merchant and Farmer aspects.", "desc":""}]
 	},
 	"Father Vital Fourmond":{
 		"typing":"Defense Witness",
-		"jury_selection":["Reveal any 2 Traits;","OR peek at 1 Relgion."],
-		"trial_in_chief":[{"type":"defense", "text":"Either +1 Ins"}, {"type":"neutral", "text":"OR peek at 3 Relgion Traits."}],
-		"summation":[{"type":"defense", "text":"+1 Ins"}]
+		"jury_selection":[{"text":"Reveal any 2 Traits;", "desc":"Select any 2 Traits"},{"text":"OR peek at 1 Relgion.", "desc":"Select 1 Religion Trait"}],
+		"trial_in_chief":[{"type":"defense", "text":"Either +1 Ins", "desc":""}, {"type":"neutral", "text":"OR peek at 3 Relgion Traits.", "desc":"Select 3 Religion Traits"}],
+		"summation":[{"type":"defense", "text":"+1 Ins", "desc":""}]
 	}
 }

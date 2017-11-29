@@ -15,16 +15,16 @@ namespace HighTreasonGame.CardTemplates
 
         protected override void addSelectionEventsAndChoices()
         {
-            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Occupation }, 3, true));
+            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Occupation }, 3, true, this.CardInfo.JurySelectionPairs[0].Description));
             SelectionEvents.Add(revealAllAspects);
 
-            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Language }, 4, true));
+            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Language }, 4, true, this.CardInfo.JurySelectionPairs[1].Description));
             SelectionEvents.Add(revealAllAspects);
         }
 
         protected override void addTrialEventsAndChoices()
         {
-            TrialEventChoices.Add(genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 1, false));
+            TrialEventChoices.Add(genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 1, false, this.CardInfo.TrialInChiefPairs[0].Description));
             TrialEvents.Add(
                 (Game game, BoardChoices choices) =>
                 {
@@ -32,7 +32,7 @@ namespace HighTreasonGame.CardTemplates
                     choices.SelectedObjs.Keys.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(1));
                 });
 
-            TrialEventChoices.Add(genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 2, true));
+            TrialEventChoices.Add(genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 2, true, this.CardInfo.TrialInChiefPairs[1].Description));
             TrialEvents.Add(
                 (Game game, BoardChoices choices) =>
                 {

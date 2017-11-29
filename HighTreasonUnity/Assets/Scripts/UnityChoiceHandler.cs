@@ -61,9 +61,9 @@ public class UnityChoiceHandler : ChoiceHandler
         passedParams = null;
     }
 
-    public override void ChooseBoardObjects(List<BoardObject> choices, Func<Dictionary<BoardObject, int>, bool> validateChoices, Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices, Func<Dictionary<BoardObject, int>, bool> choicesComplete, Game game, out BoardChoices boardChoice)
+    public override void ChooseBoardObjects(List<BoardObject> choices, Func<Dictionary<BoardObject, int>, bool> validateChoices, Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices, Func<Dictionary<BoardObject, int>, bool> choicesComplete, Game game, string desc, out BoardChoices boardChoice)
     {
-        ChoiceHandlerDelegator.Instance.TriggerChoice(this, new PickBoardObjectInputHandler(choices, validateChoices, filterChoices, choicesComplete));
+        ChoiceHandlerDelegator.Instance.TriggerChoice(this, new PickBoardObjectInputHandler(desc, choices, validateChoices, filterChoices, choicesComplete));
         waitForInput.WaitOne();
 
         boardChoice = new BoardChoices();

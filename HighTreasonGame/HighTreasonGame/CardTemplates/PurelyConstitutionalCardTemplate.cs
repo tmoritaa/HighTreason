@@ -15,7 +15,8 @@ namespace HighTreasonGame.CardTemplates
 
         protected override void addSelectionEventsAndChoices()
         {
-            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>(), 3, true, null,
+            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>(), 3, true, this.CardInfo.JurySelectionPairs[0].Description, 
+                null,
                 (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
                 {
                     List<BoardObject> newChoices = new List<BoardObject>(remainingChoices);

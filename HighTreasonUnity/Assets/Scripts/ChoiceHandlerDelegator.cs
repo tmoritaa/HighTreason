@@ -102,6 +102,7 @@ public class ChoiceHandlerDelegator : MonoBehaviour
     private void resetChoiceUI()
     {
         ViewManager.Instance.HideAllViews();
+        ViewManager.Instance.HideCurActionText();
         SelectableElementManager.Instance.Reset();
     }
 }

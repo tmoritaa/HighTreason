@@ -15,7 +15,7 @@ public class MoIInputHandler : ChoiceTypeInputHandler
     private Card pickedSummationCard = null;
 
 
-    public MoIInputHandler() : base(UnityChoiceHandler.ChoiceType.MomentOfInsight)
+    public MoIInputHandler() : base(UnityChoiceHandler.ChoiceType.MomentOfInsight, "Select Moment of Insight use")
     {
         Player player = GameManager.Instance.Game.CurPlayer;
 
@@ -89,6 +89,8 @@ public class MoIInputHandler : ChoiceTypeInputHandler
 
     public override void OnUpdate()
     {
+        base.OnUpdate();
+
         if (highlightChoices)
         {
             List<object> objs = new List<object>();

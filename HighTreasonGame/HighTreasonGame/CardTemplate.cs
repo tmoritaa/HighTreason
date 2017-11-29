@@ -69,11 +69,11 @@ namespace HighTreasonGame
             TrialEventChoices = new List<CardChoice>();
             SummationEventChoices = new List<CardChoice>();
 
+            fillCardInfo(infoRoot);
+
             addSelectionEventsAndChoices();
             addTrialEventsAndChoices();
             addSummationEventsAndChoices();
-
-            fillCardInfo(infoRoot);
         }
 
         public bool PlayAsEvent(Game game, int idx, ChoiceHandler choiceHandler)
@@ -133,6 +133,7 @@ namespace HighTreasonGame
                 HTUtility.GenActionFilterChoicesFunc(actionPtsForState, null),
                 HTUtility.GenActionChoicesCompleteFunc(actionPtsForState, null),
                 game,
+                "Select usage for " + actionPtsForState + " action points", 
                 out boardChoices);
 
             if (boardChoices.NotCancelled)
@@ -197,7 +198,7 @@ namespace HighTreasonGame
             return choiceHandler.ChooseMomentOfInsightUse(game, out moiInfo);
         }
 
-        protected CardChoice genAspectTrackForModCardChoice(HashSet<Property> optionProps, int numChoices, int modValue, bool affectedByPlayerSide)
+        protected CardChoice genAspectTrackForModCardChoice(HashSet<Property> optionProps, int numChoices, int modValue, bool affectedByPlayerSide, string desc)
         {
             return
                 (Game game, ChoiceHandler choiceHandler) =>
@@ -228,6 +229,7 @@ namespace HighTreasonGame
                         },
                         (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == numChoices; },
                         game,
+                        desc,
                         out boardChoices);
 
                     return boardChoices;
@@ -237,6 +239,7 @@ namespace HighTreasonGame
         protected CardChoice genRevealOrPeakCardChoice(HashSet<Property> optionProps, 
             int numChoices, 
             bool isReveal,
+            string desc,
             Func<Dictionary<BoardObject, int>, bool> validateChoices = null,
             Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices = null)
         {
@@ -272,6 +275,7 @@ namespace HighTreasonGame
                         },
                         (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == numChoices; },
                         game,
+                        desc,
                         out boardChoices);
 
                     return boardChoices;
@@ -330,19 +334,19 @@ namespace HighTreasonGame
             List<CardInfo.EffectPair> trialInChiefPairs = new List<CardInfo.EffectPair>();
             List<CardInfo.EffectPair> summationPairs = new List<CardInfo.EffectPair>();
 
-            foreach (string text in cardJson.Value<JArray>("jury_selection"))
+            foreach (JObject eo in cardJson.Value<JArray>("jury_selection"))
             {
-                jurySelectionPairs.Add(new CardInfo.EffectPair(CardInfo.EffectPair.EffectType.JurySelect, text));
+                jurySelectionPairs.Add(new CardInfo.EffectPair(CardInfo.EffectPair.EffectType.JurySelect, eo.Value<string>("text"), eo.Value<string>("desc")));
             }
 
             foreach (JObject eo in cardJson.Value<JArray>("trial_in_chief"))
             {
-                trialInChiefPairs.Add(new CardInfo.EffectPair(eo.Value<string>("type"), eo.Value<string>("text")));
+                trialInChiefPairs.Add(new CardInfo.EffectPair(eo.Value<string>("type"), eo.Value<string>("text"), eo.Value<string>("desc")));
             }
 
             foreach (JObject eo in cardJson.Value<JArray>("summation"))
             {
-                summationPairs.Add(new CardInfo.EffectPair(eo.Value<string>("type"), eo.Value<string>("text")));
+                summationPairs.Add(new CardInfo.EffectPair(eo.Value<string>("type"), eo.Value<string>("text"), eo.Value<string>("desc")));
             }
 
             CardInfo = new CardInfo(Name, typing, jurySelectionPairs, trialInChiefPairs, summationPairs);

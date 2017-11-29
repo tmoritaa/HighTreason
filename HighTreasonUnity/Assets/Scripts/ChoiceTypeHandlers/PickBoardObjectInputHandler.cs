@@ -17,11 +17,13 @@ public class PickBoardObjectInputHandler : ChoiceTypeInputHandler
     private Dictionary<BoardObject, int> selected = new Dictionary<BoardObject, int>();
     private List<BoardObject> remainingChoices;
 
-    public PickBoardObjectInputHandler(List<BoardObject> _choices,
+    public PickBoardObjectInputHandler(
+        string desc,
+        List<BoardObject> _choices,
         Func<Dictionary<BoardObject, int>, bool> _validateChoices,
         Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> _filterChoices,
         Func<Dictionary<BoardObject, int>, bool> _choicesComplete) 
-        : base(UnityChoiceHandler.ChoiceType.PickBoardObject)
+        : base(UnityChoiceHandler.ChoiceType.PickBoardObject, desc)
     {
         choices = _choices;
         validateChoices = _validateChoices;
@@ -91,6 +93,8 @@ public class PickBoardObjectInputHandler : ChoiceTypeInputHandler
 
     public override void OnUpdate()
     {
+        base.OnUpdate();
+
         if (highlightChoices)
         {
             SelectableElementManager.Instance.MarkObjsAsSelectable(remainingChoices.ToArray());

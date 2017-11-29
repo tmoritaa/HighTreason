@@ -133,7 +133,7 @@ namespace HighTreasonGame
 
         public void DismissJury()
         {
-            Jury jury = chooseJuryChoice(game.Board.Juries);
+            Jury jury = chooseJuryChoice(game.Board.Juries, "Select Jury to Dismiss");
 
             Console.WriteLine("Dismissed Jury\n" + jury);
 
@@ -155,7 +155,7 @@ namespace HighTreasonGame
             Jury usedJury;
             while (true)
             {
-                usedJury = chooseJuryChoice(juries);
+                usedJury = chooseJuryChoice(juries, "Select Jury for Deliberation");
 
                 int modValue = (this.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
                 List<BoardObject> choices = game.FindBO(
@@ -174,6 +174,7 @@ namespace HighTreasonGame
                     HTUtility.GenActionFilterChoicesFunc(usedJury.ActionPoints, usedJury),
                     HTUtility.GenActionChoicesCompleteFunc(usedJury.ActionPoints, usedJury),
                     game,
+                    "Select usage for " + usedJury.ActionPoints + " deliberation points",
                     out boardChoices);
 
                 if (boardChoices.NotCancelled)
@@ -231,7 +232,7 @@ namespace HighTreasonGame
             game.Discards.MoveCard(card);
         }
 
-        private Jury chooseJuryChoice(List<Jury> juries)
+        private Jury chooseJuryChoice(List<Jury> juries, string desc)
         {
             Jury jury = null;
             while (jury == null)
@@ -246,6 +247,7 @@ namespace HighTreasonGame
                     },
                     (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 1; },
                     game,
+                    desc,
                     out boardChoices);
 
                 if (boardChoices.NotCancelled)
