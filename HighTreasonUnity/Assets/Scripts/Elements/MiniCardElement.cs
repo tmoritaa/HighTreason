@@ -82,9 +82,9 @@ public class MiniCardElement : SelectableElement
 
         if (cardCanBeDisplayed())
         {
-            var cardInfo = CardInfoManager.Instance.GetCardInfo(card.Template.Name);
+            var cardInfo = card.Template.CardInfo;
 
-            cardName.text = cardInfo.name;
+            cardName.text = cardInfo.Name;
             actionPoints.text = card.Template.ActionPts.ToString();
 
             bool handled = true;
@@ -94,13 +94,13 @@ public class MiniCardElement : SelectableElement
             switch (stateType)
             {
                 case GameState.GameStateType.JurySelection:
-                    cardEffectPair = cardInfo.jurySelectionPairs;
+                    cardEffectPair = cardInfo.JurySelectionPairs;
                     break;
                 case GameState.GameStateType.TrialInChief:
-                    cardEffectPair = cardInfo.trialInChiefPairs;
+                    cardEffectPair = cardInfo.TrialInChiefPairs;
                     break;
                 case GameState.GameStateType.Summation:
-                    cardEffectPair = cardInfo.summationPairs;
+                    cardEffectPair = cardInfo.SummationPairs;
                     break;
                 default:
                     handled = false;

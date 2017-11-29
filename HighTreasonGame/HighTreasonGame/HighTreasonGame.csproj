@@ -38,6 +38,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Plugins\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -51,8 +54,9 @@
     <Compile Include="BoardChoices.cs" />
     <Compile Include="BoardObjects\Card.cs" />
     <Compile Include="CardHolder\CardHolder.cs" />
+    <Compile Include="CardInfo.cs" />
     <Compile Include="CardTemplate.cs" />
-    <Compile Include="CardTemplateManager.cs" />
+    <Compile Include="CardTemplateGenerator.cs" />
     <Compile Include="CardTemplates\CouncilExovedateCardTemplate.cs" />
     <Compile Include="CardTemplates\DoctorJamesCardTemplate.cs" />
     <Compile Include="CardTemplates\FatherVitalCardTemplate.cs" />

@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Newtonsoft.Json.Linq;
+
 namespace HighTreasonGame.CardTemplates
 {
     public class WilliamTompkinsCardTemplate : CardTemplate
     {
-        public WilliamTompkinsCardTemplate()
-            : base("William Tompkins", 3)
+        public WilliamTompkinsCardTemplate(JObject json)
+            : base("William Tompkins", 3, json)
         { }
 
         protected override void addSelectionEventsAndChoices()

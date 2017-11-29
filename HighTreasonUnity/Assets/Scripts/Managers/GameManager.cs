@@ -28,7 +28,9 @@ public class GameManager : MonoBehaviour
     {
         GameManager.instance = this;
 
-        Game = new Game(new ChoiceHandler[] { new UnityChoiceHandler(), new UnityChoiceHandler() });
+        TextAsset cardInfoTxt = Resources.Load("HighTreasonCardTexts") as TextAsset;
+
+        Game = new Game(new ChoiceHandler[] { new UnityChoiceHandler(), new UnityChoiceHandler() }, cardInfoTxt.text);
     }
 
     void Start()

@@ -40,14 +40,14 @@ public class DetailedCardElement : MonoBehaviour
     {
         resetDisplay();
 
-        var cardInfo = CardInfoManager.Instance.GetCardInfo(card.Template.Name);
+        var cardInfo = card.Template.CardInfo;
 
-        typing.text = cardInfo.typing;
-        cardName.text = cardInfo.name;
+        typing.text = cardInfo.Typing;
+        cardName.text = cardInfo.Name;
         actionPoints.Init(card);
 
         GameState.GameStateType[] stateTypes = new GameState.GameStateType[] { GameState.GameStateType.JurySelection, GameState.GameStateType.TrialInChief, GameState.GameStateType.Summation };
-        List<CardInfo.EffectPair>[] cardEffectPairs = new List<CardInfo.EffectPair>[] { cardInfo.jurySelectionPairs, cardInfo.trialInChiefPairs, cardInfo.summationPairs };
+        List<CardInfo.EffectPair>[] cardEffectPairs = new List<CardInfo.EffectPair>[] { cardInfo.JurySelectionPairs, cardInfo.TrialInChiefPairs, cardInfo.SummationPairs };
         GameObject[] parentGOs = new GameObject[] { jurySelectionParent, trialInChiefParent, summationParent };
 
         for (int j = 0; j < stateTypes.Length; ++j)

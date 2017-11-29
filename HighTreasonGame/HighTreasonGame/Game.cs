@@ -50,12 +50,14 @@ namespace HighTreasonGame
 
         private bool gameEnd = false;
 
-        public Game(ChoiceHandler[] playerChoiceHandlers)
+        public Game(ChoiceHandler[] playerChoiceHandlers, string cardInfoJson)
         {
             Board = new Board(this);
 
+            CardTemplateGenerator tempGenerator = new CardTemplateGenerator(cardInfoJson);
+
             List<Card> cards = new List<Card>();
-            CardTemplateManager.Instance.GetAllCardTemplates().ForEach(c => cards.Add(new Card(c)));
+            tempGenerator.GetAllCardTemplates().ForEach(c => cards.Add(new Card(c)));
             Deck = new DeckHolder(cards);
 
             Discards = new DiscardHolder();

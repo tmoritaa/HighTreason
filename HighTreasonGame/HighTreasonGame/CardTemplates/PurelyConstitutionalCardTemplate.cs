@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Newtonsoft.Json.Linq;
+
 namespace HighTreasonGame.CardTemplates
 {
     public class PurelyConstitutionalCardTemplate : CardTemplate
     {
-        public PurelyConstitutionalCardTemplate()
-            : base("\"A Purely Constitutional Movement\"", 3)
+        public PurelyConstitutionalCardTemplate(JObject json)
+            : base("\"A Purely Constitutional Movement\"", 3, json)
         {}
 
         protected override void addSelectionEventsAndChoices()

@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Newtonsoft.Json.Linq;
+
 namespace HighTreasonGame.CardTemplates
 {
     public class DoctorJamesCardTemplate : CardTemplate
     {
-        public DoctorJamesCardTemplate()
-            : base("Doctor James Wallace", 2)
+        public DoctorJamesCardTemplate(JObject json)
+            : base("Doctor James Wallace", 2, json)
         { }
 
         protected override void addSelectionEventsAndChoices()

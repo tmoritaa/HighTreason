@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Newtonsoft.Json.Linq;
+
 namespace HighTreasonGame.CardTemplates
 {
     public class CouncilExovedateCardTemplate : CardTemplate
     {
-        public CouncilExovedateCardTemplate()
-            : base("Council of the Exovedate", 2)
+        public CouncilExovedateCardTemplate(JObject json)
+            : base("Council of the Exovedate", 2, json)
         {}
 
         protected override void addSelectionEventsAndChoices()

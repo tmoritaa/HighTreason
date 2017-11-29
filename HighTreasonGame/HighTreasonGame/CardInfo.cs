@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using UnityEngine;
-
 public class CardInfo
 {
     public class EffectPair
@@ -33,7 +31,6 @@ public class CardInfo
                     Type = EffectType.Neutral;
                     break;
                 default:
-                    Debug.Assert(false, "EffectPair instantiation received incorrect typeStr. Should never happen.");
                     Type = EffectType.JurySelect;
                     break;
 
@@ -49,29 +46,57 @@ public class CardInfo
         }
     }
 
-    public string name;
-    public string typing;
-    public List<EffectPair> jurySelectionPairs = new List<EffectPair>();
-    public List<EffectPair> trialInChiefPairs = new List<EffectPair>();
-    public List<EffectPair> summationPairs = new List<EffectPair>();
+    public string Name
+    {
+        get; private set;
+    }
+
+    public string Typing
+    {
+        get; private set;
+    }
+
+    public List<EffectPair> JurySelectionPairs
+    {
+        get; private set;
+    }
+
+    public List<EffectPair> TrialInChiefPairs
+    {
+        get; private set;
+    }
+
+    public List<EffectPair> SummationPairs
+    {
+        get; private set;
+    }
+
+    public CardInfo(string _name, string _typing, List<EffectPair> _jurySelectionPairs, List<EffectPair> _trialInChiefPairs, List<EffectPair> _summationPairs)
+    {
+        Name = _name;
+        Typing = _typing;
+        JurySelectionPairs = _jurySelectionPairs;
+        TrialInChiefPairs = _trialInChiefPairs;
+        SummationPairs = _summationPairs;
+    }
 
     public override string ToString()
     {
         string outStr = "";
-        outStr += name + "\n";
-        outStr += typing + "\n";
+        outStr += Name + "\n";
+        outStr += Typing + "\n";
         outStr += "JurySelection:\n";
-        foreach (EffectPair ep in jurySelectionPairs)
+        foreach (EffectPair ep in JurySelectionPairs)
         {
             outStr += ep.Text + "\n";
         }
         outStr += "TrialInChief:\n";
-        foreach (EffectPair ep in trialInChiefPairs)
+        foreach (EffectPair ep in TrialInChiefPairs)
         {
             outStr += "type:" + ep.Type + " text:" + ep.Text + "\n";
         }
         outStr += "Summation:\n";
-        foreach (EffectPair ep in summationPairs)
+        foreach (EffectPair ep in SummationPairs)
         {
             outStr += "type:" + ep.Type + " text:" + ep.Text + "\n";
         }
