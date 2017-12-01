@@ -15,54 +15,59 @@ namespace HighTreasonGame.CardTemplates
 
         protected override void addSelectionEventsAndChoices()
         {
-            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Occupation }, 3, true, this.CardInfo.JurySelectionPairs[0].Description));
-            SelectionEvents.Add(revealAllAspects);
+            SelectionEvents.Add(
+                new CardEffectPair(
+                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Occupation }, 3, true, this.CardInfo.JurySelectionPairs[0].Description),
+                    revealAllAspects));
 
-            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Religion }, 2, true, this.CardInfo.JurySelectionPairs[1].Description));
-            SelectionEvents.Add(revealAllAspects);
+            SelectionEvents.Add(
+                new CardEffectPair(
+                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Religion }, 2, true, this.CardInfo.JurySelectionPairs[1].Description),
+                    revealAllAspects));
         }
 
         protected override void addTrialEventsAndChoices()
         {
-            TrialEventChoices.Add(genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 1, false, this.CardInfo.TrialInChiefPairs[0].Description));
-            TrialEvents.Add(raiseGuiltAndOneAspectEffect);
+            TrialEvents.Add(
+                new CardEffectPair(
+                    genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 1, false, this.CardInfo.TrialInChiefPairs[0].Description),
+                    raiseGuiltAndOneAspectEffect));
         }
 
         protected override void addSummationEventsAndChoices()
         {
-            SummationEventChoices.Add(
-                (Game game, ChoiceHandler choiceHandler) =>
-                {
-                    List<BoardObject> options = game.FindBO(
-                        (BoardObject htgo) =>
-                        {
-                            return (htgo.Properties.Contains(Property.Track)
-                            && htgo.Properties.Contains(Property.Aspect)
-                            && !htgo.Properties.Contains(Property.French)
-                            && ((Track)htgo).CanModify(1));
-                        });
-
-                    BoardChoices boardChoices;
-                    choiceHandler.ChooseBoardObjects(
-                        options,
-                        (Dictionary<BoardObject, int> selected) => { return true; },
-                        (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
-                        {
-                            return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
-                        },
-                        (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 3; },
-                        game,
-                        this.CardInfo.SummationPairs[0].Description,
-                        out boardChoices);
-
-                    return boardChoices;
-                });
-
             SummationEvents.Add(
-                (Game game, BoardChoices choices) => 
-                {
-                    choices.SelectedObjs.Keys.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(1));
-                });
+                new CardEffectPair(
+                    (Game game, ChoiceHandler choiceHandler) =>
+                    {
+                        List<BoardObject> options = game.FindBO(
+                            (BoardObject htgo) =>
+                            {
+                                return (htgo.Properties.Contains(Property.Track)
+                                && htgo.Properties.Contains(Property.Aspect)
+                                && !htgo.Properties.Contains(Property.French)
+                                && ((Track)htgo).CanModify(1));
+                            });
+
+                        BoardChoices boardChoices;
+                        choiceHandler.ChooseBoardObjects(
+                            options,
+                            (Dictionary<BoardObject, int> selected) => { return true; },
+                            (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
+                            {
+                                return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
+                            },
+                            (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 3; },
+                            game,
+                            this.CardInfo.SummationPairs[0].Description,
+                            out boardChoices);
+
+                        return boardChoices;
+                    },
+                    (Game game, BoardChoices choices) => 
+                    {
+                        choices.SelectedObjs.Keys.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(1));
+                    }));
         }
     }
 }

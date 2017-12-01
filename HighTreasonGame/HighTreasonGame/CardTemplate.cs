@@ -10,8 +10,26 @@ namespace HighTreasonGame
     public abstract class CardTemplate
     {
         public delegate void CardEffect(Game game, BoardChoices choices);
-
         public delegate BoardChoices CardChoice(Game game, ChoiceHandler choiceHandler);
+
+        public class CardEffectPair
+        {
+            public CardChoice CardChoice
+            {
+                get; private set;
+            }
+
+            public CardEffect CardEffect
+            {
+                get; private set;
+            }
+
+            public CardEffectPair(CardChoice choiceFunc, CardEffect effectFunc)
+            {
+                CardChoice = choiceFunc;
+                CardEffect = effectFunc;
+            }
+        }
 
         public string Name {
             get; private set;
@@ -32,27 +50,18 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        public List<CardEffect> SelectionEvents {
+        public List<CardEffectPair> SelectionEvents
+        {
             get; private set;
         }
 
-        public List<CardChoice> SelectionEventChoices {
+        public List<CardEffectPair> TrialEvents
+        {
             get; private set;
         }
 
-        public List<CardEffect> TrialEvents {
-            get; private set;
-        }
-
-        public List<CardChoice> TrialEventChoices {
-            get; private set;
-        }
-
-        public List<CardEffect> SummationEvents {
-            get; private set;
-        }
-
-        public List<CardChoice> SummationEventChoices {
+        public List<CardEffectPair> SummationEvents
+        {
             get; private set;
         }
 
@@ -61,13 +70,9 @@ namespace HighTreasonGame
             Name = _name;
             ActionPts = _actionPts;
 
-            SelectionEvents = new List<CardEffect>();
-            TrialEvents = new List<CardEffect>();
-            SummationEvents = new List<CardEffect>();
-
-            SelectionEventChoices = new List<CardChoice>();
-            TrialEventChoices = new List<CardChoice>();
-            SummationEventChoices = new List<CardChoice>();
+            SelectionEvents = new List<CardEffectPair>();
+            TrialEvents = new List<CardEffectPair>();
+            SummationEvents = new List<CardEffectPair>();
 
             fillCardInfo(infoRoot);
 
@@ -85,18 +90,18 @@ namespace HighTreasonGame
 
             if (curStateType == GameState.GameStateType.JurySelection)
             {
-                cardChoice = SelectionEventChoices[idx];
-                cardEffect = SelectionEvents[idx];
+                cardChoice = SelectionEvents[idx].CardChoice;
+                cardEffect = SelectionEvents[idx].CardEffect;
             }
             else if (curStateType == GameState.GameStateType.TrialInChief)
             {
-                cardChoice = TrialEventChoices[idx];
-                cardEffect = TrialEvents[idx];
+                cardChoice = TrialEvents[idx].CardChoice;
+                cardEffect = TrialEvents[idx].CardEffect;
             }
             else if (curStateType == GameState.GameStateType.Summation)
             {
-                cardChoice = SummationEventChoices[idx];
-                cardEffect = SummationEvents[idx];
+                cardChoice = SummationEvents[idx].CardChoice;
+                cardEffect = SummationEvents[idx].CardEffect;
             }
 
             System.Diagnostics.Debug.Assert(cardChoice != null && cardEffect != null, "Card choice or card effect is null. Should never happen");
@@ -160,15 +165,15 @@ namespace HighTreasonGame
 
             if (type == GameState.GameStateType.JurySelection)
             {
-                num = SelectionEventChoices.Count;
+                num = SelectionEvents.Count;
             }
             else if (type == GameState.GameStateType.TrialInChief)
             {
-                num = TrialEventChoices.Count;
+                num = TrialEvents.Count;
             }
             else if (type == GameState.GameStateType.Summation)
             {
-                num = SummationEventChoices.Count;
+                num = SummationEvents.Count;
             }
 
             return num;

@@ -15,138 +15,142 @@ namespace HighTreasonGame.CardTemplates
 
         protected override void addSelectionEventsAndChoices()
         {
-            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>(), 2, true, this.CardInfo.JurySelectionPairs[0].Description));
-            SelectionEvents.Add(revealAllAspects);
+            SelectionEvents.Add(
+                new CardEffectPair(genRevealOrPeakCardChoice(new HashSet<Property>(), 2, true, this.CardInfo.JurySelectionPairs[0].Description), 
+                revealAllAspects));
 
-            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>(), 1, false, this.CardInfo.JurySelectionPairs[1].Description));
-            SelectionEvents.Add(peekAllAspects);
+            SelectionEvents.Add(
+                new CardEffectPair(genRevealOrPeakCardChoice(new HashSet<Property>(), 1, false, this.CardInfo.JurySelectionPairs[1].Description), 
+                peekAllAspects));
         }
 
         protected override void addTrialEventsAndChoices()
         {
-            TrialEventChoices.Add(doNothingChoice);
+            TrialEvents.Add(
+                new CardEffectPair(
+                    doNothingChoice,
+                    (Game game, BoardChoices choices) =>
+                    {
+                        int modValue = calcModValueBasedOnSide(2, game);
+
+                        AspectTrack aspectTrack = (AspectTrack)game.FindBO(
+                            (BoardObject htgo) =>
+                            {
+                                return (htgo.Properties.Contains(Property.Track)
+                                && htgo.Properties.Contains(Property.Aspect)
+                                && htgo.Properties.Contains(Property.French));
+                            })[0];
+
+                        aspectTrack.AddToValue(modValue);
+                    }));
 
             TrialEvents.Add(
-                (Game game, BoardChoices choices) =>
-                {
-                    int modValue = calcModValueBasedOnSide(2, game);
+                new CardEffectPair(
+                    doNothingChoice,
+                    (Game game, BoardChoices choices) =>
+                    {
+                        int modValue = calcModValueBasedOnSide(2, game);
 
-                    AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                        (BoardObject htgo) =>
-                        {
-                            return (htgo.Properties.Contains(Property.Track)
-                            && htgo.Properties.Contains(Property.Aspect)
-                            && htgo.Properties.Contains(Property.French));
-                        })[0];
+                        AspectTrack aspectTrack = (AspectTrack)game.FindBO(
+                            (BoardObject htgo) =>
+                            {
+                                return (htgo.Properties.Contains(Property.Track)
+                                && htgo.Properties.Contains(Property.Aspect)
+                                && htgo.Properties.Contains(Property.English));
+                            })[0];
 
-                    aspectTrack.AddToValue(modValue);
-                });
-
-            TrialEventChoices.Add(doNothingChoice);
-
-            TrialEvents.Add(
-                (Game game, BoardChoices choices) =>
-                {
-                    int modValue = calcModValueBasedOnSide(2, game);
-
-                    AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                        (BoardObject htgo) =>
-                        {
-                            return (htgo.Properties.Contains(Property.Track)
-                            && htgo.Properties.Contains(Property.Aspect)
-                            && htgo.Properties.Contains(Property.English));
-                        })[0];
-
-                    aspectTrack.AddToValue(modValue);
-                });
-
-            TrialEventChoices.Add(
-                (Game game, ChoiceHandler choiceHandler) =>
-                {
-                    BoardChoices choices = new BoardChoices();
-                    
-                    AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                        (BoardObject htgo) =>
-                        {
-                            return (htgo.Properties.Contains(Property.Track)
-                            && htgo.Properties.Contains(Property.Aspect)
-                            && htgo.Properties.Contains(Property.Merchant));
-                        })[0];
-
-                    choices.SelectedObjs.Keys.Cast<AspectTrack>().ToList().Add(aspectTrack);
-
-                    return choices;
-                });
+                        aspectTrack.AddToValue(modValue);
+                    }));
 
             TrialEvents.Add(
-                (Game game, BoardChoices choices) =>
-                {
-                    int modValue = calcModValueBasedOnSide(1, game);
+                new CardEffectPair(
+                    (Game game, ChoiceHandler choiceHandler) =>
+                    {
+                        BoardChoices choices = new BoardChoices();
 
-                    AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                        (BoardObject htgo) =>
-                        {
-                            return (htgo.Properties.Contains(Property.Track)
-                            && htgo.Properties.Contains(Property.Aspect)
-                            && htgo.Properties.Contains(Property.Merchant));
-                        })[0];
+                        AspectTrack aspectTrack = (AspectTrack)game.FindBO(
+                            (BoardObject htgo) =>
+                            {
+                                return (htgo.Properties.Contains(Property.Track)
+                                && htgo.Properties.Contains(Property.Aspect)
+                                && htgo.Properties.Contains(Property.Merchant));
+                            })[0];
 
-                    aspectTrack.AddToValue(modValue);
-                });
+                        choices.SelectedObjs.Keys.Cast<AspectTrack>().ToList().Add(aspectTrack);
+
+                        return choices;
+                    },
+                    (Game game, BoardChoices choices) =>
+                    {
+                        int modValue = calcModValueBasedOnSide(1, game);
+
+                        AspectTrack aspectTrack = (AspectTrack)game.FindBO(
+                            (BoardObject htgo) =>
+                            {
+                                return (htgo.Properties.Contains(Property.Track)
+                                && htgo.Properties.Contains(Property.Aspect)
+                                && htgo.Properties.Contains(Property.Merchant));
+                            })[0];
+
+                        aspectTrack.AddToValue(modValue);
+                    }));
         }
 
         protected override void addSummationEventsAndChoices()
         {
-            SummationEventChoices.Add(doNothingChoice);
             SummationEvents.Add(
-                (Game game, BoardChoices choices) =>
-                {
-                    int modValue = calcModValueBasedOnSide(2, game);
+                new CardEffectPair(
+                    doNothingChoice,
+                    (Game game, BoardChoices choices) =>
+                    {
+                        int modValue = calcModValueBasedOnSide(2, game);
 
-                    AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                        (BoardObject htgo) =>
-                        {
-                            return (htgo.Properties.Contains(Property.Track)
-                            && htgo.Properties.Contains(Property.Aspect)
-                            && htgo.Properties.Contains(Property.French));
-                        })[0];
+                        AspectTrack aspectTrack = (AspectTrack)game.FindBO(
+                            (BoardObject htgo) =>
+                            {
+                                return (htgo.Properties.Contains(Property.Track)
+                                && htgo.Properties.Contains(Property.Aspect)
+                                && htgo.Properties.Contains(Property.French));
+                            })[0];
 
-                    aspectTrack.AddToValue(modValue);
-                });
+                        aspectTrack.AddToValue(modValue);
+                    }));
 
-            SummationEventChoices.Add(doNothingChoice);
             SummationEvents.Add(
-                (Game game, BoardChoices choices) =>
-                {
-                    int modValue = calcModValueBasedOnSide(2, game);
+                new CardEffectPair(
+                    doNothingChoice,
+                    (Game game, BoardChoices choices) =>
+                    {
+                        int modValue = calcModValueBasedOnSide(2, game);
 
-                    AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                        (BoardObject htgo) =>
-                        {
-                            return (htgo.Properties.Contains(Property.Track)
-                            && htgo.Properties.Contains(Property.Aspect)
-                            && htgo.Properties.Contains(Property.English));
-                        })[0];
+                        AspectTrack aspectTrack = (AspectTrack)game.FindBO(
+                            (BoardObject htgo) =>
+                            {
+                                return (htgo.Properties.Contains(Property.Track)
+                                && htgo.Properties.Contains(Property.Aspect)
+                                && htgo.Properties.Contains(Property.English));
+                            })[0];
 
-                    aspectTrack.AddToValue(modValue);
-                });
+                        aspectTrack.AddToValue(modValue);
+                    }));
 
-            SummationEventChoices.Add(doNothingChoice);
             SummationEvents.Add(
-                (Game game, BoardChoices choices) =>
-                {
-                    int modValue = calcModValueBasedOnSide(1, game);
+                new CardEffectPair(
+                    doNothingChoice,
+                    (Game game, BoardChoices choices) =>
+                    {
+                        int modValue = calcModValueBasedOnSide(1, game);
 
-                    AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                        (BoardObject htgo) =>
-                        {
-                            return (htgo.Properties.Contains(Property.Track)
-                            && htgo.Properties.Contains(Property.Aspect)
-                            && htgo.Properties.Contains(Property.Merchant));
-                        })[0];
+                        AspectTrack aspectTrack = (AspectTrack)game.FindBO(
+                            (BoardObject htgo) =>
+                            {
+                                return (htgo.Properties.Contains(Property.Track)
+                                && htgo.Properties.Contains(Property.Aspect)
+                                && htgo.Properties.Contains(Property.Merchant));
+                            })[0];
 
-                    aspectTrack.AddToValue(modValue);
-                });
+                        aspectTrack.AddToValue(modValue);
+                    }));
         }
     }
 }

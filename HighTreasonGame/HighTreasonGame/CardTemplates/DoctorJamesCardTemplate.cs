@@ -15,50 +15,53 @@ namespace HighTreasonGame.CardTemplates
 
         protected override void addSelectionEventsAndChoices()
         {
-            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Occupation }, 3, true, this.CardInfo.JurySelectionPairs[0].Description));
-            SelectionEvents.Add(revealAllAspects);
+            SelectionEvents.Add(
+                new CardEffectPair(
+                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Occupation }, 3, true, this.CardInfo.JurySelectionPairs[0].Description),
+                    revealAllAspects));
 
-            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Religion }, 2, true, this.CardInfo.JurySelectionPairs[1].Description));
-            SelectionEvents.Add(revealAllAspects);
+            SelectionEvents.Add(
+                new CardEffectPair(
+                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Religion }, 2, true, this.CardInfo.JurySelectionPairs[1].Description),
+                    revealAllAspects));
         }
 
         protected override void addTrialEventsAndChoices()
         {
-            TrialEventChoices.Add(
-                (Game game, ChoiceHandler choiceHandler) =>
-                {
-                    BoardChoices choices = new BoardChoices();
-
-                    choices.NotCancelled = handleMomentOfInsightChoice(new Player.PlayerSide[] { Player.PlayerSide.Prosecution }, game, choiceHandler, out choices.MoIInfo);
-
-                    return choices;
-                });
-
             TrialEvents.Add(
-                (Game game, BoardChoices choices) =>
-                {
-                    game.GetGuiltTrack().AddToValue(-1);
-                    handleMomentOfInsight(game, choices);
-                });
+                new CardEffectPair(
+                    (Game game, ChoiceHandler choiceHandler) =>
+                    {
+                        BoardChoices choices = new BoardChoices();
+
+                        choices.NotCancelled = handleMomentOfInsightChoice(new Player.PlayerSide[] { Player.PlayerSide.Prosecution }, game, choiceHandler, out choices.MoIInfo);
+
+                        return choices;
+                    },
+                    (Game game, BoardChoices choices) =>
+                    {
+                        game.GetGuiltTrack().AddToValue(-1);
+                        handleMomentOfInsight(game, choices);
+                    }));
         }
 
         protected override void addSummationEventsAndChoices()
         {
-            SummationEventChoices.Add(doNothingChoice);
-
             SummationEvents.Add(
-                (Game game, BoardChoices choices) =>
-                {
-                    List<BoardObject> options = game.FindBO(
-                        (BoardObject htgo) =>
-                        {
-                            return (htgo.Properties.Contains(Property.Track)
-                            && htgo.Properties.Contains(Property.Aspect)
-                            && (htgo.Properties.Contains(Property.English) || htgo.Properties.Contains(Property.Protestant)));
-                        });
+                new CardEffectPair(
+                    doNothingChoice,
+                    (Game game, BoardChoices choices) =>
+                    {
+                        List<BoardObject> options = game.FindBO(
+                            (BoardObject htgo) =>
+                            {
+                                return (htgo.Properties.Contains(Property.Track)
+                                && htgo.Properties.Contains(Property.Aspect)
+                                && (htgo.Properties.Contains(Property.English) || htgo.Properties.Contains(Property.Protestant)));
+                            });
 
-                    options.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(2));
-                });
+                        options.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(2));
+                    }));
         }
     }
 }

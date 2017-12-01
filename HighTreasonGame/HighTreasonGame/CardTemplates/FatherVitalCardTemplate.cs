@@ -15,36 +15,42 @@ namespace HighTreasonGame.CardTemplates
 
         protected override void addSelectionEventsAndChoices()
         {
-            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>(), 2, true, this.CardInfo.JurySelectionPairs[0].Description));
-            SelectionEvents.Add(revealAllAspects);
+            SelectionEvents.Add(
+                new CardEffectPair(
+                    genRevealOrPeakCardChoice(new HashSet<Property>(), 2, true, this.CardInfo.JurySelectionPairs[0].Description),
+                    revealAllAspects));
 
-            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Religion }, 1, false, this.CardInfo.JurySelectionPairs[1].Description));
-            SelectionEvents.Add(peekAllAspects);
+            SelectionEvents.Add(
+                new CardEffectPair(
+                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Religion }, 1, false, this.CardInfo.JurySelectionPairs[1].Description),
+                    peekAllAspects));
         }
 
         protected override void addTrialEventsAndChoices()
-        {
-            TrialEventChoices.Add(doNothingChoice);
+        {            
+            TrialEvents.Add(
+                new CardEffectPair(
+                    doNothingChoice,
+                    (Game game, BoardChoices choices) =>
+                    {
+                        game.GetInsanityTrack().AddToValue(1);
+                    }));
 
             TrialEvents.Add(
-                (Game game, BoardChoices choices) =>
-                {
-                    game.GetInsanityTrack().AddToValue(1);
-                });
-
-            TrialEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Religion }, 3, false, this.CardInfo.TrialInChiefPairs[1].Description));
-            TrialEvents.Add(peekAllAspects);
+                new CardEffectPair(
+                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Religion }, 3, false, this.CardInfo.TrialInChiefPairs[1].Description),
+                    peekAllAspects));
         }
 
         protected override void addSummationEventsAndChoices()
         {
-            SummationEventChoices.Add(doNothingChoice);
-
             SummationEvents.Add(
-                (Game game, BoardChoices choices) =>
-                {
-                    game.GetInsanityTrack().AddToValue(1);
-                });
+                new CardEffectPair(
+                    doNothingChoice,
+                    (Game game, BoardChoices choices) =>
+                    {
+                        game.GetInsanityTrack().AddToValue(1);
+                    }));
         }
     }
 }

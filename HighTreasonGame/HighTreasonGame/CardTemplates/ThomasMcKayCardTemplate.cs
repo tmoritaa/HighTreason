@@ -15,57 +15,61 @@ namespace HighTreasonGame.CardTemplates
 
         protected override void addSelectionEventsAndChoices()
         {
-            SelectionEventChoices.Add(genRevealOrPeakCardChoice(new HashSet<Property>(), 2, true, this.CardInfo.JurySelectionPairs[0].Description,
-                null,
-                (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
-                {
-                    List<BoardObject> newChoices = new List<BoardObject>(remainingChoices);
-                    foreach (BoardObject obj in selected.Keys)
-                    {
-                        if (obj.Properties.Contains(Property.Religion))
+            SelectionEvents.Add(
+                new CardEffectPair(
+                    genRevealOrPeakCardChoice(new HashSet<Property>(), 2, true, this.CardInfo.JurySelectionPairs[0].Description,
+                        null,
+                        (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
                         {
-                            newChoices = newChoices.Where(c => !c.Properties.Contains(Property.Religion)).ToList();
-                        }
+                            List<BoardObject> newChoices = new List<BoardObject>(remainingChoices);
+                            foreach (BoardObject obj in selected.Keys)
+                            {
+                                if (obj.Properties.Contains(Property.Religion))
+                                {
+                                    newChoices = newChoices.Where(c => !c.Properties.Contains(Property.Religion)).ToList();
+                                }
 
-                        if (obj.Properties.Contains(Property.Occupation))
-                        {
-                            newChoices = newChoices.Where(c => !c.Properties.Contains(Property.Occupation)).ToList();
-                        }
+                                if (obj.Properties.Contains(Property.Occupation))
+                                {
+                                    newChoices = newChoices.Where(c => !c.Properties.Contains(Property.Occupation)).ToList();
+                                }
 
-                        if (obj.Properties.Contains(Property.Language))
-                        {
-                            newChoices = newChoices.Where(c => !c.Properties.Contains(Property.Language)).ToList();
-                        }
-                    }
+                                if (obj.Properties.Contains(Property.Language))
+                                {
+                                    newChoices = newChoices.Where(c => !c.Properties.Contains(Property.Language)).ToList();
+                                }
+                            }
 
-                    return newChoices;
-                }));
-            SelectionEvents.Add(revealAllAspects);
+                            return newChoices;
+                        }),
+                    revealAllAspects));
         }
 
         protected override void addTrialEventsAndChoices()
         {
-            TrialEventChoices.Add(genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 1, false, this.CardInfo.TrialInChiefPairs[0].Description));
-            TrialEvents.Add(raiseGuiltAndOneAspectEffect);
+            TrialEvents.Add(
+                new CardEffectPair(
+                    genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 1, false, this.CardInfo.TrialInChiefPairs[0].Description),
+                    raiseGuiltAndOneAspectEffect));
         }
 
         protected override void addSummationEventsAndChoices()
         {
-            SummationEventChoices.Add(doNothingChoice);
-
             SummationEvents.Add(
-                (Game game, BoardChoices choices) =>
-                {
-                    List<BoardObject> options = game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.English));
-                            });
+                new CardEffectPair(
+                    doNothingChoice,
+                    (Game game, BoardChoices choices) =>
+                    {
+                        List<BoardObject> options = game.FindBO(
+                                (BoardObject htgo) =>
+                                {
+                                    return (htgo.Properties.Contains(Property.Track)
+                                    && htgo.Properties.Contains(Property.Aspect)
+                                    && htgo.Properties.Contains(Property.English));
+                                });
 
-                    options.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(2));
-                });
+                        options.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(2));
+                    }));
         }
     }
 }
