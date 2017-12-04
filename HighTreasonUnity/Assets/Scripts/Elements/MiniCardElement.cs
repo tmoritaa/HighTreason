@@ -56,13 +56,12 @@ public class MiniCardElement : SelectableElement
 
     protected override void onClick()
     {
-        if (cardCanBeDisplayed())
-        {
-            ViewManager.Instance.DisplayView(ViewManager.PopupType.DetailedCard, DisplayedCard);
-        }
-        else if (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.MomentOfInsight)
+        if (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.MomentOfInsight)
         {
             ChoiceHandlerDelegator.Instance.ChoiceMade(BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Swap, DisplayedCard);
+        } else if (cardCanBeDisplayed())
+        {
+            ViewManager.Instance.DisplayView(ViewManager.PopupType.DetailedCard, DisplayedCard);
         }
     }
 

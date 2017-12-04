@@ -74,6 +74,7 @@ public class ViewManager : MonoBehaviour
         detailedCardView.gameObject.SetActive(false);
         summationView.gameObject.SetActive(false);
         discardView.gameObject.SetActive(false);
+        this.curActionDesc.gameObject.SetActive(false);
     }
 
     public void DisplaySummationDeckViewForCurPlayer()
