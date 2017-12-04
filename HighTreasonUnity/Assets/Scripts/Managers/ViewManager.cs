@@ -15,6 +15,7 @@ public class ViewManager : MonoBehaviour
         DetailedCard,
         SummationDeck,
         Discard,
+        GameResult,
     };
 
     private static ViewManager instance;
@@ -50,6 +51,9 @@ public class ViewManager : MonoBehaviour
 
     [SerializeField]
     private SummationDeckView summationView;
+
+    [SerializeField]
+    private GameResultView gameResultView;
 
     [SerializeField]
     private GameObject jurySelectionMainBoardGO;
@@ -106,6 +110,11 @@ public class ViewManager : MonoBehaviour
             case PopupType.Discard:
                 discardView.gameObject.SetActive(true);
                 displayedView = discardView.gameObject;
+                break;
+            case PopupType.GameResult:
+                gameResultView.InitInfo((Player.PlayerSide)args[0], (bool)args[1], (int)args[2]);
+                gameResultView.gameObject.SetActive(true);
+                displayedView = gameResultView.gameObject;
                 break;
         }
 

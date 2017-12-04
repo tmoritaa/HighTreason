@@ -59,6 +59,6 @@ public class GameManager : MonoBehaviour
 
     private void onGameEnd(Player.PlayerSide winningPlayer, bool notEnoughGuiltVictory, int finalScore)
     {
-        Debug.Log("Player " + winningPlayer.ToString() + " won with score " + finalScore + " notEnoughGuiltVictory=" + notEnoughGuiltVictory.ToString());
+        ViewManager.Instance.DisplayView(ViewManager.PopupType.GameResult, winningPlayer, notEnoughGuiltVictory, finalScore);
     }
 }
