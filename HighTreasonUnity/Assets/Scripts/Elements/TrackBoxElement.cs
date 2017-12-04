@@ -9,13 +9,14 @@ using UnityEngine.UI;
 public class TrackBoxElement : MonoBehaviour 
 {
     [SerializeField]
-    private Text text;
+    private List<Text> numTexts;
 
     private int value;
 
     public void SetValue(int i)
     {
         value = i;
-        text.text = value.ToString();
+
+        numTexts.ForEach(t => t.text = value.ToString());
     }
 }

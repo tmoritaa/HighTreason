@@ -91,7 +91,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.79485595, g: 0.8602941, b: 0.3858672, a: 0.478}
+  m_Color: {r: 0.9137255, g: 0.77254903, b: 0.42745098, a: 1}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -177,8 +177,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c50b8a1d3bada0a4f9fc54ad8c352309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlightPrefab: {fileID: 1224098941512400, guid: 631a5d3da0e9f3e4abbe508a3a9d90f8,
-    type: 2}
   uniqueProperties: 0f0000000a000000
   trackBoxPrefab: {fileID: 114105624045017092, guid: ed3da7f8ff1d1c44ea66dafc049ed7a5,
     type: 2}
@@ -277,7 +275,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 20, y: 20}
+  m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224154894322399184
 RectTransform:

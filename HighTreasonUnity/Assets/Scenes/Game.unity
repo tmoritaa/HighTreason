@@ -932,6 +932,11 @@ Prefab:
       propertyPath: m_Name
       value: ProtestantTrack
       objectReference: {fileID: 0}
+    - target: {fileID: 114255744270643250, guid: 9791ab4b4059a7a41a16020d3c94898d,
+        type: 2}
+      propertyPath: m_Text
+      value: PROTESTANT (61%)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9791ab4b4059a7a41a16020d3c94898d, type: 2}
   m_IsPrefabParent: 0
@@ -2123,31 +2128,6 @@ Prefab:
     - target: {fileID: 1274007344102738, guid: 9791ab4b4059a7a41a16020d3c94898d, type: 2}
       propertyPath: m_Name
       value: CatholicTrack
-      objectReference: {fileID: 0}
-    - target: {fileID: 224860076491907874, guid: 9791ab4b4059a7a41a16020d3c94898d,
-        type: 2}
-      propertyPath: m_LocalScale.x
-      value: 0.9999976
-      objectReference: {fileID: 0}
-    - target: {fileID: 224860076491907874, guid: 9791ab4b4059a7a41a16020d3c94898d,
-        type: 2}
-      propertyPath: m_LocalScale.y
-      value: 0.9999976
-      objectReference: {fileID: 0}
-    - target: {fileID: 224860076491907874, guid: 9791ab4b4059a7a41a16020d3c94898d,
-        type: 2}
-      propertyPath: m_LocalScale.z
-      value: 0.9999976
-      objectReference: {fileID: 0}
-    - target: {fileID: 114070860815930644, guid: 9791ab4b4059a7a41a16020d3c94898d,
-        type: 2}
-      propertyPath: uniqueProperties.Array.data[0]
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 114255744270643250, guid: 9791ab4b4059a7a41a16020d3c94898d,
-        type: 2}
-      propertyPath: m_Text
-      value: CATHOLIC (39%)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9791ab4b4059a7a41a16020d3c94898d, type: 2}
