@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        Game.NotifyGameEnd += onGameEnd;
+        EventDelegator.Instance.NotifyGameEnd += onGameEnd;
 
         gameThread = new Thread(new ThreadStart(
             () => {

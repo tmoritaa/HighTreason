@@ -20,7 +20,7 @@
 	"Harold Ross":{
 		"typing":"Prosecution Witness",
 		"jury_selection":[{"text":"Reveal 3 Occupation;", "desc":"Select 3 Occupation Traits"},{"text":"OR 4 Language.", "desc":"Select 4 Language Traits"}],
-		"trial_in_chief":[{"type":"prosecution", "text":"-1 Ins and 1 MoI;", "desc":""}, {"type":"neutral", "text":"OR <-2-> to any one aspect.", "desc":"Select 1 Aspect"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"-1 Ins and 1-> to any one aspect;", "desc":""}, {"type":"neutral", "text":"OR <-2-> to any one aspect.", "desc":"Select 1 Aspect"}],
 		"summation":[{"type":"prosecution", "text":"2-> each to the English and Protestant aspects;", "desc":""}, {"type":"defense", "text":"OR 1<- each to the Farmer and French aspects.", "desc":""}]
 	},
 	"\"A Purely Constitutional Movement\"":{
