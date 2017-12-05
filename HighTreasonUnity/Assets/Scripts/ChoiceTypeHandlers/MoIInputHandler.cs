@@ -15,7 +15,7 @@ public class MoIInputHandler : ChoiceTypeInputHandler
     private Card pickedSummationCard = null;
 
 
-    public MoIInputHandler() : base(UnityChoiceHandler.ChoiceType.MomentOfInsight, "Select Moment of Insight use")
+    public MoIInputHandler() : base(UnityChoiceHandler.ChoiceType.MomentOfInsight, "Select Moment of Insight use", false)
     {
         Player player = GameManager.Instance.Game.CurPlayer;
 

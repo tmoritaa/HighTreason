@@ -23,7 +23,7 @@ public class PickBoardObjectInputHandler : ChoiceTypeInputHandler
         Func<Dictionary<BoardObject, int>, bool> _validateChoices,
         Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> _filterChoices,
         Func<Dictionary<BoardObject, int>, bool> _choicesComplete) 
-        : base(UnityChoiceHandler.ChoiceType.PickBoardObject, desc)
+        : base(UnityChoiceHandler.ChoiceType.PickBoardObject, desc, false)
     {
         choices = _choices;
         validateChoices = _validateChoices;

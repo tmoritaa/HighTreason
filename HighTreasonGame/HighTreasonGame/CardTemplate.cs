@@ -9,8 +9,8 @@ namespace HighTreasonGame
 {
     public abstract class CardTemplate
     {
-        public delegate void CardEffect(Game game, BoardChoices choices);
         public delegate BoardChoices CardChoice(Game game, ChoiceHandler choiceHandler);
+        public delegate void CardEffect(Game game, BoardChoices choices);
 
         public class CardEffectPair
         {
@@ -24,10 +24,16 @@ namespace HighTreasonGame
                 get; private set;
             }
 
-            public CardEffectPair(CardChoice choiceFunc, CardEffect effectFunc)
+            public bool Selectable
+            {
+                get; private set;
+            }
+
+            public CardEffectPair(CardChoice choiceFunc, CardEffect effectFunc, bool selectable = true)
             {
                 CardChoice = choiceFunc;
                 CardEffect = effectFunc;
+                Selectable = selectable;
             }
         }
 
@@ -290,6 +296,11 @@ namespace HighTreasonGame
         #endregion
 
         #region Effect Utility
+
+        protected void doNothingEffect(Game game, BoardChoices choices)
+        {
+            // Do nothing.
+        }
 
         // Common enough in cards that we'll just simplify it for ourselves.
         protected void raiseGuiltAndOneAspectEffect(Game game, BoardChoices choices)

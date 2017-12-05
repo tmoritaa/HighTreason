@@ -26,5 +26,13 @@ namespace HighTreasonGame
             Game game,
             string description,
             out BoardChoices boardChoice);
+        public abstract void ChooseCards(List<Card> choices,
+            Func<Dictionary<Card, int>, bool> validateChoices,
+            Func<List<Card>, Dictionary<Card, int>, List<Card>> filterChoices,
+            Func<Dictionary<Card, int>, bool, bool> choicesComplete,
+            bool stoppable,
+            Game game,
+            string description,
+            out BoardChoices boardChoice);
     }
 }

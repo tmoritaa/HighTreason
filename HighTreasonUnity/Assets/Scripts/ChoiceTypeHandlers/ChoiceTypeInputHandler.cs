@@ -11,13 +11,19 @@ public abstract class ChoiceTypeInputHandler
         get; protected set;
     }
 
+    public bool Stoppable
+    {
+        get; protected set;
+    }
+
     private bool updateDesc = false;
     private string description;
-
-    public ChoiceTypeInputHandler(UnityChoiceHandler.ChoiceType _choiceType, string desc)
+    
+    public ChoiceTypeInputHandler(UnityChoiceHandler.ChoiceType _choiceType, string desc, bool _stoppable)
     {
         ChoiceType = _choiceType;
         description = desc;
+        Stoppable = _stoppable;
         updateDesc = true;
     }
 

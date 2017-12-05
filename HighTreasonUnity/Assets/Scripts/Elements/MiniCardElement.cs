@@ -40,13 +40,16 @@ public class MiniCardElement : SelectableElement
 
     protected override bool shouldHighlight()
     {
-        return ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.MomentOfInsight 
+        return 
+            (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.MomentOfInsight 
+            || ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.ChooseCards)
             && SelectableElementManager.Instance.KeyIsSelectable(SelectKey);
     }
 
     protected override bool isSelectable()
     {
-        if (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.MomentOfInsight)
+        if (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.MomentOfInsight 
+            || ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.ChooseCards)
         {
             return SelectableElementManager.Instance.KeyIsSelectable(SelectKey);
         }
@@ -59,7 +62,12 @@ public class MiniCardElement : SelectableElement
         if (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.MomentOfInsight)
         {
             ChoiceHandlerDelegator.Instance.ChoiceMade(BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Swap, DisplayedCard);
-        } else if (cardCanBeDisplayed())
+        }
+        else if (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.ChooseCards)
+        {
+            ChoiceHandlerDelegator.Instance.ChoiceMade(DisplayedCard);
+        }
+        else if (cardCanBeDisplayed())
         {
             ViewManager.Instance.DisplayView(ViewManager.PopupType.DetailedCard, DisplayedCard);
         }

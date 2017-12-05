@@ -27,6 +27,19 @@ public class ChoiceHandlerDelegator : MonoBehaviour
         }
     }
 
+    public bool Stoppable
+    {
+        get
+        {
+            if (inputHandler != null)
+            {
+                return inputHandler.Stoppable;
+            }
+
+            return false;
+        }
+    }
+
     private ChoiceTypeInputHandler inputHandler = null;
 
     private UnityChoiceHandler curChoiceHandler;

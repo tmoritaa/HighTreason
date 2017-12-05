@@ -61,6 +61,7 @@
     <Compile Include="CardTemplates\DoctorJamesCardTemplate.cs" />
     <Compile Include="CardTemplates\FatherVitalCardTemplate.cs" />
     <Compile Include="CardTemplates\HaroldRossCardTemplate.cs" />
+    <Compile Include="CardTemplates\JailersCardTemplate.cs" />
     <Compile Include="CardTemplates\JohnAstleyCardTemplate.cs" />
     <Compile Include="CardTemplates\PurelyConstitutionalCardTemplate.cs" />
     <Compile Include="CardTemplates\ThomasMcKayCardTemplate.cs" />

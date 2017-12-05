@@ -16,6 +16,7 @@ public class UnityChoiceHandler : ChoiceHandler
         CardAndUsage,
         PickBoardObject,
         MomentOfInsight,
+        ChooseCards,
     }
 
     private AutoResetEvent waitForInput = new AutoResetEvent(false);
@@ -110,5 +111,24 @@ public class UnityChoiceHandler : ChoiceHandler
         passedParams = null;
 
         return notCancelled;
+    }
+
+    public override void ChooseCards(List<Card> choices, Func<Dictionary<Card, int>, bool> validateChoices, Func<List<Card>, Dictionary<Card, int>, List<Card>> filterChoices, Func<Dictionary<Card, int>, bool, bool> choicesComplete, bool stoppable, Game game, string description, out BoardChoices boardChoice)
+    {
+        ChoiceHandlerDelegator.Instance.TriggerChoice(this, new ChooseCardsInputHandler(description, choices, validateChoices, filterChoices, choicesComplete, stoppable));
+        waitForInput.WaitOne();
+
+        boardChoice = new BoardChoices();
+
+        if (passedParams == null)
+        {
+            boardChoice.NotCancelled = false;
+        }
+        else
+        {
+            boardChoice.selectedCards = (Dictionary<Card, int>)passedParams[0];
+        }
+
+        passedParams = null;
     }
 }

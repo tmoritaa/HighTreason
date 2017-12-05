@@ -22,6 +22,7 @@ namespace HighTreasonGame
         }
 
         public Dictionary<BoardObject, int> SelectedObjs = new Dictionary<BoardObject, int>();
+        public Dictionary<Card, int> selectedCards = new Dictionary<Card, int>();
         public MomentOfInsightInfo MoIInfo = new MomentOfInsightInfo();
 
         public bool NotCancelled = true;

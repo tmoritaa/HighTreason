@@ -44,7 +44,13 @@
 	"Father Vital Fourmond":{
 		"typing":"Defense Witness",
 		"jury_selection":[{"text":"Reveal any 2 Traits;", "desc":"Select any 2 Traits"},{"text":"OR peek at 1 Relgion.", "desc":"Select 1 Religion Trait"}],
-		"trial_in_chief":[{"type":"defense", "text":"Either +1 Ins", "desc":""}, {"type":"neutral", "text":"OR peek at 3 Relgion Traits.", "desc":"Select 3 Religion Traits"}],
+		"trial_in_chief":[{"type":"defense", "text":"Either +1 Ins;", "desc":""}, {"type":"neutral", "text":"OR peek at 3 Relgion Traits.", "desc":"Select 3 Religion Traits"}],
 		"summation":[{"type":"defense", "text":"+1 Ins", "desc":""}]
+	},
+	"Jailers":{
+		"typing":"Prosecution Allies",
+		"jury_selection":[{"text":"Peek at any 1 Trait marker.", "desc":"Select any 1 Trait"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"Either -1 Ins;"}, {"type":"neutral", "text":"OR discard this and any 1 or 2 other cards in your hand and redraw that many cards from the deck."}],
+		"summation":[{"type":"neutral", "text":"No special event"}]
 	}
 }
