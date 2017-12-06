@@ -88,7 +88,10 @@ namespace HighTreasonGame.CardTemplates
                 new CardEffectPair(
                     doNothingChoice,
                     doNothingEffect,
-                    false));
+                    (Game game) =>
+                    {
+                        return false;
+                    }));
         }
     }
 }

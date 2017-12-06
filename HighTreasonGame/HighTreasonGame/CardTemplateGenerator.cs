@@ -56,6 +56,7 @@ namespace HighTreasonGame
             addCardTemplate(new DoctorJamesCardTemplate(infoRoot));
             addCardTemplate(new ThomasMcKayCardTemplate(infoRoot));
             addCardTemplate(new JailersCardTemplate(infoRoot));
+            addCardTemplate(new GeorgeHolmesYoungCardTemplate(infoRoot));
         }
 
         private void addCardTemplate(CardTemplate template)

@@ -17,9 +17,9 @@ public class CardEventUsageFieldElement : CardUsageFieldElement
 
     private Card card;
 
-    private bool isClickable;
+    private Func<Game, bool> isClickable;
 
-    public void Init(Card _card, GameState.GameStateType _usableState, int _eventIdx, CardInfo.EffectInfo ei, bool _isClickable)
+    public void Init(Card _card, GameState.GameStateType _usableState, int _eventIdx, CardInfo.EffectInfo ei, Func<Game, bool> _isClickable)
     {
         card = _card;
         usableState = _usableState;
@@ -47,7 +47,7 @@ public class CardEventUsageFieldElement : CardUsageFieldElement
         this.GetComponent<Image>().color = color;
 
         isClickable = _isClickable;
-        this.GetComponent<Graphic>().raycastTarget = isClickable;
+        this.GetComponent<Graphic>().raycastTarget = isClickable(GameManager.Instance.Game);
     }
 
     protected override void onValidClick()
@@ -59,7 +59,7 @@ public class CardEventUsageFieldElement : CardUsageFieldElement
     protected override bool canUse()
     {
         return
-            isClickable
+            isClickable(GameManager.Instance.Game)
             && ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.CardAndUsage
             && GameManager.Instance.Game.CurState.StateType == usableState
             && card.CanBePlayed;

@@ -24,16 +24,21 @@ namespace HighTreasonGame
                 get; private set;
             }
 
-            public bool Selectable
+            public Func<Game, bool> Selectable
             {
                 get; private set;
             }
 
-            public CardEffectPair(CardChoice choiceFunc, CardEffect effectFunc, bool selectable = true)
+            public CardEffectPair(CardChoice choiceFunc, CardEffect effectFunc, Func<Game, bool> selectable = null)
             {
                 CardChoice = choiceFunc;
                 CardEffect = effectFunc;
-                Selectable = selectable;
+
+                Selectable = (Game game) => { return true; };
+                if (selectable != null)
+                {
+                    Selectable = selectable;
+                }
             }
         }
 

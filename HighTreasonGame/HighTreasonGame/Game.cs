@@ -48,6 +48,8 @@ namespace HighTreasonGame
             get; private set;
         }
 
+        public bool OfficersRecalledPlayable = false;
+
         private bool gameEnd = false;
 
         public Game(ChoiceHandler[] playerChoiceHandlers, string cardInfoJson)

@@ -122,7 +122,7 @@ public class MiniCardElement : SelectableElement
                     CardEventUsageFieldElement eventObj = GameObject.Instantiate(cardEventFieldElementPrefab);
                     eventObj.gameObject.SetActive(true);
 
-                    eventObj.Init(card, stateType, i, cardEffectPair[i], false);
+                    eventObj.Init(card, stateType, i, cardEffectPair[i], (Game game) => { return false; });
 
                     RectTransform rect = eventObj.GetComponent<RectTransform>();
                     rect.anchorMin = new Vector2(0, 1.0f - (float)(i + 1) / size);

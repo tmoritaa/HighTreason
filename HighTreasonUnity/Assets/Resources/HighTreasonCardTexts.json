@@ -52,5 +52,11 @@
 		"jury_selection":[{"text":"Peek at any 1 Trait marker.", "desc":"Select any 1 Trait"}],
 		"trial_in_chief":[{"type":"prosecution", "text":"Either -1 Ins;"}, {"type":"neutral", "text":"OR discard this and any 1 or 2 other cards in your hand and redraw that many cards from the deck."}],
 		"summation":[{"type":"neutral", "text":"No special event"}]
+	},
+	"George Holmes Young":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 2 Occupation", "desc":"Select 2 Occupation Traits"}, {"text":"OR 1 Religion.", "desc":"Select 1 Religion Trait"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui and 1-> to any aspect.", "desc":"Select 1 aspect"}],
+		"summation":[{"type":"prosecution", "text":"1-> to all Occupation Traits.", "desc":""}]
 	}
 }
