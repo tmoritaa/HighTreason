@@ -62,9 +62,16 @@
 	},
 	"Gen. Frederick Middleton":{
 		"typing":"Prosecution Witness",
-		"notes":"After playing this card during the Trial In Chief or Summation round, the Officers Recalled Card Events can be played.",
+		"notes":"After playing this card during the Trial or Summation round, the Officers Recalled Card Events can be played.",
 		"jury_selection":[{"text":"Reveal 1 aspect from each Trait.", "desc":"Select 1 Trait of each type"}],
 		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui, 2-> to the English aspect, and 1-> to the Government aspect.", "desc":""}],
 		"summation":[{"type":"prosecution", "text":"2-> each to the Occupation Trait aspect, and 2-> to the English aspect, and 1-> to the Catholic aspect.", "desc":""}]
+	},
+	"Officers Recalled":{
+		"typing":"Rebuttal Testimony",
+		"notes":"Cannot use the Trial or Summation Events on this card unless either General Middleton or George Holmes Young have been played.",
+		"jury_selection":[{"text":"Reveal 4 Language.", "desc":"Select 4 Language Traits"}, {"text":"Reveal 3 Occupation.", "desc":"Select 3 Occupation Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"-1 Ins;", "desc":""}, {"type":"neutral", "text":"OR <-2-> to the Catholic aspect.", "desc":""}],
+		"summation":[{"type":"prosecution", "text":"-1 Ins.", "desc":""}]
 	}
 }
