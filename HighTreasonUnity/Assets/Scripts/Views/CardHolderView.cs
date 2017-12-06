@@ -6,7 +6,7 @@ using UnityEngine;
 
 using HighTreasonGame;
 
-public abstract class CardHolderView : MonoBehaviour
+public abstract class CardHolderView : DismissableView
 {
     [SerializeField]
     private int cardsPerCol = 6;

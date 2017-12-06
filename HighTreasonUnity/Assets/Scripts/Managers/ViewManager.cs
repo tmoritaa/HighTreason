@@ -64,7 +64,7 @@ public class ViewManager : MonoBehaviour
     [SerializeField]
     private TextHolderElement curActionDesc;
 
-    private Stack<GameObject> displayedPopups = new Stack<GameObject>();
+    private Stack<DismissableView> displayedPopups = new Stack<DismissableView>();
 
     void Awake()
     {
@@ -83,43 +83,44 @@ public class ViewManager : MonoBehaviour
 
     public void DisplaySummationDeckViewForCurPlayer()
     {
-        DisplayView(PopupType.SummationDeck, GameManager.Instance.Game.CurPlayer);
+        DisplayView(PopupType.SummationDeck, true, GameManager.Instance.Game.CurPlayer);
     }
 
     public void DisplayDiscardView()
     {
-        DisplayView(PopupType.Discard);
+        DisplayView(PopupType.Discard, true);
     }
 
-    public void DisplayView(PopupType ptype, params object[] args)
+    public void DisplayView(PopupType ptype, bool dismissable, params object[] args)
     {
-        GameObject displayedView = null;
+        DismissableView displayedView = null;
 
         switch (ptype)
         {
             case PopupType.DetailedCard:
                 detailedCardView.SetCardForDisplay((Card)args[0]);
                 detailedCardView.gameObject.SetActive(true);
-                displayedView = detailedCardView.gameObject;
+                displayedView = detailedCardView;
                 break;
             case PopupType.SummationDeck:
                 summationView.SetPlayerForDisplay((Player)args[0]);
                 summationView.gameObject.SetActive(true);
-                displayedView = summationView.gameObject;
+                displayedView = summationView;
                 break;
             case PopupType.Discard:
                 discardView.gameObject.SetActive(true);
-                displayedView = discardView.gameObject;
+                displayedView = discardView;
                 break;
             case PopupType.GameResult:
                 gameResultView.InitInfo((Player.PlayerSide)args[0], (bool)args[1], (int)args[2]);
                 gameResultView.gameObject.SetActive(true);
-                displayedView = gameResultView.gameObject;
+                displayedView = gameResultView;
                 break;
         }
 
         if (displayedView != null)
         {
+            displayedView.Dismissable = dismissable;
             displayedPopups.Push(displayedView);
         }
     }
@@ -128,14 +129,14 @@ public class ViewManager : MonoBehaviour
     {
         while (displayedPopups.Count > 0)
         {
-            GameObject go = displayedPopups.Pop();
+            GameObject go = displayedPopups.Pop().gameObject;
             go.SetActive(false);
         }
     }
 
     public void HideTopView()
     {
-        displayedPopups.Pop().SetActive(false);
+        displayedPopups.Pop().gameObject.SetActive(false);
     }
 
     public void HideCurActionText()

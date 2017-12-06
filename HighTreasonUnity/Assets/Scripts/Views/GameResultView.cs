@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 using HighTreasonGame;
 
-public class GameResultView : MonoBehaviour 
+public class GameResultView : DismissableView 
 {
     [SerializeField]
     Text text;

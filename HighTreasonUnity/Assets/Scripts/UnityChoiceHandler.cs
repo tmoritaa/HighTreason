@@ -14,9 +14,10 @@ public class UnityChoiceHandler : ChoiceHandler
     {
         NoChoice,
         CardAndUsage,
-        PickBoardObject,
+        ChooseBoardObjects,
         MomentOfInsight,
         ChooseCards,
+        ChooseCardEffect,
     }
 
     private AutoResetEvent waitForInput = new AutoResetEvent(false);
@@ -126,7 +127,23 @@ public class UnityChoiceHandler : ChoiceHandler
         }
         else
         {
-            boardChoice.selectedCards = (Dictionary<Card, int>)passedParams[0];
+            boardChoice.SelectedCards = (Dictionary<Card, int>)passedParams[0];
+        }
+
+        passedParams = null;
+    }
+    
+    public override void ChooseCardEffect(Card cardToPlay, Game game, string description, out BoardChoices.CardPlayInfo cardPlayInfo)
+    {
+        ChoiceHandlerDelegator.Instance.TriggerChoice(this, new ChooseCardEffectInputHandler(cardToPlay, description));
+        waitForInput.WaitOne();
+
+        cardPlayInfo = new BoardChoices.CardPlayInfo();
+
+        if (passedParams != null)
+        {
+            int idx = (int)passedParams[2];
+            cardPlayInfo.eventIdx = idx;
         }
 
         passedParams = null;

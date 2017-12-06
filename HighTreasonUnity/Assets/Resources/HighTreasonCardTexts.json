@@ -21,7 +21,7 @@
 		"typing":"Prosecution Witness",
 		"jury_selection":[{"text":"Reveal 3 Occupation;", "desc":"Select 3 Occupation Traits"},{"text":"OR 4 Language.", "desc":"Select 4 Language Traits"}],
 		"trial_in_chief":[{"type":"prosecution", "text":"-1 Ins and 1-> to any one aspect;", "desc":""}, {"type":"neutral", "text":"OR <-2-> to any one aspect.", "desc":"Select 1 Aspect"}],
-		"summation":[{"type":"prosecution", "text":"2-> each to the English and Protestant aspects;", "desc":""}, {"type":"defense", "text":"OR 1<- each to the Farmer and French aspects.", "desc":""}]
+		"summation":[{"type":"prosecution", "text":"2-> each to the English and Protestant aspects;", "desc":""}, {"type":"defense", "text":"OR <-1 each to the Farmer and French aspects.", "desc":""}]
 	},
 	"\"A Purely Constitutional Movement\"":{
 		"typing":"Defense Evidence",
@@ -73,5 +73,11 @@
 		"jury_selection":[{"text":"Reveal 4 Language.", "desc":"Select 4 Language Traits"}, {"text":"Reveal 3 Occupation.", "desc":"Select 3 Occupation Traits"}],
 		"trial_in_chief":[{"type":"prosecution", "text":"-1 Ins;", "desc":""}, {"type":"neutral", "text":"OR <-2-> to the Catholic aspect.", "desc":""}],
 		"summation":[{"type":"prosecution", "text":"-1 Ins.", "desc":""}]
+	},
+	"The Metis":{
+		"typing":"Defense Allies",
+		"jury_selection":[{"text":"Play this card last. Take any one card from Discard pile and reuse its Jury Selection ability", "desc":"Select a card in the Discard pile"}],
+		"trial_in_chief":[{"type":"defense", "text":"<-2 to the English aspect and <-3 to the French aspect.", "desc":""}],
+		"summation":[{"type":"defense", "text":"<-2 each to any three aspects except for 1-> to the Government and Merchant aspects.", "desc":""}]	
 	}
 }

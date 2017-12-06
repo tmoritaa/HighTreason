@@ -30,7 +30,7 @@ public class OpponentSummationDeckTrigger : HighlightElement
         }
         else
         {
-            ViewManager.Instance.DisplayView(ViewManager.PopupType.SummationDeck, GameManager.Instance.Game.GetOtherPlayer());
+            ViewManager.Instance.DisplayView(ViewManager.PopupType.SummationDeck, true, GameManager.Instance.Game.GetOtherPlayer());
         }
     }
 

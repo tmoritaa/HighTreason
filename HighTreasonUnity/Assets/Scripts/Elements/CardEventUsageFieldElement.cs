@@ -60,8 +60,8 @@ public class CardEventUsageFieldElement : CardUsageFieldElement
     {
         return
             isClickable(GameManager.Instance.Game)
-            && ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.CardAndUsage
             && GameManager.Instance.Game.CurState.StateType == usableState
-            && card.CanBePlayed;
+            && ((card.CanBePlayed && ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.CardAndUsage)
+                || ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.ChooseCardEffect);
     }
 }

@@ -68,11 +68,12 @@
     <Compile Include="CardTemplates\JohnAstleyCardTemplate.cs" />
     <Compile Include="CardTemplates\OfficersRecalledCardTemplate.cs" />
     <Compile Include="CardTemplates\PurelyConstitutionalCardTemplate.cs" />
+    <Compile Include="CardTemplates\TheMetisCardTemplate.cs" />
     <Compile Include="CardTemplates\ThomasMcKayCardTemplate.cs" />
     <Compile Include="CardTemplates\WilliamTompkinsCardTemplate.cs" />
     <Compile Include="CardHolder\DeckHolder.cs" />
     <Compile Include="CardHolder\DiscardHolder.cs" />
-    <Compile Include="GameState.cs" />
+    <Compile Include="GameStates\GameState.cs" />
     <Compile Include="GameStates\CardPlayState.cs" />
     <Compile Include="GameStates\DelibrationState.cs" />
     <Compile Include="GameStates\JuryDismissalState.cs" />

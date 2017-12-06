@@ -77,8 +77,8 @@ namespace HighTreasonGame.CardTemplates
                     },
                     (Game game, BoardChoices choices) =>
                     {
-                        int numCardsToMul = choices.selectedCards.Count;
-                        choices.selectedCards.Keys.ToList().ForEach(c => game.Discards.MoveCard(c));
+                        int numCardsToMul = choices.SelectedCards.Count;
+                        choices.SelectedCards.Keys.ToList().ForEach(c => game.Discards.MoveCard(c));
                         game.Deck.DealCards(numCardsToMul).ForEach(c => game.CurPlayer.Hand.MoveCard(c));
                     }));
         }

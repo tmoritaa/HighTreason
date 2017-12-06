@@ -34,5 +34,6 @@ namespace HighTreasonGame
             Game game,
             string description,
             out BoardChoices boardChoice);
+        public abstract void ChooseCardEffect(Card cardToPlay, Game game, string description, out BoardChoices.CardPlayInfo cardPlayInfo);
     }
 }

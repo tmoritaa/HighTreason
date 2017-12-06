@@ -296,8 +296,6 @@ namespace HighTreasonGame
             return
                 (Game game, ChoiceHandler choiceHandler) =>
                 {
-                    List<Jury.JuryAspect> juryAspects = new List<Jury.JuryAspect>();
-
                     List<BoardObject> options = game.FindBO(
                         (BoardObject htgo) =>
                         {

@@ -69,7 +69,7 @@ public class MiniCardElement : SelectableElement
         }
         else if (cardCanBeDisplayed())
         {
-            ViewManager.Instance.DisplayView(ViewManager.PopupType.DetailedCard, DisplayedCard);
+            ViewManager.Instance.DisplayView(ViewManager.PopupType.DetailedCard, true, DisplayedCard);
         }
     }
 

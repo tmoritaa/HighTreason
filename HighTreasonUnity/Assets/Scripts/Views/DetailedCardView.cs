@@ -7,7 +7,7 @@ using HighTreasonGame;
 
 using UnityEngine;
 
-public class DetailedCardView : MonoBehaviour 
+public class DetailedCardView : DismissableView 
 {
     [SerializeField]
     DetailedCardElement cardElement;

@@ -41,7 +41,8 @@ public class UndoUsageTrigger : MonoBehaviour
 
     private bool canUndo()
     {
-        return (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.PickBoardObject && GameManager.Instance.Game.CurState.StateType != GameState.GameStateType.JuryDismissal)
-            || ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.MomentOfInsight;
+        return (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.ChooseBoardObjects && GameManager.Instance.Game.CurState.StateType != GameState.GameStateType.JuryDismissal)
+            || ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.MomentOfInsight
+            || ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.ChooseCards;
     }
 }
