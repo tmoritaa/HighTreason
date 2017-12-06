@@ -4,7 +4,7 @@ using System.Linq;
 
 public class CardInfo
 {
-    public class EffectPair
+    public class EffectInfo
     {
         public enum EffectType
         {
@@ -18,7 +18,7 @@ public class CardInfo
         public string Text { get; private set; }
         public string Description { get; private set; }
 
-        public EffectPair(string typeStr, string text, string desc)
+        public EffectInfo(string typeStr, string text, string desc)
         {
             Text = text;
             Description = desc;
@@ -41,7 +41,7 @@ public class CardInfo
             }
         }
 
-        public EffectPair(EffectType type, string text, string desc)
+        public EffectInfo(EffectType type, string text, string desc)
         {
             Type = type;
             Text = text;
@@ -59,28 +59,28 @@ public class CardInfo
         get; private set;
     }
 
-    public List<EffectPair> JurySelectionPairs
+    public List<EffectInfo> JurySelectionInfos
     {
         get; private set;
     }
 
-    public List<EffectPair> TrialInChiefPairs
+    public List<EffectInfo> TrialInChiefInfos
     {
         get; private set;
     }
 
-    public List<EffectPair> SummationPairs
+    public List<EffectInfo> SummationInfos
     {
         get; private set;
     }
 
-    public CardInfo(string _name, string _typing, List<EffectPair> _jurySelectionPairs, List<EffectPair> _trialInChiefPairs, List<EffectPair> _summationPairs)
+    public CardInfo(string _name, string _typing, List<EffectInfo> _jurySelectionInfo, List<EffectInfo> _trialInChiefInfo, List<EffectInfo> _summationInfo)
     {
         Name = _name;
         Typing = _typing;
-        JurySelectionPairs = _jurySelectionPairs;
-        TrialInChiefPairs = _trialInChiefPairs;
-        SummationPairs = _summationPairs;
+        JurySelectionInfos = _jurySelectionInfo;
+        TrialInChiefInfos = _trialInChiefInfo;
+        SummationInfos = _summationInfo;
     }
 
     public override string ToString()
@@ -89,17 +89,17 @@ public class CardInfo
         outStr += Name + "\n";
         outStr += Typing + "\n";
         outStr += "JurySelection:\n";
-        foreach (EffectPair ep in JurySelectionPairs)
+        foreach (EffectInfo ep in JurySelectionInfos)
         {
             outStr += ep.Text + "\n";
         }
         outStr += "TrialInChief:\n";
-        foreach (EffectPair ep in TrialInChiefPairs)
+        foreach (EffectInfo ep in TrialInChiefInfos)
         {
             outStr += "type:" + ep.Type + " text:" + ep.Text + "\n";
         }
         outStr += "Summation:\n";
-        foreach (EffectPair ep in SummationPairs)
+        foreach (EffectInfo ep in SummationInfos)
         {
             outStr += "type:" + ep.Type + " text:" + ep.Text + "\n";
         }

@@ -96,18 +96,18 @@ public class MiniCardElement : SelectableElement
 
             bool handled = true;
             GameState.GameStateType stateType = GameManager.Instance.Game.CurState.StateType;
-            List<CardInfo.EffectPair> cardEffectPair = null;
+            List<CardInfo.EffectInfo> cardEffectPair = null;
 
             switch (stateType)
             {
                 case GameState.GameStateType.JurySelection:
-                    cardEffectPair = cardInfo.JurySelectionPairs;
+                    cardEffectPair = cardInfo.JurySelectionInfos;
                     break;
                 case GameState.GameStateType.TrialInChief:
-                    cardEffectPair = cardInfo.TrialInChiefPairs;
+                    cardEffectPair = cardInfo.TrialInChiefInfos;
                     break;
                 case GameState.GameStateType.Summation:
-                    cardEffectPair = cardInfo.SummationPairs;
+                    cardEffectPair = cardInfo.SummationInfos;
                     break;
                 default:
                     handled = false;

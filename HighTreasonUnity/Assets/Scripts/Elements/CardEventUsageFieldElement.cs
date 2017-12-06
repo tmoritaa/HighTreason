@@ -19,27 +19,27 @@ public class CardEventUsageFieldElement : CardUsageFieldElement
 
     private bool isClickable;
 
-    public void Init(Card _card, GameState.GameStateType _usableState, int _eventIdx, CardInfo.EffectPair ep, bool _isClickable)
+    public void Init(Card _card, GameState.GameStateType _usableState, int _eventIdx, CardInfo.EffectInfo ei, bool _isClickable)
     {
         card = _card;
         usableState = _usableState;
         eventIdx = _eventIdx;
 
-        this.GetComponentInChildren<Text>().text = ep.Text;
+        this.GetComponentInChildren<Text>().text = ei.Text;
 
         Color color = Color.black;
-        switch (ep.Type)
+        switch (ei.Type)
         {
-            case CardInfo.EffectPair.EffectType.Prosecution:
+            case CardInfo.EffectInfo.EffectType.Prosecution:
                 color = ViewManager.Instance.ProsecutionColor;
                 break;
-            case CardInfo.EffectPair.EffectType.Defense:
+            case CardInfo.EffectInfo.EffectType.Defense:
                 color = ViewManager.Instance.DefenseColor;
                 break;
-            case CardInfo.EffectPair.EffectType.Neutral:
+            case CardInfo.EffectInfo.EffectType.Neutral:
                 color = ViewManager.Instance.NeutralColor;
                 break;
-            case CardInfo.EffectPair.EffectType.JurySelect:
+            case CardInfo.EffectInfo.EffectType.JurySelect:
                 color = ViewManager.Instance.JurySelectColor;
                 break;
         }

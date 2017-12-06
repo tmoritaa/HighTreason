@@ -17,12 +17,12 @@ namespace HighTreasonGame.CardTemplates
         {
             SelectionEvents.Add(
                 new CardEffectPair(
-                    genRevealOrPeakCardChoice(new HashSet<Property>(), 2, true, this.CardInfo.JurySelectionPairs[0].Description),
+                    genRevealOrPeakCardChoice(new HashSet<Property>(), 2, true, this.CardInfo.JurySelectionInfos[0].Description),
                     revealAllAspects));
 
             SelectionEvents.Add(
                 new CardEffectPair(
-                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Religion }, 1, false, this.CardInfo.JurySelectionPairs[1].Description),
+                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Religion }, 1, false, this.CardInfo.JurySelectionInfos[1].Description),
                     peekAllAspects));
         }
 
@@ -38,7 +38,7 @@ namespace HighTreasonGame.CardTemplates
 
             TrialEvents.Add(
                 new CardEffectPair(
-                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Religion }, 3, false, this.CardInfo.TrialInChiefPairs[1].Description),
+                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Religion }, 3, false, this.CardInfo.TrialInChiefInfos[1].Description),
                     peekAllAspects));
         }
 

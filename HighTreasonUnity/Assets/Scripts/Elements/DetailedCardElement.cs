@@ -47,22 +47,24 @@ public class DetailedCardElement : MonoBehaviour
         actionPoints.Init(card);
 
         GameState.GameStateType[] stateTypes = new GameState.GameStateType[] { GameState.GameStateType.JurySelection, GameState.GameStateType.TrialInChief, GameState.GameStateType.Summation };
-        List<CardInfo.EffectPair>[] cardEffectPairs = new List<CardInfo.EffectPair>[] { cardInfo.JurySelectionPairs, cardInfo.TrialInChiefPairs, cardInfo.SummationPairs };
+        List<CardInfo.EffectInfo>[] cardEffectInfos = new List<CardInfo.EffectInfo>[] { cardInfo.JurySelectionInfos, cardInfo.TrialInChiefInfos, cardInfo.SummationInfos };
+        List<CardTemplate.CardEffectPair>[] cardEffectPairs = new List<CardTemplate.CardEffectPair>[] { card.Template.SelectionEvents, card.Template.TrialEvents, card.Template.SummationEvents };
         GameObject[] parentGOs = new GameObject[] { jurySelectionParent, trialInChiefParent, summationParent };
 
         for (int j = 0; j < stateTypes.Length; ++j)
         {
-            List<CardInfo.EffectPair> pairList = cardEffectPairs[j];
+            List<CardInfo.EffectInfo> infoList = cardEffectInfos[j];
+            List<CardTemplate.CardEffectPair> effectPairs = cardEffectPairs[j];
             GameObject parentGO = parentGOs[j];
             GameState.GameStateType stateType = stateTypes[j];
 
-            int size = pairList.Count;
+            int size = infoList.Count;
             for (int i = 0; i < size; ++i)
             {
                 CardEventUsageFieldElement eventObj = GameObject.Instantiate(cardEventFieldElementPrefab);
                 eventObj.gameObject.SetActive(true);
 
-                eventObj.Init(card, stateType, i, pairList[i], true);
+                eventObj.Init(card, stateType, i, infoList[i], effectPairs[i].Selectable);
 
                 RectTransform rect = eventObj.GetComponent<RectTransform>();
                 rect.anchorMin = new Vector2(0, 1.0f - (float)(i + 1) / size);

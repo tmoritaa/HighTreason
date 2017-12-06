@@ -17,7 +17,7 @@ namespace HighTreasonGame.CardTemplates
         {
             SelectionEvents.Add(
                 new CardEffectPair(
-                    genRevealOrPeakCardChoice(new HashSet<Property>() {}, 1, false, this.CardInfo.JurySelectionPairs[0].Description),
+                    genRevealOrPeakCardChoice(new HashSet<Property>() {}, 1, false, this.CardInfo.JurySelectionInfos[0].Description),
                     peekAllAspects));
         }
 
@@ -69,7 +69,7 @@ namespace HighTreasonGame.CardTemplates
                             },
                             true,
                             game,
-                            this.CardInfo.TrialInChiefPairs[0].Description,
+                            this.CardInfo.TrialInChiefInfos[0].Description,
                             out boardChoice);
 
                         return boardChoice;

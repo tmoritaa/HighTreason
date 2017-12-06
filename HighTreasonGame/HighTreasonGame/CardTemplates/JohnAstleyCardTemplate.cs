@@ -17,12 +17,12 @@ namespace HighTreasonGame.CardTemplates
         {
             SelectionEvents.Add(
                 new CardEffectPair(
-                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Occupation }, 3, true, this.CardInfo.JurySelectionPairs[0].Description),
+                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Occupation }, 3, true, this.CardInfo.JurySelectionInfos[0].Description),
                     revealAllAspects));
 
             SelectionEvents.Add(
                 new CardEffectPair(
-                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Religion }, 2, true, this.CardInfo.JurySelectionPairs[1].Description),
+                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Religion }, 2, true, this.CardInfo.JurySelectionInfos[1].Description),
                     revealAllAspects));
         }
 
@@ -30,7 +30,7 @@ namespace HighTreasonGame.CardTemplates
         {
             TrialEvents.Add(
                 new CardEffectPair(
-                    genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 1, false, this.CardInfo.TrialInChiefPairs[0].Description),
+                    genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 1, false, this.CardInfo.TrialInChiefInfos[0].Description),
                     raiseGuiltAndOneAspectEffect));
         }
 
@@ -59,7 +59,7 @@ namespace HighTreasonGame.CardTemplates
                             },
                             (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 3; },
                             game,
-                            this.CardInfo.SummationPairs[0].Description,
+                            this.CardInfo.SummationInfos[0].Description,
                             out boardChoices);
 
                         return boardChoices;

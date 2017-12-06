@@ -346,23 +346,23 @@ namespace HighTreasonGame
 
             string typing = cardJson.Value<string>("typing");
 
-            List<CardInfo.EffectPair> jurySelectionPairs = new List<CardInfo.EffectPair>();
-            List<CardInfo.EffectPair> trialInChiefPairs = new List<CardInfo.EffectPair>();
-            List<CardInfo.EffectPair> summationPairs = new List<CardInfo.EffectPair>();
+            List<CardInfo.EffectInfo> jurySelectionPairs = new List<CardInfo.EffectInfo>();
+            List<CardInfo.EffectInfo> trialInChiefPairs = new List<CardInfo.EffectInfo>();
+            List<CardInfo.EffectInfo> summationPairs = new List<CardInfo.EffectInfo>();
 
             foreach (JObject eo in cardJson.Value<JArray>("jury_selection"))
             {
-                jurySelectionPairs.Add(new CardInfo.EffectPair(CardInfo.EffectPair.EffectType.JurySelect, eo.Value<string>("text"), eo.Value<string>("desc")));
+                jurySelectionPairs.Add(new CardInfo.EffectInfo(CardInfo.EffectInfo.EffectType.JurySelect, eo.Value<string>("text"), eo.Value<string>("desc")));
             }
 
             foreach (JObject eo in cardJson.Value<JArray>("trial_in_chief"))
             {
-                trialInChiefPairs.Add(new CardInfo.EffectPair(eo.Value<string>("type"), eo.Value<string>("text"), eo.Value<string>("desc")));
+                trialInChiefPairs.Add(new CardInfo.EffectInfo(eo.Value<string>("type"), eo.Value<string>("text"), eo.Value<string>("desc")));
             }
 
             foreach (JObject eo in cardJson.Value<JArray>("summation"))
             {
-                summationPairs.Add(new CardInfo.EffectPair(eo.Value<string>("type"), eo.Value<string>("text"), eo.Value<string>("desc")));
+                summationPairs.Add(new CardInfo.EffectInfo(eo.Value<string>("type"), eo.Value<string>("text"), eo.Value<string>("desc")));
             }
 
             CardInfo = new CardInfo(Name, typing, jurySelectionPairs, trialInChiefPairs, summationPairs);

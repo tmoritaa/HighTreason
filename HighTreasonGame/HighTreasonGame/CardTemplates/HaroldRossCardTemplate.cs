@@ -17,12 +17,12 @@ namespace HighTreasonGame.CardTemplates
         {
             SelectionEvents.Add(
                 new CardEffectPair(
-                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Occupation }, 3, true, this.CardInfo.JurySelectionPairs[0].Description),
+                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Occupation }, 3, true, this.CardInfo.JurySelectionInfos[0].Description),
                     revealAllAspects));
 
             SelectionEvents.Add(
                 new CardEffectPair(
-                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Language }, 4, true, this.CardInfo.JurySelectionPairs[1].Description),
+                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Language }, 4, true, this.CardInfo.JurySelectionInfos[1].Description),
                     revealAllAspects));
         }
 
@@ -30,7 +30,7 @@ namespace HighTreasonGame.CardTemplates
         {
             TrialEvents.Add(
                 new CardEffectPair(
-                    genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 1, false, this.CardInfo.TrialInChiefPairs[0].Description),
+                    genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 1, false, this.CardInfo.TrialInChiefInfos[0].Description),
                     (Game game, BoardChoices choices) =>
                     {
                         game.GetGuiltTrack().AddToValue(1);
@@ -39,7 +39,7 @@ namespace HighTreasonGame.CardTemplates
 
             TrialEvents.Add(
                 new CardEffectPair(
-                    genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 2, true, this.CardInfo.TrialInChiefPairs[1].Description),
+                    genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 2, true, this.CardInfo.TrialInChiefInfos[1].Description),
                     (Game game, BoardChoices choices) =>
                     {
                         int modValue = calcModValueBasedOnSide(2, game);
