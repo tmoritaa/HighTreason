@@ -16,7 +16,7 @@ namespace HighTreasonGame
         }
 
         // TODO: only necessary since generating cards. Should be deleted once enough cards are implemented.
-        public JObject infoRoot;
+        public JObject InfoRoot;
 
         public CardTemplateGenerator(string cardInfoJson)
         {
@@ -31,11 +31,13 @@ namespace HighTreasonGame
             // TODO: only for now until we have enough cards.
             while (CardTemplates.Keys.Count < 45)
             {
-                CardTemplate tmp1 = new JohnAstleyCardTemplate(infoRoot);
+                CardTemplate tmp1 = new JohnAstleyCardTemplate();
+                tmp1.Init(InfoRoot);
                 tmp1.SetName(tmp1.Name + CardTemplates.Keys.Count.ToString().PadLeft(2, '0'));
                 CardTemplates.Add(tmp1.Name, tmp1);
 
-                CardTemplate tmp2 = new PurelyConstitutionalCardTemplate(infoRoot);
+                CardTemplate tmp2 = new PurelyConstitutionalCardTemplate();
+                tmp2.Init(InfoRoot);
                 tmp2.SetName(tmp2.Name + CardTemplates.Keys.Count.ToString().PadLeft(2, '0'));
                 CardTemplates.Add(tmp2.Name, tmp2);
             }
@@ -45,24 +47,21 @@ namespace HighTreasonGame
 
         private void generateCardTemplates(string cardInfoJson)
         {
-            infoRoot = JObject.Parse(cardInfoJson);
+            var cardTemplateTypes =
+                from a in AppDomain.CurrentDomain.GetAssemblies()
+                from t in a.GetTypes()
+                let attributes = t.GetCustomAttributes(typeof(CardTemplateAttribute), true)
+                where attributes != null && attributes.Length > 0
+                select new { Type = t, Attributes = attributes.Cast<CardTemplateAttribute>() };
 
-            addCardTemplate(new JohnAstleyCardTemplate(infoRoot));
-            addCardTemplate(new PurelyConstitutionalCardTemplate(infoRoot));
-            addCardTemplate(new CouncilExovedateCardTemplate(infoRoot));
-            addCardTemplate(new WilliamTompkinsCardTemplate(infoRoot));
-            addCardTemplate(new FatherVitalCardTemplate(infoRoot));
-            addCardTemplate(new HaroldRossCardTemplate(infoRoot));
-            addCardTemplate(new DoctorJamesCardTemplate(infoRoot));
-            addCardTemplate(new ThomasMcKayCardTemplate(infoRoot));
-            addCardTemplate(new JailersCardTemplate(infoRoot));
-            addCardTemplate(new GeorgeHolmesYoungCardTemplate(infoRoot));
-            addCardTemplate(new GenFrederickMiddletonCardTemplate(infoRoot));
-        }
+            InfoRoot = JObject.Parse(cardInfoJson);
 
-        private void addCardTemplate(CardTemplate template)
-        {
-            CardTemplates.Add(template.Name, template);
+            foreach (var type in cardTemplateTypes)
+            {
+                CardTemplate template = (CardTemplate)Activator.CreateInstance(type.Type);
+                template.Init(InfoRoot);
+                CardTemplates.Add(template.Name, template);
+            }
         }
     }
 }

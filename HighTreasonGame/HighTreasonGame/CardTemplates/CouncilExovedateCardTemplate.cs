@@ -7,10 +7,11 @@ using Newtonsoft.Json.Linq;
 
 namespace HighTreasonGame.CardTemplates
 {
+    [CardTemplateAttribute]
     public class CouncilExovedateCardTemplate : CardTemplate
     {
-        public CouncilExovedateCardTemplate(JObject json)
-            : base("Council of the Exovedate", 2, json)
+        public CouncilExovedateCardTemplate()
+            : base("Council of the Exovedate", 2)
         {}
 
         protected override void addSelectionEventsAndChoices()

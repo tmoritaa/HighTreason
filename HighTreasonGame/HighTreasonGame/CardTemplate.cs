@@ -76,7 +76,7 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        public CardTemplate(string _name, int _actionPts, JObject infoRoot)
+        public CardTemplate(string _name, int _actionPts)
         {
             Name = _name;
             ActionPts = _actionPts;
@@ -84,12 +84,6 @@ namespace HighTreasonGame
             SelectionEvents = new List<CardEffectPair>();
             TrialEvents = new List<CardEffectPair>();
             SummationEvents = new List<CardEffectPair>();
-
-            fillCardInfo(infoRoot);
-
-            addSelectionEventsAndChoices();
-            addTrialEventsAndChoices();
-            addSummationEventsAndChoices();
         }
 
         public bool PlayAsEvent(Game game, int idx, ChoiceHandler choiceHandler)
@@ -190,9 +184,49 @@ namespace HighTreasonGame
             return num;
         }
 
+        public void Init(JObject json)
+        {
+            fillCardInfo(json);
+
+            addSelectionEventsAndChoices();
+            addTrialEventsAndChoices();
+            addSummationEventsAndChoices();
+        }
+
         protected abstract void addSelectionEventsAndChoices();
         protected abstract void addTrialEventsAndChoices();
         protected abstract void addSummationEventsAndChoices();
+
+        private void fillCardInfo(JObject json)
+        {
+            JObject cardJson = json.Value<JObject>(Name);
+
+            string typing = cardJson.Value<string>("typing");
+
+            JToken notesToken;
+            string notes = cardJson.TryGetValue("notes", out notesToken) ? (string)notesToken : "";
+
+            List<CardInfo.EffectInfo> jurySelectionPairs = new List<CardInfo.EffectInfo>();
+            List<CardInfo.EffectInfo> trialInChiefPairs = new List<CardInfo.EffectInfo>();
+            List<CardInfo.EffectInfo> summationPairs = new List<CardInfo.EffectInfo>();
+
+            foreach (JObject eo in cardJson.Value<JArray>("jury_selection"))
+            {
+                jurySelectionPairs.Add(new CardInfo.EffectInfo(CardInfo.EffectInfo.EffectType.JurySelect, eo.Value<string>("text"), eo.Value<string>("desc")));
+            }
+
+            foreach (JObject eo in cardJson.Value<JArray>("trial_in_chief"))
+            {
+                trialInChiefPairs.Add(new CardInfo.EffectInfo(eo.Value<string>("type"), eo.Value<string>("text"), eo.Value<string>("desc")));
+            }
+
+            foreach (JObject eo in cardJson.Value<JArray>("summation"))
+            {
+                summationPairs.Add(new CardInfo.EffectInfo(eo.Value<string>("type"), eo.Value<string>("text"), eo.Value<string>("desc")));
+            }
+
+            CardInfo = new CardInfo(Name, typing, notes, jurySelectionPairs, trialInChiefPairs, summationPairs);
+        }
 
         #region Choice Utility
 
@@ -344,36 +378,5 @@ namespace HighTreasonGame
             }
         }
         #endregion
-
-        private void fillCardInfo(JObject json)
-        {
-            JObject cardJson = json.Value<JObject>(Name);
-
-            string typing = cardJson.Value<string>("typing");
-
-            JToken notesToken;
-            string notes = cardJson.TryGetValue("notes", out notesToken) ? (string)notesToken : "";
-
-            List<CardInfo.EffectInfo> jurySelectionPairs = new List<CardInfo.EffectInfo>();
-            List<CardInfo.EffectInfo> trialInChiefPairs = new List<CardInfo.EffectInfo>();
-            List<CardInfo.EffectInfo> summationPairs = new List<CardInfo.EffectInfo>();
-
-            foreach (JObject eo in cardJson.Value<JArray>("jury_selection"))
-            {
-                jurySelectionPairs.Add(new CardInfo.EffectInfo(CardInfo.EffectInfo.EffectType.JurySelect, eo.Value<string>("text"), eo.Value<string>("desc")));
-            }
-
-            foreach (JObject eo in cardJson.Value<JArray>("trial_in_chief"))
-            {
-                trialInChiefPairs.Add(new CardInfo.EffectInfo(eo.Value<string>("type"), eo.Value<string>("text"), eo.Value<string>("desc")));
-            }
-
-            foreach (JObject eo in cardJson.Value<JArray>("summation"))
-            {
-                summationPairs.Add(new CardInfo.EffectInfo(eo.Value<string>("type"), eo.Value<string>("text"), eo.Value<string>("desc")));
-            }
-
-            CardInfo = new CardInfo(Name, typing, notes, jurySelectionPairs, trialInChiefPairs, summationPairs);
-        }
     }
 }

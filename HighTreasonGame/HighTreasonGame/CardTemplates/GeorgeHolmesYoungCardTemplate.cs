@@ -7,10 +7,11 @@ using Newtonsoft.Json.Linq;
 
 namespace HighTreasonGame.CardTemplates
 {
+    [CardTemplateAttribute]
     public class GeorgeHolmesYoungCardTemplate : CardTemplate
     {
-        public GeorgeHolmesYoungCardTemplate(JObject json)
-            : base("George Holmes Young", 2, json)
+        public GeorgeHolmesYoungCardTemplate()
+            : base("George Holmes Young", 2)
         { }
 
         protected override void addSelectionEventsAndChoices()

@@ -9,8 +9,9 @@ namespace HighTreasonGame.CardTemplates
 {
     public class PurelyConstitutionalCardTemplate : CardTemplate
     {
-        public PurelyConstitutionalCardTemplate(JObject json)
-            : base("\"A Purely Constitutional Movement\"", 3, json)
+        [CardTemplateAttribute]
+        public PurelyConstitutionalCardTemplate()
+            : base("\"A Purely Constitutional Movement\"", 3)
         {}
 
         protected override void addSelectionEventsAndChoices()
