@@ -28,7 +28,7 @@ namespace HighTreasonGame.CardTemplates
         {
             TrialEvents.Add(
                 new CardEffectPair(
-                    doNothingChoice,
+                    genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 1, false, this.CardInfo.TrialInChiefInfos[0].Description),
                     (Game game, BoardChoices choices) =>
                     {
                         raiseGuiltAndOneAspectEffect(game, choices);

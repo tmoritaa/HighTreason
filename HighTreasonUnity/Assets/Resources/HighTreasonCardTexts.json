@@ -59,5 +59,12 @@
 		"jury_selection":[{"text":"Reveal 2 Occupation", "desc":"Select 2 Occupation Traits"}, {"text":"OR 1 Religion.", "desc":"Select 1 Religion Trait"}],
 		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui and 1-> to any aspect.", "desc":"Select 1 aspect"}],
 		"summation":[{"type":"prosecution", "text":"1-> to all Occupation Traits.", "desc":""}]
+	},
+	"Gen. Frederick Middleton":{
+		"typing":"Prosecution Witness",
+		"notes":"After playing this card during the Trial In Chief or Summation round, the Officers Recalled Card Events can be played.",
+		"jury_selection":[{"text":"Reveal 1 aspect from each Trait.", "desc":"Select 1 Trait of each type"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui, 2-> to the English aspect, and 1-> to the Government aspect.", "desc":""}],
+		"summation":[{"type":"prosecution", "text":"2-> each to the Occupation Trait aspect, and 2-> to the English aspect, and 1-> to the Catholic aspect.", "desc":""}]
 	}
 }
