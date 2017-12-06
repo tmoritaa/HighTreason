@@ -351,6 +351,9 @@ namespace HighTreasonGame
 
             string typing = cardJson.Value<string>("typing");
 
+            JToken notesToken;
+            string notes = cardJson.TryGetValue("notes", out notesToken) ? (string)notesToken : "";
+
             List<CardInfo.EffectInfo> jurySelectionPairs = new List<CardInfo.EffectInfo>();
             List<CardInfo.EffectInfo> trialInChiefPairs = new List<CardInfo.EffectInfo>();
             List<CardInfo.EffectInfo> summationPairs = new List<CardInfo.EffectInfo>();
@@ -370,7 +373,7 @@ namespace HighTreasonGame
                 summationPairs.Add(new CardInfo.EffectInfo(eo.Value<string>("type"), eo.Value<string>("text"), eo.Value<string>("desc")));
             }
 
-            CardInfo = new CardInfo(Name, typing, jurySelectionPairs, trialInChiefPairs, summationPairs);
+            CardInfo = new CardInfo(Name, typing, notes, jurySelectionPairs, trialInChiefPairs, summationPairs);
         }
     }
 }

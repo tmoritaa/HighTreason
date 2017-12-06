@@ -17,6 +17,9 @@ public class DetailedCardElement : MonoBehaviour
     private Text cardName;
 
     [SerializeField]
+    private Text notes;
+
+    [SerializeField]
     private CardActionUsageFieldElement actionPoints;
 
     [SerializeField]
@@ -44,6 +47,7 @@ public class DetailedCardElement : MonoBehaviour
 
         typing.text = cardInfo.Typing;
         cardName.text = cardInfo.Name;
+        notes.text = cardInfo.Notes;
         actionPoints.Init(card);
 
         GameState.GameStateType[] stateTypes = new GameState.GameStateType[] { GameState.GameStateType.JurySelection, GameState.GameStateType.TrialInChief, GameState.GameStateType.Summation };

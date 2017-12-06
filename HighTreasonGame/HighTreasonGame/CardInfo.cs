@@ -17,6 +17,7 @@ public class CardInfo
         public EffectType Type { get; private set; }
         public string Text { get; private set; }
         public string Description { get; private set; }
+        public string Notes { get; private set; }
 
         public EffectInfo(string typeStr, string text, string desc)
         {
@@ -59,6 +60,11 @@ public class CardInfo
         get; private set;
     }
 
+    public string Notes
+    {
+        get; private set;
+    }
+
     public List<EffectInfo> JurySelectionInfos
     {
         get; private set;
@@ -74,10 +80,11 @@ public class CardInfo
         get; private set;
     }
 
-    public CardInfo(string _name, string _typing, List<EffectInfo> _jurySelectionInfo, List<EffectInfo> _trialInChiefInfo, List<EffectInfo> _summationInfo)
+    public CardInfo(string _name, string _typing, string _notes, List<EffectInfo> _jurySelectionInfo, List<EffectInfo> _trialInChiefInfo, List<EffectInfo> _summationInfo)
     {
         Name = _name;
         Typing = _typing;
+        Notes = _notes;
         JurySelectionInfos = _jurySelectionInfo;
         TrialInChiefInfos = _trialInChiefInfo;
         SummationInfos = _summationInfo;
