@@ -44,15 +44,7 @@ namespace HighTreasonGame.CardTemplates
                     doNothingChoice,
                     (Game game, BoardChoices choices) =>
                     {
-                        List<AspectTrack> aspectTracks = game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.Occupation));
-                            }).Cast<AspectTrack>().ToList();
-
-                        aspectTracks.ForEach(t => t.AddToValue(1));
+                        findAspectTracksWithProp(game, Property.Occupation).ForEach(t => t.AddToValue(1));
 
                         game.OfficersRecalledPlayable = true;
                     }));

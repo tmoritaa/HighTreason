@@ -346,6 +346,25 @@ namespace HighTreasonGame
             choices.SelectedObjs.Keys.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(1));
         }
 
+        protected List<AspectTrack> findAspectTracksWithProp(Game game, params Property[] aspectProp)
+        {
+            return game.FindBO(
+                (BoardObject bo) =>
+                {
+                    bool valid = false;
+                    foreach(Property prop in aspectProp)
+                    {
+                        if (bo.Properties.Contains(prop))
+                        {
+                            valid = true;
+                            break;
+                        }
+                    }
+
+                    return valid && bo.Properties.Contains(Property.Aspect) && bo.Properties.Contains(Property.Track);
+                }).Cast<AspectTrack>().ToList();
+        }
+
         protected void revealAllAspects(Game game, BoardChoices choices)
         {
             choices.SelectedObjs.Keys.Cast<Jury.JuryAspect>().ToList().ForEach(a => a.Reveal());

@@ -53,15 +53,7 @@ namespace HighTreasonGame.CardTemplates
                     doNothingChoice,
                     (Game game, BoardChoices choices) =>
                     {
-                        List<BoardObject> options = game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && (htgo.Properties.Contains(Property.English) || htgo.Properties.Contains(Property.Protestant)));
-                            });
-
-                        options.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(2));
+                        findAspectTracksWithProp(game, Property.English, Property.Protestant).ForEach(t => t.AddToValue(2));
                     }));
         }
     }

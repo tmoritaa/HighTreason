@@ -53,14 +53,9 @@ namespace HighTreasonGame.CardTemplates
                     (Game game, BoardChoices choices) =>
                     {
                         game.GetGuiltTrack().AddToValue(1);
-                        List<AspectTrack> bos = game.FindBO(
-                            (BoardObject bo) =>
-                            {
-                                return bo.Properties.Contains(Property.Track) && bo.Properties.Contains(Property.Aspect)
-                                    && (bo.Properties.Contains(Property.English) || bo.Properties.Contains(Property.GovWorker));
-                            }).Cast<AspectTrack>().ToList();
 
-                        bos.ForEach(t => t.AddToValue(t.Properties.Contains(Property.English) ? 2 : 1));
+                        findAspectTracksWithProp(game, Property.English, Property.GovWorker).ForEach(t => t.AddToValue(t.Properties.Contains(Property.English) ? 2 : 1));
+
                         game.OfficersRecalledPlayable = true;
                     }));
         }
@@ -72,15 +67,9 @@ namespace HighTreasonGame.CardTemplates
                     doNothingChoice,
                     (Game game, BoardChoices choices) =>
                     {
-                        List<AspectTrack> aspectTracks = game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && (htgo.Properties.Contains(Property.Occupation) || htgo.Properties.Contains(Property.English) || htgo.Properties.Contains(Property.Catholic)));
-                            }).Cast<AspectTrack>().ToList();
-
+                        List<AspectTrack> aspectTracks = findAspectTracksWithProp(game, Property.Occupation, Property.English, Property.Catholic);
                         aspectTracks.ForEach(t => t.AddToValue((t.Properties.Contains(Property.Occupation) || t.Properties.Contains(Property.English)) ? 2 : 1));
+
                         game.OfficersRecalledPlayable = true;
                     }));
         }

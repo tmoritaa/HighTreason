@@ -66,13 +66,7 @@ namespace HighTreasonGame
                     doNothingChoice,
                     (Game game, BoardChoices choices) =>
                     {
-                        List<AspectTrack> ats = game.FindBO(
-                            (BoardObject bo) =>
-                            {
-                                return bo.Properties.Contains(Property.Aspect) && bo.Properties.Contains(Property.Track)
-                                    && (bo.Properties.Contains(Property.English) || bo.Properties.Contains(Property.French));
-                            }).Cast<AspectTrack>().ToList();
-
+                        List<AspectTrack> ats = findAspectTracksWithProp(game, Property.English, Property.French);
                         ats.ForEach(t => t.AddToValue(t.Properties.Contains(Property.English) ? 2 : 3));
                     }));
         }
@@ -111,14 +105,8 @@ namespace HighTreasonGame
                     (Game game, BoardChoices choices) =>
                     {
                         choices.SelectedObjs.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(-2));
-                        game.FindBO(
-                            (BoardObject bo) =>
-                            {
-                                return
-                                    bo.Properties.Contains(Property.Aspect)
-                                    && bo.Properties.Contains(Property.Track)
-                                    && (bo.Properties.Contains(Property.GovWorker) || bo.Properties.Contains(Property.Merchant));
-                            }).Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(1));
+
+                        findAspectTracksWithProp(game, Property.GovWorker, Property.Merchant).ForEach(t => t.AddToValue(1));
                     }));
         }
     }

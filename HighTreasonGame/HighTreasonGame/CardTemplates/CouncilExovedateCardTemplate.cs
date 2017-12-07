@@ -33,16 +33,7 @@ namespace HighTreasonGame.CardTemplates
                     (Game game, BoardChoices choices) =>
                     {
                         int modValue = calcModValueBasedOnSide(2, game);
-
-                        AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.French));
-                            })[0];
-
-                        aspectTrack.AddToValue(modValue);
+                        findAspectTracksWithProp(game, Property.French)[0].AddToValue(modValue);
                     }));
 
             TrialEvents.Add(
@@ -51,49 +42,16 @@ namespace HighTreasonGame.CardTemplates
                     (Game game, BoardChoices choices) =>
                     {
                         int modValue = calcModValueBasedOnSide(2, game);
-
-                        AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.English));
-                            })[0];
-
-                        aspectTrack.AddToValue(modValue);
+                        findAspectTracksWithProp(game, Property.English)[0].AddToValue(modValue);
                     }));
 
             TrialEvents.Add(
                 new CardEffectPair(
-                    (Game game, ChoiceHandler choiceHandler) =>
-                    {
-                        BoardChoices choices = new BoardChoices();
-
-                        AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.Merchant));
-                            })[0];
-
-                        choices.SelectedObjs.Keys.Cast<AspectTrack>().ToList().Add(aspectTrack);
-
-                        return choices;
-                    },
+                    doNothingChoice,
                     (Game game, BoardChoices choices) =>
                     {
                         int modValue = calcModValueBasedOnSide(1, game);
-
-                        AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.Merchant));
-                            })[0];
-
-                        aspectTrack.AddToValue(modValue);
+                        findAspectTracksWithProp(game, Property.Merchant, Property.Farmer).ForEach(t => t.AddToValue(modValue));
                     }));
         }
 
@@ -105,16 +63,7 @@ namespace HighTreasonGame.CardTemplates
                     (Game game, BoardChoices choices) =>
                     {
                         int modValue = calcModValueBasedOnSide(2, game);
-
-                        AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.French));
-                            })[0];
-
-                        aspectTrack.AddToValue(modValue);
+                        findAspectTracksWithProp(game, Property.French)[0].AddToValue(modValue);
                     }));
 
             SummationEvents.Add(
@@ -123,16 +72,7 @@ namespace HighTreasonGame.CardTemplates
                     (Game game, BoardChoices choices) =>
                     {
                         int modValue = calcModValueBasedOnSide(2, game);
-
-                        AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.English));
-                            })[0];
-
-                        aspectTrack.AddToValue(modValue);
+                        findAspectTracksWithProp(game, Property.English)[0].AddToValue(modValue);
                     }));
 
             SummationEvents.Add(
@@ -141,16 +81,7 @@ namespace HighTreasonGame.CardTemplates
                     (Game game, BoardChoices choices) =>
                     {
                         int modValue = calcModValueBasedOnSide(1, game);
-
-                        AspectTrack aspectTrack = (AspectTrack)game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.Merchant));
-                            })[0];
-
-                        aspectTrack.AddToValue(modValue);
+                        findAspectTracksWithProp(game, Property.Merchant, Property.Farmer).ForEach(t => t.AddToValue(modValue));
                     }));
         }
     }

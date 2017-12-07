@@ -85,27 +85,12 @@ namespace HighTreasonGame.CardTemplates
                     doNothingChoice,
                     (Game game, BoardChoices choices) =>
                     {
-                        int sign = (game.CurPlayer.Side == Player.PlayerSide.Prosecution ? 1 : -1);
+                        int modVal = calcModValueBasedOnSide(2, game);
+                        int oppModVal = -calcModValueBasedOnSide(1, game);
 
-                        List<AspectTrack> options = game.FindBO(
-                            (BoardObject htgo) =>
-                            {
-                                return (htgo.Properties.Contains(Property.Track)
-                                && htgo.Properties.Contains(Property.Aspect)
-                                && htgo.Properties.Contains(Property.Occupation));
-                            }).Cast<AspectTrack>().ToList();
+                        List<AspectTrack> ats = findAspectTracksWithProp(game, Property.GovWorker, Property.Merchant, Property.Farmer);
 
-                        foreach (AspectTrack track in options)
-                        {
-                            if (track.Properties.Contains(Property.Farmer))
-                            {
-                                track.AddToValue(-calcModValueBasedOnSide(1, game));
-                            }
-                            else
-                            {
-                                track.AddToValue(calcModValueBasedOnSide(2, game));
-                            }
-                        }
+                        ats.ForEach(t => t.AddToValue(t.Properties.Contains(Property.Farmer) ? oppModVal : modVal));
                     }));
         }
     }

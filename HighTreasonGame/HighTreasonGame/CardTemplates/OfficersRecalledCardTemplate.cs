@@ -46,14 +46,7 @@ namespace HighTreasonGame
                     {
                         int modVal = calcModValueBasedOnSide(2, game);
 
-                        AspectTrack track = (AspectTrack)game.FindBO(
-                            (BoardObject bo) =>
-                            {
-                                return 
-                                    bo.Properties.Contains(Property.Aspect) && bo.Properties.Contains(Property.Track) &&bo.Properties.Contains(Property.Catholic);
-                            })[0];
-
-                        track.AddToValue(modVal);
+                        findAspectTracksWithProp(game, Property.Catholic)[0].AddToValue(modVal);
                     },
                     (Game game) =>
                     {

@@ -79,5 +79,23 @@
 		"jury_selection":[{"text":"Play this card last. Take any one card from Discard pile and reuse its Jury Selection ability", "desc":"Select a card in the Discard pile"}],
 		"trial_in_chief":[{"type":"defense", "text":"<-2 to the English aspect and <-3 to the French aspect.", "desc":""}],
 		"summation":[{"type":"defense", "text":"<-2 each to any three aspects except for 1-> to the Government and Merchant aspects.", "desc":""}]	
+	},
+	"Letter to Major Crozier":{
+		"typing":"Prosecution Evidence",
+		"jury_selection":[{"text":"Reveal 4 Occupation;", "desc":"Select 4 Occupation Traits"}, {"text":"OR 2 Religion.", "desc":"Select 2 Religion Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui and 1-> to any one aspect.", "desc":"Select 1 aspect"}],
+		"summation":[{"type":"prosecution", "text":"1-> each to any four aspects.", "desc":"Select 4 Aspects"}]
+	},
+	"Thomas Sanderson":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 2 Language;", "desc":"Select 2 Language Traits"}, {"text":"OR 1 Religion.", "desc":"Select 1 Religion Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui and 1-> to any one aspect;", "desc":"Select 1 aspect"}, {"type":"prosecution", "text":"OR 1-> to the Protestant aspect and 1-> to the Farmer aspect.", "desc":""}],
+		"summation":[{"type":"prosecution", "text":"2-> to the Protestant aspect.", "desc":""}]
+	},
+	"Robert Jefferson":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 2 Language;", "desc":"Select 2 Language Traits"}, {"text":"OR 2 Occupation.", "desc":"Select 2 Occupation Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"2-> to the Farmer aspect and 1-> to the Merchant aspect.", "desc":""}],
+		"summation":[{"type":"prosecution", "text":"2-> to the Merchant aspect.", "desc":""}]	
 	}
 }
