@@ -37,6 +37,5 @@ namespace HighTreasonGame
             string description,
             out BoardChoices boardChoice);
         public abstract void ChooseCardEffect(Card cardToPlay, Game game, Player choosingPlayer, string description, out BoardChoices.CardPlayInfo cardPlayInfo);
-        public abstract void ChooseAttorneyForObjection(List<Card> validAttorneys, Game game, Player choosingPlayer, string description, out BoardChoices cardPlayInfo);
     }
 }

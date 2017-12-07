@@ -17,8 +17,7 @@ public class UnityChoiceHandler : ChoiceHandler
         ChooseBoardObjects,
         MomentOfInsight,
         ChooseCards,
-        ChooseCardEffect,
-        ChooseAttorney,
+        ChooseCardEffect
     }
 
     private AutoResetEvent waitForInput = new AutoResetEvent(false);
@@ -162,17 +161,6 @@ public class UnityChoiceHandler : ChoiceHandler
             int idx = (int)passedParams[2];
             cardPlayInfo.eventIdx = idx;
         }
-
-        passedParams = null;
-    }
-
-    public override void ChooseAttorneyForObjection(List<Card> validAttorneys, Game game, Player choosingPlayer, string description, out BoardChoices boardChoices)
-    {
-        ChoiceHandlerDelegator.Instance.TriggerChoice(this, choosingPlayer, new ChooseAttorneyInputHandler(validAttorneys, description));
-        waitForInput.WaitOne();
-
-        boardChoices = new BoardChoices();
-        boardChoices.SelectedCards = (Dictionary<Card, int>)passedParams[0];
 
         passedParams = null;
     }

@@ -154,17 +154,21 @@ namespace HighTreasonGame
                 // TODO: later should also have some way of showing which event was picked by opponent. Should be done on Unity side.
                 string desc = "Select attorney card to object " + card.Template.Name + ", or press done to pass";
 
-                BoardChoices choices;
-                choiceHandler.ChooseAttorneyForObjection(
+                BoardChoices boardChoices;
+                choiceHandler.ChooseCards(
                     attorneyCards,
+                    (Dictionary<Card, int> selected) => { return true; },
+                    (List<Card> choices, Dictionary<Card, int> selected) => { return choices; },
+                    (Dictionary<Card, int> selected, bool isDone) => { return selected.Count == 1 || isDone; },
+                    true,
                     game,
                     this,
                     desc,
-                    out choices);
+                    out boardChoices);
 
-                if (choices.SelectedCards.Count > 0)
+                if (boardChoices.SelectedCards.Count > 0)
                 {
-                    Card objectCard = choices.SelectedCards.Keys.First();
+                    Card objectCard = boardChoices.SelectedCards.Keys.First();
                     discardCard(objectCard);
                     objected = true;
                 }
