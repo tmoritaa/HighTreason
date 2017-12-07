@@ -10,6 +10,12 @@ using HighTreasonGame;
 
 public class GameManager : MonoBehaviour 
 {
+    [SerializeField]
+    private bool skipToTrialInChief;
+
+    [SerializeField]
+    private bool skipToSummation;
+
     private static GameManager instance;
 
     public static GameManager Instance
@@ -30,7 +36,17 @@ public class GameManager : MonoBehaviour
 
         TextAsset cardInfoTxt = Resources.Load("HighTreasonCardTexts") as TextAsset;
 
-        Game = new Game(new ChoiceHandler[] { new UnityChoiceHandler(), new UnityChoiceHandler() }, cardInfoTxt.text);
+        GameState.GameStateType startState = GameState.GameStateType.JurySelection;
+        if (skipToTrialInChief)
+        {
+            startState = GameState.GameStateType.TrialInChief;
+        }
+        else if (skipToSummation)
+        {
+            startState = GameState.GameStateType.Summation;
+        }
+
+        Game = new Game(new ChoiceHandler[] { new UnityChoiceHandler(), new UnityChoiceHandler() }, cardInfoTxt.text, startState);
     }
 
     void Start()

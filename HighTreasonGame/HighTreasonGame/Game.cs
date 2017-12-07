@@ -38,6 +38,11 @@ namespace HighTreasonGame
             get; private set;
         }
 
+        public GameState.GameStateType StartState
+        {
+            get; private set;
+        }
+
         private List<BoardObject> boardObjects = new List<BoardObject>();
 
         private Dictionary<Player.PlayerSide, Player> players = new Dictionary<Player.PlayerSide, Player>();
@@ -52,8 +57,10 @@ namespace HighTreasonGame
 
         private bool gameEnd = false;
 
-        public Game(ChoiceHandler[] playerChoiceHandlers, string cardInfoJson)
+        public Game(ChoiceHandler[] playerChoiceHandlers, string cardInfoJson, GameState.GameStateType startState=GameState.GameStateType.JurySelection)
         {
+            StartState = startState;
+
             Board = new Board(this);
 
             CardTemplateGenerator tempGenerator = new CardTemplateGenerator(cardInfoJson);
@@ -78,7 +85,7 @@ namespace HighTreasonGame
 
         public void StartGame()
         {
-            SetNextState(GameState.GameStateType.JurySelection);
+            SetNextState(StartState);
 
             while (!gameEnd)
             {

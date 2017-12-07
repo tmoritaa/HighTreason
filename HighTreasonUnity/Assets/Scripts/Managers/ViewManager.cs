@@ -157,6 +157,7 @@ public class ViewManager : MonoBehaviour
     {
         bool isJurySelect = GameManager.Instance.Game.CurState.StateType == GameState.GameStateType.JurySelection;
         bool isFirstTrialInChief = (curStateShown == GameState.GameStateType.JurySelection && GameManager.Instance.Game.CurState.StateType == GameState.GameStateType.TrialInChief);
+        bool skippedToSummation = (!trialAndSummationMainBoardGO.activeInHierarchy && GameManager.Instance.Game.CurState.StateType == GameState.GameStateType.Summation);
 
         if (isJurySelect || isFirstTrialInChief)
         {
@@ -168,7 +169,7 @@ public class ViewManager : MonoBehaviour
         {
             jurySelectionMainBoardGO.SetActive(true);
         }
-        else if (isFirstTrialInChief)
+        else if (isFirstTrialInChief || skippedToSummation)
         {
             jurySelectionMainBoardGO.SetActive(false);
             trialAndSummationMainBoardGO.SetActive(true);

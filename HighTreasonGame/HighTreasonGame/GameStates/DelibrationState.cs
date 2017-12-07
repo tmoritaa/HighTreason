@@ -13,6 +13,11 @@ namespace HighTreasonGame.GameStates
 
         public override void StartState()
         {
+            if (game.StartState == this.StateType)
+            {
+                game.Board.Juries.RemoveRange(0, 6);
+            }
+
             game.CurPlayer = game.GetPlayerOfSide(Player.PlayerSide.Prosecution);
 
             if (game.NotifyStateStart != null)

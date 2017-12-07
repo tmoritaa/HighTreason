@@ -15,6 +15,14 @@ namespace HighTreasonGame.GameStates
 
         public override void StartState()
         {
+            if (game.StartState == this.StateType)
+            {
+                game.Board.Juries.RemoveRange(0, 6);
+
+                game.Deck.DealCards(2).ForEach(c => game.GetPlayerOfSide(Player.PlayerSide.Prosecution).SummationDeck.MoveCard(c));
+                game.Deck.DealCards(2).ForEach(c => game.GetPlayerOfSide(Player.PlayerSide.Defense).SummationDeck.MoveCard(c));
+            }
+
             numVisits += 1;
             base.StartState();
         }
