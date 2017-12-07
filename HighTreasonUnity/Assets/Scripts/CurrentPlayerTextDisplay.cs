@@ -19,6 +19,9 @@ public class CurrentPlayerTextDisplay : MonoBehaviour
 	
 	void Update()
 	{
-        text.text = GameManager.Instance.Game.CurPlayer.Side.ToString();
+        if (ChoiceHandlerDelegator.Instance.CurChoosingPlayer != null)
+        {
+            text.text = ChoiceHandlerDelegator.Instance.CurChoosingPlayer.Side.ToString();
+        }
     }
 }

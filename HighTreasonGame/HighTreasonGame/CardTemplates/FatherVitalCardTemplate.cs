@@ -11,7 +11,7 @@ namespace HighTreasonGame.CardTemplates
     public class FatherVitalCardTemplate : CardTemplate
     {
         public FatherVitalCardTemplate()
-            : base("Father Vital Fourmond", 2)
+            : base("Father Vital Fourmond", 2, Player.PlayerSide.Defense)
         { }
 
         protected override void addSelectionEventsAndChoices()

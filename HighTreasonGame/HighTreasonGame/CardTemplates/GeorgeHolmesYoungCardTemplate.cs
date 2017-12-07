@@ -11,7 +11,7 @@ namespace HighTreasonGame.CardTemplates
     public class GeorgeHolmesYoungCardTemplate : CardTemplate
     {
         public GeorgeHolmesYoungCardTemplate()
-            : base("George Holmes Young", 2)
+            : base("George Holmes Young", 2, Player.PlayerSide.Prosecution)
         { }
 
         protected override void addSelectionEventsAndChoices()

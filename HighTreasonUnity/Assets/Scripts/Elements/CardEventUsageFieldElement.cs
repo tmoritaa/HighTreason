@@ -52,7 +52,6 @@ public class CardEventUsageFieldElement : CardUsageFieldElement
 
     protected override void onValidClick()
     {
-        Debug.Log("Event Choice complete");
         ChoiceHandlerDelegator.Instance.ChoiceMade(Player.PlayerActionParams.UsageType.Event, card, eventIdx);
     }
 

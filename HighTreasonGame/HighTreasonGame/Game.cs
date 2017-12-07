@@ -98,7 +98,7 @@ namespace HighTreasonGame
 
         public void PassToNextPlayer()
         {
-            CurPlayer = GetOtherPlayer();
+            CurPlayer = GetOtherPlayer(CurPlayer);
         }
 
         public void ShuffleDiscardBackToDeck()
@@ -123,9 +123,9 @@ namespace HighTreasonGame
             return players[side];
         }
 
-        public Player GetOtherPlayer()
+        public Player GetOtherPlayer(Player curPlayer)
         {
-            Player.PlayerSide oppositeSide = (CurPlayer.Side == Player.PlayerSide.Defense) ? Player.PlayerSide.Prosecution : Player.PlayerSide.Defense;
+            Player.PlayerSide oppositeSide = (curPlayer.Side == Player.PlayerSide.Defense) ? Player.PlayerSide.Prosecution : Player.PlayerSide.Defense;
             return players[oppositeSide];
         }
 

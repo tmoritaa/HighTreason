@@ -82,7 +82,7 @@ namespace HighTreasonGame
             while (!actionPerformed)
             {
                 PlayerActionParams playerAction;
-                choiceHandler.ChoosePlayerAction(Hand.SelectableCards, game, out playerAction);
+                choiceHandler.ChoosePlayerAction(Hand.SelectableCards, game, this, out playerAction);
 
                 if (playerAction.usage == PlayerActionParams.UsageType.Cancelled)
                 {
@@ -100,13 +100,21 @@ namespace HighTreasonGame
                 else if (playerAction.usage == PlayerActionParams.UsageType.Event)
                 {
                     playerAction.card.BeingPlayed = true;
-                    actionPerformed = playerAction.card.Template.PlayAsEvent(game, (int)playerAction.misc[0], choiceHandler);
+
+                    bool objected = game.GetOtherPlayer(game.CurPlayer).performObjectionPhase(playerAction.card);
+                    actionPerformed = objected;
+
+                    if (!objected)
+                    {
+                        actionPerformed = playerAction.card.PlayAsEvent(game, this, (int)playerAction.misc[0], choiceHandler);
+                    }
+                    
                     cardPlayed = true;
                 }
                 else if (playerAction.usage == PlayerActionParams.UsageType.Action)
                 {
                     playerAction.card.BeingPlayed = true;
-                    actionPerformed = playerAction.card.Template.PlayAsAction(game, choiceHandler);
+                    actionPerformed = playerAction.card.PlayAsAction(game, this, choiceHandler);
                     cardPlayed = true;
                 }
 
@@ -129,6 +137,40 @@ namespace HighTreasonGame
                     playerAction.card.BeingPlayed = false;
                 }
             }
+        }
+
+        public bool performObjectionPhase(Card card)
+        {
+            bool objected = false;
+
+            if (game.CurState.StateType != GameState.GameStateType.TrialInChief && game.CurState.StateType != GameState.GameStateType.Summation)
+            {
+                return objected;
+            }
+
+            List<Card> attorneyCards = Hand.Cards.FindAll(c => c.Template.CanBeUsedToObject(this));
+            if (attorneyCards.Count > 0)
+            {
+                // TODO: later should also have some way of showing which event was picked by opponent. Should be done on Unity side.
+                string desc = "Select attorney card to object " + card.Template.Name + ", or press done to pass";
+
+                BoardChoices choices;
+                choiceHandler.ChooseAttorneyForObjection(
+                    attorneyCards,
+                    game,
+                    this,
+                    desc,
+                    out choices);
+
+                if (choices.SelectedCards.Count > 0)
+                {
+                    Card objectCard = choices.SelectedCards.Keys.First();
+                    discardCard(objectCard);
+                    objected = true;
+                }
+            }
+
+            return objected;
         }
 
         public void DismissJury()
@@ -174,6 +216,7 @@ namespace HighTreasonGame
                     HTUtility.GenActionFilterChoicesFunc(usedJury.ActionPoints, usedJury),
                     HTUtility.GenActionChoicesCompleteFunc(usedJury.ActionPoints, usedJury),
                     game,
+                    this,
                     "Select usage for " + usedJury.ActionPoints + " deliberation points",
                     out boardChoices);
 
@@ -247,6 +290,7 @@ namespace HighTreasonGame
                     },
                     (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 1; },
                     game,
+                    this,
                     desc,
                     out boardChoices);
 

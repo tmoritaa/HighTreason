@@ -45,6 +45,7 @@ namespace HighTreasonGame
                         int affectLimit = 2;
                         if (delibJury != null)
                         {
+                            affectLimit = 0;
                             foreach (Jury.JuryAspect aspect in delibJury.Aspects)
                             {
                                 affectLimit += (bo.Properties.Contains(aspect.Aspect)) ? 1 : 0;
@@ -79,6 +80,7 @@ namespace HighTreasonGame
                         int affectLimit = 2;
                         if (delibJury != null)
                         {
+                            affectLimit = 0;
                             foreach (Jury.JuryAspect aspect in delibJury.Aspects)
                             {
                                 affectLimit += (bo.Properties.Contains(aspect.Aspect)) ? 1 : 0;
@@ -133,6 +135,7 @@ namespace HighTreasonGame
                         int affectLimit = 2;
                         if (delibJury != null)
                         {
+                            affectLimit = 0;
                             foreach (Jury.JuryAspect aspect in delibJury.Aspects)
                             {
                                 affectLimit += (bo.Properties.Contains(aspect.Aspect)) ? 1 : 0;

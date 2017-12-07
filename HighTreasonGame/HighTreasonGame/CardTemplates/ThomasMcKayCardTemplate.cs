@@ -11,7 +11,7 @@ namespace HighTreasonGame.CardTemplates
     public class ThomasMcKayCardTemplate : CardTemplate
     {
         public ThomasMcKayCardTemplate()
-            : base("Thomas McKay", 2)
+            : base("Thomas McKay", 2, Player.PlayerSide.Prosecution)
         { }
 
         protected override void addSelectionEventsAndChoices()

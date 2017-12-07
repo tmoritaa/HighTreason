@@ -9,7 +9,7 @@ namespace HighTreasonGame
     public class LetterToMajorCrozierCardTemplate : CardTemplate
     {
         public LetterToMajorCrozierCardTemplate() 
-            : base("Letter to Major Crozier", 2)
+            : base("Letter to Major Crozier", 2, Player.PlayerSide.Prosecution)
         { }
 
         protected override void addSelectionEventsAndChoices()
@@ -37,7 +37,7 @@ namespace HighTreasonGame
         {
             SummationEvents.Add(
                 new CardEffectPair(
-                    (Game game, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
                     {
                         List<BoardObject> options = game.FindBO(
                             (BoardObject htgo) =>
@@ -57,6 +57,7 @@ namespace HighTreasonGame
                             },
                             (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 4; },
                             game,
+                            choosingPlayer,
                             this.CardInfo.SummationInfos[0].Description,
                             out boardChoices);
 

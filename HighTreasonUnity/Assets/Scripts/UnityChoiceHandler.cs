@@ -18,6 +18,7 @@ public class UnityChoiceHandler : ChoiceHandler
         MomentOfInsight,
         ChooseCards,
         ChooseCardEffect,
+        ChooseAttorney,
     }
 
     private AutoResetEvent waitForInput = new AutoResetEvent(false);
@@ -34,9 +35,9 @@ public class UnityChoiceHandler : ChoiceHandler
         waitForInput.Set();
     }
 
-    public override void ChoosePlayerAction(List<Card> cards, Game game, out Player.PlayerActionParams outPlayerAction)
+    public override void ChoosePlayerAction(List<Card> cards, Game game, Player choosingPlayer, out Player.PlayerActionParams outPlayerAction)
     {
-        ChoiceHandlerDelegator.Instance.TriggerChoice(this, new CardAndUsageInputHandler());
+        ChoiceHandlerDelegator.Instance.TriggerChoice(this, choosingPlayer, new CardAndUsageInputHandler());
         waitForInput.WaitOne();
 
         outPlayerAction = new Player.PlayerActionParams();
@@ -63,9 +64,17 @@ public class UnityChoiceHandler : ChoiceHandler
         passedParams = null;
     }
 
-    public override void ChooseBoardObjects(List<BoardObject> choices, Func<Dictionary<BoardObject, int>, bool> validateChoices, Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices, Func<Dictionary<BoardObject, int>, bool> choicesComplete, Game game, string desc, out BoardChoices boardChoice)
+    public override void ChooseBoardObjects(List<BoardObject> choices, 
+        Func<Dictionary<BoardObject, int>, bool> validateChoices, 
+        Func<List<BoardObject>, Dictionary<BoardObject, int>, 
+            List<BoardObject>> filterChoices, 
+        Func<Dictionary<BoardObject, int>, bool> choicesComplete, 
+        Game game, 
+        Player choosingPlayer, 
+        string desc, 
+        out BoardChoices boardChoice)
     {
-        ChoiceHandlerDelegator.Instance.TriggerChoice(this, new PickBoardObjectInputHandler(desc, choices, validateChoices, filterChoices, choicesComplete));
+        ChoiceHandlerDelegator.Instance.TriggerChoice(this, choosingPlayer, new PickBoardObjectInputHandler(desc, choices, validateChoices, filterChoices, choicesComplete));
         waitForInput.WaitOne();
 
         boardChoice = new BoardChoices();
@@ -82,9 +91,9 @@ public class UnityChoiceHandler : ChoiceHandler
         passedParams = null;
     }
 
-    public override bool ChooseMomentOfInsightUse(Game game, out BoardChoices.MomentOfInsightInfo outMoIInfo)
+    public override bool ChooseMomentOfInsightUse(Game game, Player choosingPlayer, out BoardChoices.MomentOfInsightInfo outMoIInfo)
     {
-        ChoiceHandlerDelegator.Instance.TriggerChoice(this, new MoIInputHandler());
+        ChoiceHandlerDelegator.Instance.TriggerChoice(this, choosingPlayer, new MoIInputHandler(choosingPlayer));
         waitForInput.WaitOne();
 
         outMoIInfo = new BoardChoices.MomentOfInsightInfo();
@@ -114,9 +123,17 @@ public class UnityChoiceHandler : ChoiceHandler
         return notCancelled;
     }
 
-    public override void ChooseCards(List<Card> choices, Func<Dictionary<Card, int>, bool> validateChoices, Func<List<Card>, Dictionary<Card, int>, List<Card>> filterChoices, Func<Dictionary<Card, int>, bool, bool> choicesComplete, bool stoppable, Game game, string description, out BoardChoices boardChoice)
+    public override void ChooseCards(List<Card> choices, 
+        Func<Dictionary<Card, int>, bool> validateChoices, 
+        Func<List<Card>, Dictionary<Card, int>, 
+            List<Card>> filterChoices, Func<Dictionary<Card, int>, bool, bool> choicesComplete, 
+        bool stoppable, 
+        Game game,
+        Player choosingPlayer,
+        string description, 
+        out BoardChoices boardChoice)
     {
-        ChoiceHandlerDelegator.Instance.TriggerChoice(this, new ChooseCardsInputHandler(description, choices, validateChoices, filterChoices, choicesComplete, stoppable));
+        ChoiceHandlerDelegator.Instance.TriggerChoice(this, choosingPlayer, new ChooseCardsInputHandler(description, choices, validateChoices, filterChoices, choicesComplete, stoppable));
         waitForInput.WaitOne();
 
         boardChoice = new BoardChoices();
@@ -133,9 +150,9 @@ public class UnityChoiceHandler : ChoiceHandler
         passedParams = null;
     }
     
-    public override void ChooseCardEffect(Card cardToPlay, Game game, string description, out BoardChoices.CardPlayInfo cardPlayInfo)
+    public override void ChooseCardEffect(Card cardToPlay, Game game, Player choosingPlayer, string description, out BoardChoices.CardPlayInfo cardPlayInfo)
     {
-        ChoiceHandlerDelegator.Instance.TriggerChoice(this, new ChooseCardEffectInputHandler(cardToPlay, description));
+        ChoiceHandlerDelegator.Instance.TriggerChoice(this, choosingPlayer, new ChooseCardEffectInputHandler(cardToPlay, description));
         waitForInput.WaitOne();
 
         cardPlayInfo = new BoardChoices.CardPlayInfo();
@@ -145,6 +162,17 @@ public class UnityChoiceHandler : ChoiceHandler
             int idx = (int)passedParams[2];
             cardPlayInfo.eventIdx = idx;
         }
+
+        passedParams = null;
+    }
+
+    public override void ChooseAttorneyForObjection(List<Card> validAttorneys, Game game, Player choosingPlayer, string description, out BoardChoices boardChoices)
+    {
+        ChoiceHandlerDelegator.Instance.TriggerChoice(this, choosingPlayer, new ChooseAttorneyInputHandler(validAttorneys, description));
+        waitForInput.WaitOne();
+
+        boardChoices = new BoardChoices();
+        boardChoices.SelectedCards = (Dictionary<Card, int>)passedParams[0];
 
         passedParams = null;
     }

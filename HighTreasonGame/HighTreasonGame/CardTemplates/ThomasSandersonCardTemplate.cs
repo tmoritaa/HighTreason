@@ -9,7 +9,7 @@ namespace HighTreasonGame
     public class ThomasSandersonCardTemplate : CardTemplate
     {
         public ThomasSandersonCardTemplate() 
-            : base("Thomas Sanderson", 2)
+            : base("Thomas Sanderson", 2, Player.PlayerSide.Prosecution)
         { }
 
         protected override void addSelectionEventsAndChoices()

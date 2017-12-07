@@ -11,7 +11,7 @@ namespace HighTreasonGame.CardTemplates
     {
         [CardTemplateAttribute]
         public PurelyConstitutionalCardTemplate()
-            : base("\"A Purely Constitutional Movement\"", 3)
+            : base("\"A Purely Constitutional Movement\"", 3, Player.PlayerSide.Defense)
         {}
 
         protected override void addSelectionEventsAndChoices()
@@ -49,10 +49,10 @@ namespace HighTreasonGame.CardTemplates
         {
             TrialEvents.Add(
                 new CardEffectPair(
-                    (Game game, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
                     {
                         BoardChoices choices = new BoardChoices();
-                        choices.NotCancelled = handleMomentOfInsightChoice(new Player.PlayerSide[] { Player.PlayerSide.Defense }, game, choiceHandler, out choices.MoIInfo);
+                        choices.NotCancelled = handleMomentOfInsightChoice(new Player.PlayerSide[] { Player.PlayerSide.Defense }, game, choosingPlayer, choiceHandler, out choices.MoIInfo);
                         return choices;
                     },
                     (Game game, BoardChoices choices) => 
@@ -74,11 +74,7 @@ namespace HighTreasonGame.CardTemplates
         {
             SummationEvents.Add(
                 new CardEffectPair(
-                    (Game game, ChoiceHandler choiceHandler) =>
-                    {
-                        BoardChoices choices = new BoardChoices();
-                        return choices;
-                    },
+                    doNothingChoice,
                     (Game game, BoardChoices choices) => 
                     {
                         game.GetInsanityTrack().AddToValue(1);

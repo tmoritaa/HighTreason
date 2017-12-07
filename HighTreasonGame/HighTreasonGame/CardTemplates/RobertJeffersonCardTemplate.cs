@@ -9,7 +9,7 @@ namespace HighTreasonGame
     public class RobertJeffersonCardTemplate : CardTemplate
     {
         public RobertJeffersonCardTemplate() 
-            : base("Robert Jefferson", 2)
+            : base("Robert Jefferson", 2, Player.PlayerSide.Prosecution)
         { }
 
         protected override void addSelectionEventsAndChoices()

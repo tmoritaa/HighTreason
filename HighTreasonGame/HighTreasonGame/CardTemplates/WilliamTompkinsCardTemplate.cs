@@ -11,7 +11,7 @@ namespace HighTreasonGame.CardTemplates
     public class WilliamTompkinsCardTemplate : CardTemplate
     {
         public WilliamTompkinsCardTemplate()
-            : base("William Tompkins", 3)
+            : base("William Tompkins", 3, Player.PlayerSide.Prosecution)
         { }
 
         protected override void addSelectionEventsAndChoices()
@@ -36,7 +36,7 @@ namespace HighTreasonGame.CardTemplates
         {
             TrialEvents.Add(
                 new CardEffectPair(
-                    (Game game, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
                     {
                         int modValue = calcModValueBasedOnSide(2, game);
 
@@ -59,13 +59,14 @@ namespace HighTreasonGame.CardTemplates
                             },
                             (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 1; },
                             game,
+                            choosingPlayer,
                             this.CardInfo.TrialInChiefInfos[0].Description,
                             out boardChoices);
 
                         if (boardChoices.NotCancelled)
                         {
                             boardChoices.NotCancelled = handleMomentOfInsightChoice(new Player.PlayerSide[] { Player.PlayerSide.Prosecution, Player.PlayerSide.Defense },
-                                game, choiceHandler, out boardChoices.MoIInfo);
+                                game, choosingPlayer, choiceHandler, out boardChoices.MoIInfo);
                         }
 
                         return boardChoices;

@@ -28,12 +28,15 @@ public class OpponentInfoDisplay : MonoBehaviour
 
     void Update()
 	{
-        Player p = GameManager.Instance.Game.GetOtherPlayer();
+        if (ChoiceHandlerDelegator.Instance.CurChoosingPlayer != null)
+        {
+            Player p = GameManager.Instance.Game.GetOtherPlayer(ChoiceHandlerDelegator.Instance.CurChoosingPlayer);
 
-        background.color = (p.Side == Player.PlayerSide.Prosecution) ? ViewManager.Instance.ProsecutionColor : ViewManager.Instance.DefenseColor;
+            background.color = (p.Side == Player.PlayerSide.Prosecution) ? ViewManager.Instance.ProsecutionColor : ViewManager.Instance.DefenseColor;
 
-        roleText.text = p.Side.ToString();
-        handText.text = "Hand: " + p.Hand.Cards.Count.ToString();
-        summationDeckText.text = "Summation: " + p.SummationDeck.Cards.Count.ToString();
+            roleText.text = p.Side.ToString();
+            handText.text = "Hand: " + p.Hand.Cards.Count.ToString();
+            summationDeckText.text = "Summation: " + p.SummationDeck.Cards.Count.ToString();
+        }
     }
 }

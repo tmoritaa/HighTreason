@@ -37,6 +37,11 @@ namespace HighTreasonGame
             Value = Math.Max(Math.Min(Value, MaxValue), MinValue);
         }
 
+        public void ResetValue()
+        {
+            Value = 0;
+        }
+
         public bool CanModify(int modValue)
         {
             return (Math.Sign(modValue) > 0) ? Value < MaxValue : Value > MinValue;

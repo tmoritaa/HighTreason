@@ -34,22 +34,23 @@ public class MiniCardElement : SelectableElement
     {
         SelectKey = _displayedCard;
 
-        Debug.Log("Setting up card " + _displayedCard.Template.Name);
         initCardDisplay(_displayedCard);
     }
 
     protected override bool shouldHighlight()
     {
-        return 
-            (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.MomentOfInsight 
-            || ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.ChooseCards)
+        return
+            (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.MomentOfInsight
+            || ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.ChooseCards
+            || ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.ChooseAttorney)
             && SelectableElementManager.Instance.KeyIsSelectable(SelectKey);
     }
 
     protected override bool isSelectable()
     {
         if (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.MomentOfInsight 
-            || ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.ChooseCards)
+            || ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.ChooseCards
+            || ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.ChooseAttorney)
         {
             return SelectableElementManager.Instance.KeyIsSelectable(SelectKey);
         }
@@ -63,7 +64,7 @@ public class MiniCardElement : SelectableElement
         {
             ChoiceHandlerDelegator.Instance.ChoiceMade(BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Swap, DisplayedCard);
         }
-        else if (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.ChooseCards)
+        else if (ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.ChooseCards || ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.ChooseAttorney)
         {
             ChoiceHandlerDelegator.Instance.ChoiceMade(DisplayedCard);
         }
@@ -144,7 +145,7 @@ public class MiniCardElement : SelectableElement
 
     private bool cardCanBeDisplayed()
     {
-        Player curPlayer = GameManager.Instance.Game.CurPlayer;
-        return DisplayedCard.Revealed || DisplayedCard.CardHolder.Id == CardHolder.HolderId.Discard || curPlayer.Hand == DisplayedCard.CardHolder || curPlayer.SummationDeck == DisplayedCard.CardHolder;
+        Player curPlayer = ChoiceHandlerDelegator.Instance.CurChoosingPlayer;
+        return curPlayer != null && (DisplayedCard.Revealed || DisplayedCard.CardHolder.Id == CardHolder.HolderId.Discard || curPlayer.Hand == DisplayedCard.CardHolder || curPlayer.SummationDeck == DisplayedCard.CardHolder);
     }
 }

@@ -11,7 +11,7 @@ namespace HighTreasonGame.CardTemplates
     public class GenFrederickMiddletonCardTemplate : CardTemplate
     {
         public GenFrederickMiddletonCardTemplate()
-            : base("Gen. Frederick Middleton", 3)
+            : base("Gen. Frederick Middleton", 3, Player.PlayerSide.Prosecution)
         { }
 
         protected override void addSelectionEventsAndChoices()

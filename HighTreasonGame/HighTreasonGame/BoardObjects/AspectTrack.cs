@@ -34,6 +34,11 @@ namespace HighTreasonGame
             return (TimesAffectedByAction < MAX_TIMES_MODABLE) && base.CanModifyByAction(modValue);
         }
 
+        public void ResetTimesAffected()
+        {
+            TimesAffectedByAction = 0;
+        }
+
         public override string ToString()
         {
             string outStr = "-" + base.ToString() + "\n";

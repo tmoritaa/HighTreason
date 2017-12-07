@@ -9,7 +9,7 @@ namespace HighTreasonGame
     public class OfficersRecalledCardTemplate : CardTemplate
     {
         public OfficersRecalledCardTemplate()
-            : base("Officers Recalled", 3)
+            : base("Officers Recalled", 3, Player.PlayerSide.Prosecution)
         { }
 
         protected override void addSelectionEventsAndChoices()

@@ -21,7 +21,6 @@ public abstract class BoardObjectElement : SelectableElement
     {
         if (isSelectable())
         {
-            Debug.Log("BoardObject Choice Complete");
             ChoiceHandlerDelegator.Instance.ChoiceMade(BoardObject);
         }
     }

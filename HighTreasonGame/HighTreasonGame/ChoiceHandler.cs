@@ -17,13 +17,14 @@ namespace HighTreasonGame
             PlayerType = playerType;
         }
 
-        public abstract void ChoosePlayerAction(List<Card> cards, Game game, out Player.PlayerActionParams outCardUsage);
-        public abstract bool ChooseMomentOfInsightUse(Game game, out BoardChoices.MomentOfInsightInfo outMoIInfo);
+        public abstract void ChoosePlayerAction(List<Card> cards, Game game, Player choosingPlayer, out Player.PlayerActionParams outCardUsage);
+        public abstract bool ChooseMomentOfInsightUse(Game game, Player choosingPlayer, out BoardChoices.MomentOfInsightInfo outMoIInfo);
         public abstract void ChooseBoardObjects(List<BoardObject> choices, 
             Func<Dictionary<BoardObject, int>, bool> validateChoices, 
             Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices,
             Func<Dictionary<BoardObject, int>, bool> choicesComplete,
             Game game,
+            Player choosingPlayer,
             string description,
             out BoardChoices boardChoice);
         public abstract void ChooseCards(List<Card> choices,
@@ -32,8 +33,10 @@ namespace HighTreasonGame
             Func<Dictionary<Card, int>, bool, bool> choicesComplete,
             bool stoppable,
             Game game,
+            Player choosingPlayer,
             string description,
             out BoardChoices boardChoice);
-        public abstract void ChooseCardEffect(Card cardToPlay, Game game, string description, out BoardChoices.CardPlayInfo cardPlayInfo);
+        public abstract void ChooseCardEffect(Card cardToPlay, Game game, Player choosingPlayer, string description, out BoardChoices.CardPlayInfo cardPlayInfo);
+        public abstract void ChooseAttorneyForObjection(List<Card> validAttorneys, Game game, Player choosingPlayer, string description, out BoardChoices cardPlayInfo);
     }
 }

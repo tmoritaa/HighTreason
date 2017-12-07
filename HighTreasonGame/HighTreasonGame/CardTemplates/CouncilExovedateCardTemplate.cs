@@ -11,7 +11,7 @@ namespace HighTreasonGame.CardTemplates
     public class CouncilExovedateCardTemplate : CardTemplate
     {
         public CouncilExovedateCardTemplate()
-            : base("Council of the Exovedate", 2)
+            : base("Council of the Exovedate", 2, Player.PlayerSide.Defense)
         {}
 
         protected override void addSelectionEventsAndChoices()

@@ -14,15 +14,16 @@ public class MoIInputHandler : ChoiceTypeInputHandler
     private Card pickedHandCard = null;
     private Card pickedSummationCard = null;
 
+    private Player choosingPlayer;
 
-    public MoIInputHandler() : base(UnityChoiceHandler.ChoiceType.MomentOfInsight, "Select Moment of Insight use", false)
+    public MoIInputHandler(Player _choosingPlayer) : base(UnityChoiceHandler.ChoiceType.MomentOfInsight, "Select Moment of Insight use", false)
     {
-        Player player = GameManager.Instance.Game.CurPlayer;
+        choosingPlayer = _choosingPlayer;
 
         if (canSwap())
         {
-            handChoices = player.Hand.Cards.Where(c => !c.BeingPlayed).ToList();
-            summationChoices = player.SummationDeck.Cards;
+            handChoices = choosingPlayer.Hand.Cards.Where(c => !c.BeingPlayed).ToList();
+            summationChoices = choosingPlayer.SummationDeck.Cards;
         }
 
         highlightChoices = canSwap() || canReveal();
@@ -37,12 +38,12 @@ public class MoIInputHandler : ChoiceTypeInputHandler
 
     private bool canSwap()
     {
-        return GameManager.Instance.Game.CurPlayer.SummationDeck.Cards.Count != 0;
+        return choosingPlayer.SummationDeck.Cards.Count != 0;
     }
 
     private bool canReveal()
     {
-        return GameManager.Instance.Game.GetOtherPlayer().SummationDeck.Cards.Count != 0;
+        return GameManager.Instance.Game.GetOtherPlayer(choosingPlayer).SummationDeck.Cards.Count != 0;
     }
 
     public override bool VerifyInput(out object[] validOutput, params object[] input)
@@ -108,11 +109,6 @@ public class MoIInputHandler : ChoiceTypeInputHandler
                 }
             }
             
-            if (canReveal())
-            {
-                // TODO: implement.
-            }
-
             if (objs.Count > 0)
             {
                 SelectableElementManager.Instance.MarkObjsAsSelectable(objs.ToArray());

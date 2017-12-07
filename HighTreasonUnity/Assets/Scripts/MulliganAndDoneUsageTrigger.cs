@@ -47,12 +47,10 @@ public class MulliganAndDoneUsageTrigger : MonoBehaviour
     {
         if (ChoiceHandlerDelegator.Instance.Stoppable)
         {
-            Debug.Log("Done Choice complete");
             ChoiceHandlerDelegator.Instance.ChoiceMade("done");
         }
         else if (canMulligan())
         {
-            Debug.Log("Mulligan Choice complete");
             ChoiceHandlerDelegator.Instance.ChoiceMade(Player.PlayerActionParams.UsageType.Mulligan);
         }
     }
@@ -61,6 +59,7 @@ public class MulliganAndDoneUsageTrigger : MonoBehaviour
     {
         return ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.CardAndUsage
             && GameManager.Instance.Game.CurState.StateType == GameState.GameStateType.TrialInChief
-            && !GameManager.Instance.Game.CurPlayer.PerformedMulligan;
+            && ChoiceHandlerDelegator.Instance.CurChoosingPlayer != null
+            && !ChoiceHandlerDelegator.Instance.CurChoosingPlayer.PerformedMulligan;
     }
 }

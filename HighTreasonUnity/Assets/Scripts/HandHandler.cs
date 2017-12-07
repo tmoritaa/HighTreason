@@ -21,8 +21,6 @@ public class HandHandler : MonoBehaviour
 
 	void Awake()
 	{
-        EventDelegator.Instance.NotifyStateStart += updateDisplayingPlayer;
-        EventDelegator.Instance.NotifyStartOfTurn += updateDisplayingPlayer;
         EventDelegator.Instance.NotifyPlayerActionPerformed += playerActionPerformed;
 	}
 
@@ -31,14 +29,22 @@ public class HandHandler : MonoBehaviour
         background = GetComponent<Image>();
     }
 
+    void Update()
+    {
+        if (ChoiceHandlerDelegator.Instance.CurChoosingPlayer != null && displayingPlayer != ChoiceHandlerDelegator.Instance.CurChoosingPlayer)
+        {
+            updateDisplayingPlayer(ChoiceHandlerDelegator.Instance.CurChoosingPlayer);
+        }
+    }
+
     private void playerActionPerformed(Player.PlayerActionParams usageParams)
     {
         initHandDisplay();
     }
 
-    private void updateDisplayingPlayer()
+    private void updateDisplayingPlayer(Player choosingPlayer)
     {
-        Player curPlayer = GameManager.Instance.Game.CurPlayer;
+        Player curPlayer = choosingPlayer;
 
         if (curPlayer.ChoiceType == Player.PlayerType.Human && curPlayer != displayingPlayer)
         {

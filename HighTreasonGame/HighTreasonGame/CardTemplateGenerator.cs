@@ -36,7 +36,7 @@ namespace HighTreasonGame
                 tmp1.SetName(tmp1.Name + CardTemplates.Keys.Count.ToString().PadLeft(2, '0'));
                 CardTemplates.Add(tmp1.Name, tmp1);
 
-                CardTemplate tmp2 = new PurelyConstitutionalCardTemplate();
+                CardTemplate tmp2 = new GeorgeBurbidgeCardTemplate();
                 tmp2.Init(InfoRoot);
                 tmp2.SetName(tmp2.Name + CardTemplates.Keys.Count.ToString().PadLeft(2, '0'));
                 CardTemplates.Add(tmp2.Name, tmp2);

@@ -9,14 +9,14 @@ namespace HighTreasonGame
     public class TheMetisCardTemplate : CardTemplate
     {
         public TheMetisCardTemplate()
-            : base("The Metis", 4)
+            : base("The Metis", 4, Player.PlayerSide.Defense)
         { }
 
         protected override void addSelectionEventsAndChoices()
         {
             SelectionEvents.Add(
                 new CardEffectPair(
-                    (Game game, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
                     {
                         BoardChoices boardChoices;
 
@@ -27,6 +27,7 @@ namespace HighTreasonGame
                             (Dictionary<Card, int> selected, bool isDone) => { return selected.Count == 1; },
                             false,
                             game,
+                            choosingPlayer,
                             CardInfo.JurySelectionInfos[0].Description,
                             out boardChoices);
 
@@ -34,12 +35,12 @@ namespace HighTreasonGame
                         {                            
                             Card card = boardChoices.SelectedCards.Keys.First();
 
-                            choiceHandler.ChooseCardEffect(card, game, "Select Jury Selection event to play", out boardChoices.PlayInfo);
+                            choiceHandler.ChooseCardEffect(card, game, choosingPlayer, "Select Jury Selection event to play", out boardChoices.PlayInfo);
 
                             if (boardChoices.NotCancelled)
                             {
                                 int idx = boardChoices.PlayInfo.eventIdx;
-                                boardChoices.PlayInfo.resultBoardChoice = card.Template.SelectionEvents[idx].CardChoice(game, choiceHandler);
+                                boardChoices.PlayInfo.resultBoardChoice = card.Template.SelectionEvents[idx].CardChoice(game, choosingPlayer, choiceHandler);
 
                                 boardChoices.NotCancelled = boardChoices.PlayInfo.resultBoardChoice.NotCancelled;
                             }
@@ -75,7 +76,7 @@ namespace HighTreasonGame
         {
             SummationEvents.Add(
                 new CardEffectPair(
-                    (Game game, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
                     {
                         List<BoardObject> choices = game.FindBO(
                             (BoardObject bo) =>
@@ -97,6 +98,7 @@ namespace HighTreasonGame
                             },
                             (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 3; },
                             game,
+                            choosingPlayer,
                             CardInfo.SummationInfos[0].Description,
                             out boardChoices);
 

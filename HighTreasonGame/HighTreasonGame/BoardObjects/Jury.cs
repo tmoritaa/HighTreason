@@ -126,13 +126,13 @@ namespace HighTreasonGame
         }
 
         public Jury(int id, int swayMax, int _actionPoints, Game game, Property religionAspect, Property languageAspect, Property occupationAspect)
-            : base(game, Property.Jury, Property.Religion, Property.Language, Property.Occupation)
+            : base(game, Property.Jury)
         {
             Id = id;
 
             ActionPoints = _actionPoints;
 
-            SwayTrack = new SwayTrack(-swayMax, swayMax, game, Property.Jury, Property.Religion, Property.Language, Property.Occupation, religionAspect, languageAspect, occupationAspect);
+            SwayTrack = new SwayTrack(-swayMax, swayMax, game, Property.Jury);
 
             Aspects = new List<JuryAspect>();
             Aspects.Add(new JuryAspect(game, this, Property.Religion, religionAspect));

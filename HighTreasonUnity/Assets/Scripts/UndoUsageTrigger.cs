@@ -34,7 +34,6 @@ public class UndoUsageTrigger : MonoBehaviour
     {
         if (canUndo())
         {
-            Debug.Log("Undo Choice complete");
             ChoiceHandlerDelegator.Instance.ChoiceMade("cancel");
         }
     }

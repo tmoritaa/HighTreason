@@ -11,7 +11,7 @@ namespace HighTreasonGame.CardTemplates
     public class DoctorJamesCardTemplate : CardTemplate
     {
         public DoctorJamesCardTemplate()
-            : base("Doctor James Wallace", 2)
+            : base("Doctor James Wallace", 2, Player.PlayerSide.Prosecution)
         { }
 
         protected override void addSelectionEventsAndChoices()
@@ -31,17 +31,17 @@ namespace HighTreasonGame.CardTemplates
         {
             TrialEvents.Add(
                 new CardEffectPair(
-                    (Game game, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
                     {
                         BoardChoices choices = new BoardChoices();
 
-                        choices.NotCancelled = handleMomentOfInsightChoice(new Player.PlayerSide[] { Player.PlayerSide.Prosecution }, game, choiceHandler, out choices.MoIInfo);
+                        choices.NotCancelled = handleMomentOfInsightChoice(new Player.PlayerSide[] { Player.PlayerSide.Prosecution }, game, choosingPlayer, choiceHandler, out choices.MoIInfo);
 
                         return choices;
                     },
                     (Game game, BoardChoices choices) =>
                     {
-                        game.GetGuiltTrack().AddToValue(-1);
+                        game.GetInsanityTrack().AddToValue(-1);
                         handleMomentOfInsight(game, choices);
                     }));
         }

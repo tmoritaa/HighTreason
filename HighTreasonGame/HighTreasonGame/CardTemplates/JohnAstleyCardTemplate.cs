@@ -11,7 +11,7 @@ namespace HighTreasonGame.CardTemplates
     public class JohnAstleyCardTemplate : CardTemplate
     {
         public JohnAstleyCardTemplate() 
-            : base("John W. Astley", 2)
+            : base("John W. Astley", 2, Player.PlayerSide.Prosecution)
         {}
 
         protected override void addSelectionEventsAndChoices()
@@ -39,7 +39,7 @@ namespace HighTreasonGame.CardTemplates
         {
             SummationEvents.Add(
                 new CardEffectPair(
-                    (Game game, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
                     {
                         List<BoardObject> options = game.FindBO(
                             (BoardObject htgo) =>
@@ -60,6 +60,7 @@ namespace HighTreasonGame.CardTemplates
                             },
                             (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 3; },
                             game,
+                            choosingPlayer,
                             this.CardInfo.SummationInfos[0].Description,
                             out boardChoices);
 

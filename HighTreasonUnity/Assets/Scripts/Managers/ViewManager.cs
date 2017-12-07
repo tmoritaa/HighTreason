@@ -83,7 +83,10 @@ public class ViewManager : MonoBehaviour
 
     public void DisplaySummationDeckViewForCurPlayer()
     {
-        DisplayView(PopupType.SummationDeck, true, GameManager.Instance.Game.CurPlayer);
+        if (ChoiceHandlerDelegator.Instance.CurChoosingPlayer != null)
+        {
+            DisplayView(PopupType.SummationDeck, true, ChoiceHandlerDelegator.Instance.CurChoosingPlayer);
+        }
     }
 
     public void DisplayDiscardView()

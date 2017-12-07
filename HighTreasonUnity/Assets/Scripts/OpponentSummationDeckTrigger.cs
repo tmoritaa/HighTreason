@@ -28,15 +28,16 @@ public class OpponentSummationDeckTrigger : HighlightElement
         {
             ChoiceHandlerDelegator.Instance.ChoiceMade(BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Reveal);
         }
-        else
+        else if (ChoiceHandlerDelegator.Instance.CurChoosingPlayer != null)
         {
-            ViewManager.Instance.DisplayView(ViewManager.PopupType.SummationDeck, true, GameManager.Instance.Game.GetOtherPlayer());
+            ViewManager.Instance.DisplayView(ViewManager.PopupType.SummationDeck, true, GameManager.Instance.Game.GetOtherPlayer(ChoiceHandlerDelegator.Instance.CurChoosingPlayer));
         }
     }
 
     private bool isSelectableForMoI()
     {
         return ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.MomentOfInsight
-            && GameManager.Instance.Game.GetOtherPlayer().SummationDeck.Cards.Count > 0;
+            && ChoiceHandlerDelegator.Instance.CurChoosingPlayer != null
+            && GameManager.Instance.Game.GetOtherPlayer(ChoiceHandlerDelegator.Instance.CurChoosingPlayer).SummationDeck.Cards.Count > 0;
     }
 }

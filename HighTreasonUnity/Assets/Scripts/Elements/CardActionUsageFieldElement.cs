@@ -22,7 +22,6 @@ public class CardActionUsageFieldElement : CardUsageFieldElement
     {
         if (canUse())
         {
-            Debug.Log("Action Choice Complete");
             ChoiceHandlerDelegator.Instance.ChoiceMade(Player.PlayerActionParams.UsageType.Action, card);
         }
     }

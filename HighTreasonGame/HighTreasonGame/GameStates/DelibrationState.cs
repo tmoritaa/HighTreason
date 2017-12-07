@@ -111,7 +111,7 @@ namespace HighTreasonGame.GameStates
                     playerSidePassed[game.CurPlayer.Side] = true;
                 }
 
-                if (!playerSidePassed.ContainsKey(game.GetOtherPlayer().Side))
+                if (!playerSidePassed.ContainsKey(game.GetOtherPlayer(game.CurPlayer).Side))
                 {
                     game.PassToNextPlayer();
                 }

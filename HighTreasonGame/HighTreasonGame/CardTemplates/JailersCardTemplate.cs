@@ -11,7 +11,7 @@ namespace HighTreasonGame.CardTemplates
     public class JailersCardTemplate : CardTemplate
     {
         public JailersCardTemplate()
-            : base("Jailers", 1)
+            : base("Jailers", 1, Player.PlayerSide.Prosecution)
         { }
 
         protected override void addSelectionEventsAndChoices()
@@ -34,7 +34,7 @@ namespace HighTreasonGame.CardTemplates
 
             TrialEvents.Add(
                 new CardEffectPair(
-                    (Game game, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
                     {
                         List<Card> selectableCards = game.CurPlayer.Hand.Cards;
 
@@ -70,6 +70,7 @@ namespace HighTreasonGame.CardTemplates
                             },
                             true,
                             game,
+                            choosingPlayer,
                             this.CardInfo.TrialInChiefInfos[0].Description,
                             out boardChoice);
 

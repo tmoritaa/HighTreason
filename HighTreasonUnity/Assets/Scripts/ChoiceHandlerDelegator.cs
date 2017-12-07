@@ -39,6 +39,11 @@ public class ChoiceHandlerDelegator : MonoBehaviour
             return false;
         }
     }
+    
+    public Player CurChoosingPlayer
+    {
+        get; private set;
+    }
 
     private ChoiceTypeInputHandler inputHandler = null;
 
@@ -72,10 +77,11 @@ public class ChoiceHandlerDelegator : MonoBehaviour
         }
     }
 
-    public void TriggerChoice(UnityChoiceHandler choiceHandler, ChoiceTypeInputHandler _inputHandler)
+    public void TriggerChoice(UnityChoiceHandler choiceHandler, Player choosingPlayer, ChoiceTypeInputHandler _inputHandler)
     {
         inputHandler = _inputHandler;
         curChoiceHandler = choiceHandler;
+        CurChoosingPlayer = choosingPlayer;
 
         checkIfShouldSkip = true;
     }
@@ -89,7 +95,6 @@ public class ChoiceHandlerDelegator : MonoBehaviour
 
         if (input.Length == 1 && input[0].GetType() == typeof(string) && ((string)input[0]).Equals("cancel"))
         {
-            Debug.Log("Cancelled choice complete");
             cleanupAfterChoice();
             curChoiceHandler.ChoiceInputMade(null);
         }
@@ -99,7 +104,6 @@ public class ChoiceHandlerDelegator : MonoBehaviour
             bool complete = inputHandler.VerifyInput(out validOutput, input);
             if (complete)
             {
-                Debug.Log("ChoiceMade complete");
                 cleanupAfterChoice();
                 curChoiceHandler.ChoiceInputMade(validOutput);
             }
@@ -109,6 +113,7 @@ public class ChoiceHandlerDelegator : MonoBehaviour
     private void cleanupAfterChoice()
     {
         resetChoiceUI();
+        CurChoosingPlayer = null;
         inputHandler = null;
     }
 

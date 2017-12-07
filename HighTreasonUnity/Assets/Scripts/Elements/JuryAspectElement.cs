@@ -31,21 +31,24 @@ public class JuryAspectElement : BoardObjectElement
 
     protected override void updateUI()
     {
-        string str = string.Empty;
-        if (juryAspect.IsVisibleToPlayer(GameManager.Instance.Game.CurPlayer.Side))
+        if (ChoiceHandlerDelegator.Instance.CurChoosingPlayer != null)
         {
-            str = juryAspect.Aspect.ToString().Substring(0, 2);
+            string str = string.Empty;
+            if (juryAspect.IsVisibleToPlayer(ChoiceHandlerDelegator.Instance.CurChoosingPlayer.Side))
+            {
+                str = juryAspect.Aspect.ToString().Substring(0, 2);
 
-            if (juryAspect.IsPeeked)
+                if (juryAspect.IsPeeked)
+                {
+                    str += "?";
+                }
+            }
+            else
             {
                 str += "?";
             }
-        }
-        else
-        {
-            str += "?";
-        }
 
-        text.text = str;
+            text.text = str;
+        }
     }
 }

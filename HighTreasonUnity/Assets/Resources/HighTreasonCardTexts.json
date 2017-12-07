@@ -97,5 +97,15 @@
 		"jury_selection":[{"text":"Reveal 2 Language;", "desc":"Select 2 Language Traits"}, {"text":"OR 2 Occupation.", "desc":"Select 2 Occupation Traits"}],
 		"trial_in_chief":[{"type":"prosecution", "text":"2-> to the Farmer aspect and 1-> to the Merchant aspect.", "desc":""}],
 		"summation":[{"type":"prosecution", "text":"2-> to the Merchant aspect.", "desc":""}]	
+	},
+	"George W. Burbidge":{
+		"typing":"Prosecution Attorney",
+		"jury_selection":[{"text":"If you are the prosecution, peek at 2 Traits; if you are the Defense, peek at 1 Trait.", "desc":"Select Traits to peek"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"Prosecution can play in reaction to cancel a Defense Event;", "desc":""}, 
+							{"type":"neutral", "text":"Play to remove all Sway markers affecting one aspect, and then <-2-> that aspect;", "desc":"Select an Aspect track"},
+							{"type":"neutral", "text":"Play to place 2 Sway markers (total) on any Juror(s), even locked ones.", "desc":"Select Jurors to place 2 Sway markers"}],
+		"summation":[{"type":"prosecution", "text":"Prosecution can play in reaction to cancel a Defense Event;", "desc":""}, 
+						{"type":"neutral", "text":"Place 2 Sway markers (total) on Unlocked Jurors (only);", "desc":"Select Jurors to place 2 Sway markers"},
+						{"type":"neutral", "text":"Play to remove all Sway markers affecting one Juror, even a Locked one, and then place one Sway marker on that Juror.", "desc":"Select a Juror"}]
 	}
 }

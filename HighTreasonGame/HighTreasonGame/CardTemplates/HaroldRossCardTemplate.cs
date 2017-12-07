@@ -11,7 +11,7 @@ namespace HighTreasonGame.CardTemplates
     public class HaroldRossCardTemplate : CardTemplate
     {
         public HaroldRossCardTemplate()
-            : base("Harold Ross", 3)
+            : base("Harold Ross", 3, Player.PlayerSide.Prosecution)
         { }
 
         protected override void addSelectionEventsAndChoices()

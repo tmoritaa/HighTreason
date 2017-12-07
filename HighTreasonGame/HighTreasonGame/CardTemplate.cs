@@ -9,7 +9,7 @@ namespace HighTreasonGame
 {
     public abstract class CardTemplate
     {
-        public delegate BoardChoices CardChoice(Game game, ChoiceHandler choiceHandler);
+        public delegate BoardChoices CardChoice(Game game, Player choosingPlayer, ChoiceHandler choiceHandler);
         public delegate void CardEffect(Game game, BoardChoices choices);
 
         public class CardEffectPair
@@ -76,92 +76,19 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        public CardTemplate(string _name, int _actionPts)
+        protected Player.PlayerSide side;
+        protected bool isAttorney;
+
+        public CardTemplate(string _name, int _actionPts, Player.PlayerSide _side, bool _isAttorney=false)
         {
             Name = _name;
             ActionPts = _actionPts;
+            side = _side;
+            isAttorney = _isAttorney;
 
             SelectionEvents = new List<CardEffectPair>();
             TrialEvents = new List<CardEffectPair>();
             SummationEvents = new List<CardEffectPair>();
-        }
-
-        public bool PlayAsEvent(Game game, int idx, ChoiceHandler choiceHandler)
-        {
-            GameState.GameStateType curStateType = game.CurState.StateType;
-
-            CardChoice cardChoice = null;
-            CardEffect cardEffect = null;
-
-            if (curStateType == GameState.GameStateType.JurySelection)
-            {
-                cardChoice = SelectionEvents[idx].CardChoice;
-                cardEffect = SelectionEvents[idx].CardEffect;
-            }
-            else if (curStateType == GameState.GameStateType.TrialInChief)
-            {
-                cardChoice = TrialEvents[idx].CardChoice;
-                cardEffect = TrialEvents[idx].CardEffect;
-            }
-            else if (curStateType == GameState.GameStateType.Summation)
-            {
-                cardChoice = SummationEvents[idx].CardChoice;
-                cardEffect = SummationEvents[idx].CardEffect;
-            }
-
-            System.Diagnostics.Debug.Assert(cardChoice != null && cardEffect != null, "Card choice or card effect is null. Should never happen");
-
-            BoardChoices choices = cardChoice(game, choiceHandler);
-
-            if (choices.NotCancelled)
-            {
-                cardEffect(game, choices);
-            }
-
-            return choices.NotCancelled;
-        }
-
-        public bool PlayAsAction(Game game, ChoiceHandler choiceHandler)
-        {
-            bool isSummation = game.CurState.StateType == GameState.GameStateType.Summation;
-
-            int modValue = (game.CurPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
-            List<BoardObject> choices = game.FindBO(
-                (BoardObject bo) =>
-                {
-                    return (bo.Properties.Contains(Property.Track) &&
-                    ((bo.Properties.Contains(Property.Jury) && bo.Properties.Contains(Property.Sway))
-                    || (!isSummation && bo.Properties.Contains(Property.Aspect))))
-                    && ((Track)bo).CanModifyByAction(modValue);
-                }).ToList();
-
-            int actionPtsForState = isSummation ? 2 : ActionPts;
-
-            BoardChoices boardChoices;
-            choiceHandler.ChooseBoardObjects(choices,
-                HTUtility.GenActionValidateChoicesFunc(actionPtsForState, null),
-                HTUtility.GenActionFilterChoicesFunc(actionPtsForState, null),
-                HTUtility.GenActionChoicesCompleteFunc(actionPtsForState, null),
-                game,
-                "Select usage for " + actionPtsForState + " action points", 
-                out boardChoices);
-
-            if (boardChoices.NotCancelled)
-            {
-                foreach (BoardObject bo in boardChoices.SelectedObjs.Keys)
-                {
-                    if (bo.GetType() == typeof(AspectTrack))
-                    {
-                        ((AspectTrack)bo).ModTrackByAction(modValue * boardChoices.SelectedObjs[bo]);
-                    }
-                    else
-                    {
-                        ((Track)bo).AddToValue(modValue * boardChoices.SelectedObjs[bo]);
-                    }
-                }
-            }
-
-            return boardChoices.NotCancelled;
         }
 
         public int GetNumberOfEventsInState(GameState.GameStateType type)
@@ -182,6 +109,11 @@ namespace HighTreasonGame
             }
 
             return num;
+        }
+
+        public bool CanBeUsedToObject(Player player)
+        {
+            return player.Side == side && isAttorney;
         }
 
         public void Init(JObject json)
@@ -230,13 +162,13 @@ namespace HighTreasonGame
 
         #region Choice Utility
 
-        protected BoardChoices doNothingChoice(Game game, ChoiceHandler choiceHandler)
+        protected BoardChoices doNothingChoice(Game game, Player choosingPlayer, ChoiceHandler choiceHandler)
         {
             BoardChoices choices = new BoardChoices();
             return choices;
         }
 
-        protected bool handleMomentOfInsightChoice(Player.PlayerSide[] supportedSides, Game game, ChoiceHandler choiceHandler, out BoardChoices.MomentOfInsightInfo moiInfo)
+        protected bool handleMomentOfInsightChoice(Player.PlayerSide[] supportedSides, Game game, Player choosingPlayer, ChoiceHandler choiceHandler, out BoardChoices.MomentOfInsightInfo moiInfo)
         {
             moiInfo = new BoardChoices.MomentOfInsightInfo();
             if (!supportedSides.Contains(game.CurPlayer.Side))
@@ -245,13 +177,13 @@ namespace HighTreasonGame
                 return true;
             }
 
-            return choiceHandler.ChooseMomentOfInsightUse(game, out moiInfo);
+            return choiceHandler.ChooseMomentOfInsightUse(game, choosingPlayer, out moiInfo);
         }
 
         protected CardChoice genAspectTrackForModCardChoice(HashSet<Property> optionProps, int numChoices, int modValue, bool affectedByPlayerSide, string desc)
         {
             return
-                (Game game, ChoiceHandler choiceHandler) =>
+                (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
                 {
                     List<BoardObject> options = game.FindBO(
                         (BoardObject htgo) =>
@@ -279,6 +211,7 @@ namespace HighTreasonGame
                         },
                         (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == numChoices; },
                         game,
+                        choosingPlayer,
                         desc,
                         out boardChoices);
 
@@ -294,7 +227,7 @@ namespace HighTreasonGame
             Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices = null)
         {
             return
-                (Game game, ChoiceHandler choiceHandler) =>
+                (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
                 {
                     List<BoardObject> options = game.FindBO(
                         (BoardObject htgo) =>
@@ -323,6 +256,7 @@ namespace HighTreasonGame
                         },
                         (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == numChoices; },
                         game,
+                        choosingPlayer,
                         desc,
                         out boardChoices);
 
@@ -351,13 +285,16 @@ namespace HighTreasonGame
             return game.FindBO(
                 (BoardObject bo) =>
                 {
-                    bool valid = false;
-                    foreach(Property prop in aspectProp)
+                    bool valid = aspectProp.Length == 0;
+                    if (!valid)
                     {
-                        if (bo.Properties.Contains(prop))
+                        foreach (Property prop in aspectProp)
                         {
-                            valid = true;
-                            break;
+                            if (bo.Properties.Contains(prop))
+                            {
+                                valid = true;
+                                break;
+                            }
                         }
                     }
 
@@ -384,7 +321,7 @@ namespace HighTreasonGame
         {
             if (choices.MoIInfo.Use == BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Reveal)
             {
-                game.GetOtherPlayer().RevealCardInSummation();
+                game.GetOtherPlayer(game.CurPlayer).RevealCardInSummation();
             }
             else if (choices.MoIInfo.Use == BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Swap)
             {

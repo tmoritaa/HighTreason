@@ -16,7 +16,7 @@ public abstract class ChoiceTypeInputHandler
         get; protected set;
     }
 
-    private bool updateDesc = false;
+    private bool updateUI = false;
     private string description;
     
     public ChoiceTypeInputHandler(UnityChoiceHandler.ChoiceType _choiceType, string desc, bool _stoppable)
@@ -24,7 +24,7 @@ public abstract class ChoiceTypeInputHandler
         ChoiceType = _choiceType;
         description = desc;
         Stoppable = _stoppable;
-        updateDesc = true;
+        updateUI = true;
     }
 
     public virtual bool SkipChoiceIfNoValid(out object[] validOutput)
@@ -35,10 +35,10 @@ public abstract class ChoiceTypeInputHandler
 
     public virtual void OnUpdate()
     {
-        if (updateDesc)
+        if (updateUI)
         {
             ViewManager.Instance.UpdateActionText(description);
-            updateDesc = false;
+            updateUI = false;
         }
     }
 
