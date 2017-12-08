@@ -51,7 +51,7 @@ namespace HighTreasonGame
         {
             Name = name;
         }
-            
+
         public int ActionPts {
             get; private set;
         }
@@ -79,7 +79,7 @@ namespace HighTreasonGame
         protected Player.PlayerSide side;
         protected bool isAttorney;
 
-        public CardTemplate(string _name, int _actionPts, Player.PlayerSide _side, bool _isAttorney=false)
+        public CardTemplate(string _name, int _actionPts, Player.PlayerSide _side, bool _isAttorney = false)
         {
             Name = _name;
             ActionPts = _actionPts;
@@ -219,8 +219,8 @@ namespace HighTreasonGame
                 };
         }
 
-        protected CardChoice genRevealOrPeakCardChoice(HashSet<Property> optionProps, 
-            int numChoices, 
+        protected CardChoice genRevealOrPeakCardChoice(HashSet<Property> optionProps,
+            int numChoices,
             bool isReveal,
             string desc,
             Func<Dictionary<BoardObject, int>, bool> validateChoices = null,
@@ -247,9 +247,9 @@ namespace HighTreasonGame
 
                     BoardChoices boardChoices;
                     choiceHandler.ChooseBoardObjects(options,
-                        validateChoices != null ? validateChoices : 
+                        validateChoices != null ? validateChoices :
                         (Dictionary<BoardObject, int> selected) => { return true; },
-                        filterChoices != null ? filterChoices : 
+                        filterChoices != null ? filterChoices :
                         (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
                         {
                             return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
@@ -331,6 +331,194 @@ namespace HighTreasonGame
                 player.Hand.MoveCard(choices.MoIInfo.SummationCard);
             }
         }
+        #endregion
+
+        #region Attorney CardEffect Utility
+
+        protected CardEffectPair genAttorneyJurySelectPeekEffectPair(int sameSideVal, int oppSideVal, int infoIdx)
+        {
+            return new CardEffectPair(
+                    (Game game, Player choosingPlayer, ChoiceHandler handler) =>
+                    {
+                        int numChoices = (choosingPlayer.Side == side) ? sameSideVal : oppSideVal;
+
+                        CardChoice func = genRevealOrPeakCardChoice(new HashSet<Property>() { }, numChoices, false, this.CardInfo.JurySelectionInfos[infoIdx].Description);
+                        return func(game, choosingPlayer, handler);
+                    },
+                    peekAllAspects);
+        }
+
+        protected CardEffectPair genAttorneyTrialAspectClearEffectPair(int modVal, int infoIdx)
+        {
+            return new CardEffectPair(
+                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
+                    {
+                        List<AspectTrack> tracks = findAspectTracksWithProp(game);
+
+                        BoardChoices boardChoices;
+                        choiceHandler.ChooseBoardObjects(
+                            tracks.Cast<BoardObject>().ToList(),
+                            (Dictionary<BoardObject, int> selected) => { return true; },
+                            (List<BoardObject> choices, Dictionary<BoardObject, int> selected) =>
+                            {
+                                return choices;
+                            },
+                            (Dictionary<BoardObject, int> selected) =>
+                            {
+                                return selected.Count == 1;
+                            },
+                            game,
+                            choosingPlayer,
+                            this.CardInfo.TrialInChiefInfos[infoIdx].Description,
+                            out boardChoices);
+
+                        return boardChoices;
+                    },
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
+                    {
+                        AspectTrack track = (AspectTrack)choices.SelectedObjs.Keys.First();
+
+                        track.ResetTimesAffected();
+                        track.AddToValue(calcModValueBasedOnSide(modVal, choosingPlayer));
+                    });
+        }
+
+        protected CardEffectPair genAttorneyTrialAddSwayEffectPair(int infoIdx)
+        {
+            return new CardEffectPair(
+                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
+                    {
+                        List<BoardObject> bos = game.FindBO(
+                            (BoardObject bo) =>
+                            {
+                                return
+                                    bo.Properties.Contains(Property.Sway)
+                                    && bo.Properties.Contains(Property.Track)
+                                    && bo.Properties.Contains(Property.Jury);
+                            });
+
+                        BoardChoices boardChoices;
+                        choiceHandler.ChooseBoardObjects(
+                            bos,
+                            (Dictionary<BoardObject, int> selected) =>
+                            {
+                                int actionPtsLeft = ActionPts - HTUtility.CalcActionPtUsage(selected);
+                                return (actionPtsLeft >= 0);
+                            },
+                            (List<BoardObject> choicesLeft, Dictionary<BoardObject, int> selected) =>
+                            {
+                                return choicesLeft.FindAll(t =>
+                                    (choosingPlayer.Side == Player.PlayerSide.Prosecution) ? !((SwayTrack)t).IsLockedByProsecution : !((SwayTrack)t).IsLockedByDefense);
+                            },
+                            (Dictionary<BoardObject, int> selected) =>
+                            {
+                                int actionPtsLeft = ActionPts - HTUtility.CalcActionPtUsage(selected);
+                                return (actionPtsLeft == 0);
+                            },
+                            game,
+                            choosingPlayer,
+                            this.CardInfo.TrialInChiefInfos[infoIdx].Description,
+                            out boardChoices);
+
+                        return boardChoices;
+                    },
+                    (Game game, Player choosingPlayer, BoardChoices boardChoices) =>
+                    {
+                        int sideMod = (choosingPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
+                        foreach (KeyValuePair<BoardObject, int> kv in boardChoices.SelectedObjs)
+                        {
+                            SwayTrack track = (SwayTrack)kv.Key;
+                            track.AddToValue(sideMod * kv.Value);
+                        }
+                    });
+        }
+
+        protected CardEffectPair genAttorneySummationAddSwayEffectPair(int infoIdx)
+        {
+            return new CardEffectPair(
+                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
+                    {
+                        List<BoardObject> bos = game.FindBO(
+                            (BoardObject bo) =>
+                            {
+                                return bo.Properties.Contains(Property.Sway)
+                                    && bo.Properties.Contains(Property.Track)
+                                    && bo.Properties.Contains(Property.Jury)
+                                    && !((SwayTrack)bo).IsLocked;
+                            });
+
+                        BoardChoices boardChoices;
+                        choiceHandler.ChooseBoardObjects(
+                            bos,
+                            (Dictionary<BoardObject, int> selected) =>
+                            {
+                                int actionPtsLeft = ActionPts - HTUtility.CalcActionPtUsage(selected);
+                                return (actionPtsLeft >= 0);
+                            },
+                            (List<BoardObject> choicesLeft, Dictionary<BoardObject, int> selected) =>
+                            {
+                                return choicesLeft.FindAll(t => !((SwayTrack)t).IsLocked);
+                            },
+                            (Dictionary<BoardObject, int> selected) =>
+                            {
+                                int actionPtsLeft = ActionPts - HTUtility.CalcActionPtUsage(selected);
+                                return (actionPtsLeft == 0);
+                            },
+                            game,
+                            choosingPlayer,
+                            this.CardInfo.SummationInfos[infoIdx].Description,
+                            out boardChoices);
+
+                        return boardChoices;
+                    },
+                    (Game game, Player choosingPlayer, BoardChoices boardChoices) =>
+                    {
+                        int sideMod = (choosingPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
+                        foreach (KeyValuePair<BoardObject, int> kv in boardChoices.SelectedObjs)
+                        {
+                            SwayTrack track = (SwayTrack)kv.Key;
+                            track.AddToValue(sideMod * kv.Value);
+                        }
+                    });
+        }
+
+        protected CardEffectPair genAttorneySummationClearSwayEffectPair(int infoIdx)
+        {
+            return new CardEffectPair(
+                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
+                    {
+                        List<BoardObject> bos = game.FindBO(
+                            (BoardObject bo) =>
+                            {
+                                return bo.Properties.Contains(Property.Sway)
+                                    && bo.Properties.Contains(Property.Track)
+                                    && bo.Properties.Contains(Property.Jury);
+                            });
+
+                        BoardChoices boardChoices;
+                        choiceHandler.ChooseBoardObjects(
+                            bos,
+                            (Dictionary<BoardObject, int> selected) => { return true; },
+                            (List<BoardObject> choicesLeft, Dictionary<BoardObject, int> selected) => { return choicesLeft; },
+                            (Dictionary<BoardObject, int> selected) =>
+                            {
+                                return selected.Count == 1;
+                            },
+                            game,
+                            choosingPlayer,
+                            this.CardInfo.SummationInfos[infoIdx].Description,
+                            out boardChoices);
+
+                        return boardChoices;
+                    },
+                    (Game game, Player choosingPlayer, BoardChoices boardChoices) =>
+                    {
+                        SwayTrack track = (SwayTrack)boardChoices.SelectedObjs.Keys.First();
+                        track.ResetValue();
+                        track.AddToValue((choosingPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1);
+                    });
+        }
+
         #endregion
     }
 }

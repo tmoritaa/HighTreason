@@ -6,10 +6,10 @@ using System.Text;
 namespace HighTreasonGame
 {
     [CardTemplateAttribute]
-    public class GeorgeBurbidgeCardTemplate : CardTemplate
+    public class ThomasJohnstoneCardTemplate : CardTemplate
     {
-        public GeorgeBurbidgeCardTemplate() 
-            : base("George W. Burbidge", 2, Player.PlayerSide.Prosecution, true)
+        public ThomasJohnstoneCardTemplate()
+            : base("Thomas Cooke Johnstone", 2, Player.PlayerSide.Defense, true)
         { }
 
         protected override void addSelectionEventsAndChoices()

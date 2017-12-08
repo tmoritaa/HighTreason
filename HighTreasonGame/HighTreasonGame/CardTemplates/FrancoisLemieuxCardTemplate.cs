@@ -6,15 +6,15 @@ using System.Text;
 namespace HighTreasonGame
 {
     [CardTemplateAttribute]
-    public class GeorgeBurbidgeCardTemplate : CardTemplate
+    public class FrancoisLemieuxCardTemplate : CardTemplate
     {
-        public GeorgeBurbidgeCardTemplate() 
-            : base("George W. Burbidge", 2, Player.PlayerSide.Prosecution, true)
+        public FrancoisLemieuxCardTemplate()
+            : base("Francois-Xavier Lemieux", 5, Player.PlayerSide.Defense, true)
         { }
 
         protected override void addSelectionEventsAndChoices()
         {
-            SelectionEvents.Add(genAttorneyJurySelectPeekEffectPair(2, 1, 0));
+            SelectionEvents.Add(genAttorneyJurySelectPeekEffectPair(5, 3, 0));
         }
 
         protected override void addTrialEventsAndChoices()
