@@ -219,5 +219,35 @@
 			{"type":"prosecution", "text":"2-> to the English aspect;", "desc":""},
 			{"type":"neutral", "text":"<-1-> to the Farmer aspect and <-1-> to the Government aspect.", "desc":""}],
 		"summation":[{"type":"neutral", "text":"1-> each to English and Government aspects, <-1 to the Farmer aspect, and <-2-> to the Merchant aspect.", "desc":""}]
+	},
+	"A Matter of $35000":{
+		"typing":"Prosecution Version",
+		"jury_selection":[{"text":"Reveal any 3 Traits.", "desc":"Select 3 Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"-1 Ins and 2-> to the French aspect.", "desc":""}],
+		"summation":[{"type":"prosecution", "text":"-1 Ins and 1-> each to French, Catholic, and Farmer aspects.", "desc":""}]
+	},
+	"Father Alexis Andre":{
+		"typing":"Neutral Witness",
+		"jury_selection":[{"text":"Reveal any 3 Traits.", "desc":"Select 3 Traits"}, {"text":"Peek at 2 Religion.", "desc":"Select 2 Religion Traits"}],
+		"trial_in_chief":[{"type":"neutral", "text":"<-2-> to the French aspect, and <-2-> to the Catholic aspect, and <-2-> to the Farmer aspect.", "desc":""}],
+		"summation":[{"type":"neutral", "text":"+1 OR -1 Ins", "desc":""}]
+	},
+	"Exovede":{
+		"typing":"Defense Testimony",
+		"jury_selection":[{"text":"Reveal 1 Occupation and 1 Language;", "desc":"Select 1 Occupation and 1 Religion Trait"}, {"text":"Reveal 2 Religion.", "desc":"Select 2 Religion Traits"}],
+		"trial_in_chief":[{"type":"neutral", "text":"<-2-> to the Protestant aspect, and <-1-> to the Catholic aspect.", "desc":""}],
+		"summation":[{"type":"neutral", "text":"<-1-> each to the Protestant and Catholic aspects.", "desc":""}]
+	},
+	"Charles Nolin":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal any 3 Traits.", "desc":"Select 3 Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui and 2-> to the English aspect and 1-> to all Occupation Traits;", "desc":""}, {"type":"neutral", "text":"+1 Gui and <-2-> to both Religion Traits.", "desc":""}],
+		"summation":[{"type":"prosecution", "text":"3-> to the English aspect and 1-> to all three Occupation Traits.", "desc":""}]
+	},
+	"Doctor Francois Roy":{
+		"typing":"Defense Witness",
+		"jury_selection":[{"text":"Peek at any 2 Traits.", "desc":"Select 2 Traits"}],
+		"trial_in_chief":[{"type":"defense", "text":"+1 Ins, <-2 to the French aspect, and <-2 each to the Protestant and Catholic aspects.", "desc":""}],
+		"summation":[{"type":"defense", "text":"+1 Ins;", "desc":""}, {"type":"defense", "text":"<-2 each to any three aspects except English;", "desc":"Select 3 non-English aspects"}]
 	}
 }
