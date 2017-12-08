@@ -17,9 +17,9 @@ public class CardEventUsageFieldElement : CardUsageFieldElement
 
     private Card card;
 
-    private Func<Game, bool> isClickable;
+    private Func<Game, Player, bool> isClickable;
 
-    public void Init(Card _card, GameState.GameStateType _usableState, int _eventIdx, CardInfo.EffectInfo ei, Func<Game, bool> _isClickable)
+    public void Init(Card _card, GameState.GameStateType _usableState, int _eventIdx, CardInfo.EffectInfo ei, Func<Game, Player, bool> _isClickable)
     {
         card = _card;
         usableState = _usableState;
@@ -47,18 +47,18 @@ public class CardEventUsageFieldElement : CardUsageFieldElement
         this.GetComponent<Image>().color = color;
 
         isClickable = _isClickable;
-        this.GetComponent<Graphic>().raycastTarget = isClickable(GameManager.Instance.Game);
+        this.GetComponent<Graphic>().raycastTarget = isClickable(GameManager.Instance.Game, ChoiceHandlerDelegator.Instance.CurChoosingPlayer);
     }
 
     protected override void onValidClick()
     {
-        ChoiceHandlerDelegator.Instance.ChoiceMade(Player.PlayerActionParams.UsageType.Event, card, eventIdx);
+        ChoiceHandlerDelegator.Instance.ChoiceMade(ChoiceHandler.PlayerActionParams.UsageType.Event, card, eventIdx);
     }
 
     protected override bool canUse()
     {
         return
-            isClickable(GameManager.Instance.Game)
+            isClickable(GameManager.Instance.Game, ChoiceHandlerDelegator.Instance.CurChoosingPlayer)
             && GameManager.Instance.Game.CurState.StateType == usableState
             && ((card.CanBePlayed && ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.CardAndUsage)
                 || ChoiceHandlerDelegator.Instance.CurChoiceType == UnityChoiceHandler.ChoiceType.ChooseCardEffect);

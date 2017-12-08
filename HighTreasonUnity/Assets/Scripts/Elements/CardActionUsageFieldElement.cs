@@ -22,7 +22,7 @@ public class CardActionUsageFieldElement : CardUsageFieldElement
     {
         if (canUse())
         {
-            ChoiceHandlerDelegator.Instance.ChoiceMade(Player.PlayerActionParams.UsageType.Action, card);
+            ChoiceHandlerDelegator.Instance.ChoiceMade(ChoiceHandler.PlayerActionParams.UsageType.Action, card);
         }
     }
 

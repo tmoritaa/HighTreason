@@ -66,7 +66,7 @@ namespace HighTreasonGame.CardTemplates
 
                         return boardChoices;
                     },
-                    (Game game, BoardChoices choices) => 
+                    (Game game, Player choosingPlayer, BoardChoices choices) => 
                     {
                         choices.SelectedObjs.Keys.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(1));
                     }));

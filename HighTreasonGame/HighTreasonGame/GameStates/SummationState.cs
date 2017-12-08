@@ -29,7 +29,7 @@ namespace HighTreasonGame.GameStates
                 player.SummationDeck.MoveAllCardsToHolder(player.Hand);
             }
 
-            game.CurPlayer = game.GetPlayerOfSide(Player.PlayerSide.Prosecution);
+            curPlayer = game.GetPlayerOfSide(Player.PlayerSide.Prosecution);
 
             if (game.NotifyStateStart != null)
             {
@@ -53,7 +53,7 @@ namespace HighTreasonGame.GameStates
                     game.NotifyStartOfTurn();
                 }
 
-                game.CurPlayer.PerformPlayerAction();
+                performPlayerAction(curPlayer);
 
                 int numPlayersFinished = 0;
                 List<Player> players = game.GetPlayers();
@@ -63,10 +63,10 @@ namespace HighTreasonGame.GameStates
                     break;
                 }
 
-                if ((game.CurPlayer.Side == Player.PlayerSide.Prosecution && game.CurPlayer.Hand.Cards.Count == 3) 
-                    || game.CurPlayer.Hand.Cards.Count == 0)
+                if ((curPlayer.Side == Player.PlayerSide.Prosecution && curPlayer.Hand.Cards.Count == 3) 
+                    || curPlayer.Hand.Cards.Count == 0)
                 {
-                    game.PassToNextPlayer();
+                    passToNextPlayer();
                 }
             }
 

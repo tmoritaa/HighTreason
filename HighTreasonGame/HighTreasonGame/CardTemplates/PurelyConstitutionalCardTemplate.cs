@@ -55,16 +55,16 @@ namespace HighTreasonGame.CardTemplates
                         choices.NotCancelled = handleMomentOfInsightChoice(new Player.PlayerSide[] { Player.PlayerSide.Defense }, game, choosingPlayer, choiceHandler, out choices.MoIInfo);
                         return choices;
                     },
-                    (Game game, BoardChoices choices) => 
+                    (Game game, Player choosingPlayer, BoardChoices choices) => 
                     {
-                        game.GetInsanityTrack().AddToValue(1);
-                        handleMomentOfInsight(game, choices);
+                        game.Board.GetInsanityTrack().AddToValue(1);
+                        handleMomentOfInsight(game, choosingPlayer, choices);
                     }));
 
             TrialEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) => 
+                    (Game game, Player choosingPlayer, BoardChoices choices) => 
                     {
                         findAspectTracksWithProp(game, Property.Farmer, Property.French).ForEach(t => t.AddToValue(-2));
                     }));
@@ -75,9 +75,9 @@ namespace HighTreasonGame.CardTemplates
             SummationEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) => 
+                    (Game game, Player choosingPlayer, BoardChoices choices) => 
                     {
-                        game.GetInsanityTrack().AddToValue(1);
+                        game.Board.GetInsanityTrack().AddToValue(1);
                     }));
         }
     }

@@ -51,7 +51,7 @@ public class MulliganAndDoneUsageTrigger : MonoBehaviour
         }
         else if (canMulligan())
         {
-            ChoiceHandlerDelegator.Instance.ChoiceMade(Player.PlayerActionParams.UsageType.Mulligan);
+            ChoiceHandlerDelegator.Instance.ChoiceMade(ChoiceHandler.PlayerActionParams.UsageType.Mulligan);
         }
     }
 

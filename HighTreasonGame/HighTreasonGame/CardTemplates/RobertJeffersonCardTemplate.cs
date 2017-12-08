@@ -30,7 +30,7 @@ namespace HighTreasonGame
             TrialEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) => 
+                    (Game game, Player choosingPlayer, BoardChoices choices) => 
                     {
                         List<AspectTrack> ts = findAspectTracksWithProp(game, new Property[] { Property.Farmer, Property.Merchant });
                         ts.ForEach(t => t.AddToValue(t.Properties.Contains(Property.Farmer) ? 2 : 1));
@@ -42,7 +42,7 @@ namespace HighTreasonGame
             SummationEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
                         findAspectTracksWithProp(game, new Property[] { Property.Merchant })[0].AddToValue(2);
                     }));

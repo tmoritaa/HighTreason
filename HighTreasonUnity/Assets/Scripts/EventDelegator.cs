@@ -33,7 +33,7 @@ public class EventDelegator : MonoBehaviour
     private bool doNotifyPlayerActionPerformed = false;
     private bool doNotifyGameEnd = false;
 
-    private Player.PlayerActionParams usageParamsArg;
+    private ChoiceHandler.PlayerActionParams usageParamsArg;
     private GameResultArgs gameResultArg;
 
     void Awake()
@@ -97,7 +97,7 @@ public class EventDelegator : MonoBehaviour
         doNotifyStartOfTurn = true;
     }
 
-    private void triggerPlayerActionPerformed(Player.PlayerActionParams usageParams)
+    private void triggerPlayerActionPerformed(ChoiceHandler.PlayerActionParams usageParams)
     {
         doNotifyPlayerActionPerformed = true;
         usageParamsArg = usageParams;

@@ -18,7 +18,7 @@ namespace HighTreasonGame
                 new CardEffectPair(
                     (Game game, Player choosingPlayer, ChoiceHandler handler) =>
                     {
-                        int numChoices = (game.CurPlayer.Side == side) ? 2 : 1;
+                        int numChoices = (choosingPlayer.Side == side) ? 2 : 1;
 
                         CardChoice func = genRevealOrPeakCardChoice(new HashSet<Property>() {}, numChoices, false, this.CardInfo.JurySelectionInfos[0].Description);
                         return func(game, choosingPlayer, handler);
@@ -32,7 +32,7 @@ namespace HighTreasonGame
                 new CardEffectPair(
                     doNothingChoice,
                     doNothingEffect,
-                    (Game game) => { return false; }));
+                    (Game game, Player choosingPlayer) => { return false; }));
 
             TrialEvents.Add(
                 new CardEffectPair(
@@ -59,12 +59,12 @@ namespace HighTreasonGame
 
                         return boardChoices;
                     },
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
                         AspectTrack track = (AspectTrack)choices.SelectedObjs.Keys.First();
 
                         track.ResetTimesAffected();
-                        track.AddToValue(calcModValueBasedOnSide(2, game));
+                        track.AddToValue(calcModValueBasedOnSide(2, choosingPlayer));
                     }));
 
             TrialEvents.Add(
@@ -105,9 +105,9 @@ namespace HighTreasonGame
 
                         return boardChoices;
                     },
-                    (Game game, BoardChoices boardChoices) =>
+                    (Game game, Player choosingPlayer, BoardChoices boardChoices) =>
                     {
-                        int sideMod = (game.CurPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
+                        int sideMod = (choosingPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
                         foreach (KeyValuePair<BoardObject, int> kv in boardChoices.SelectedObjs)
                         {
                             SwayTrack track = (SwayTrack)kv.Key;
@@ -119,7 +119,7 @@ namespace HighTreasonGame
         protected override void addSummationEventsAndChoices()
         {
             SummationEvents.Add(
-                new CardEffectPair(doNothingChoice, doNothingEffect, (Game game) => { return false; }));
+                new CardEffectPair(doNothingChoice, doNothingEffect, (Game game, Player choosingPlayer) => { return false; }));
 
             SummationEvents.Add(
                 new CardEffectPair(
@@ -158,9 +158,9 @@ namespace HighTreasonGame
 
                         return boardChoices;
                     },
-                    (Game game, BoardChoices boardChoices) =>
+                    (Game game, Player choosingPlayer, BoardChoices boardChoices) =>
                     {
-                        int sideMod = (game.CurPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
+                        int sideMod = (choosingPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
                         foreach (KeyValuePair<BoardObject, int> kv in boardChoices.SelectedObjs)
                         {
                             SwayTrack track = (SwayTrack)kv.Key;
@@ -196,11 +196,11 @@ namespace HighTreasonGame
 
                         return boardChoices;
                     },
-                    (Game game, BoardChoices boardChoices) =>
+                    (Game game, Player choosingPlayer, BoardChoices boardChoices) =>
                     {
                         SwayTrack track = (SwayTrack)boardChoices.SelectedObjs.Keys.First();
                         track.ResetValue();
-                        track.AddToValue((game.CurPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1);
+                        track.AddToValue((choosingPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1);
                     }));
         }
     }

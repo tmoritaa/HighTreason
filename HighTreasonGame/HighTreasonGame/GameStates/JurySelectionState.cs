@@ -24,13 +24,13 @@ namespace HighTreasonGame.GameStates
                     game.NotifyStartOfTurn();
                 }
 
-                game.CurPlayer.PerformPlayerAction();
+                performPlayerAction(curPlayer);
 
-                if (game.CurPlayer.Hand.Cards.Count == 2)
+                if (curPlayer.Hand.Cards.Count == 2)
                 {
                     numPlayersFinished += 1;
-                    game.CurPlayer.AddHandToSummation();
-                    game.PassToNextPlayer();
+                    curPlayer.AddHandToSummation();
+                    passToNextPlayer();
                 }
             }
             

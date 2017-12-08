@@ -27,16 +27,16 @@ namespace HighTreasonGame.CardTemplates
             TrialEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        game.GetInsanityTrack().AddToValue(-1);
+                        game.Board.GetInsanityTrack().AddToValue(-1);
                     }));
 
             TrialEvents.Add(
                 new CardEffectPair(
                     (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
                     {
-                        List<Card> selectableCards = game.CurPlayer.Hand.Cards;
+                        List<Card> selectableCards = choosingPlayer.Hand.Cards;
 
                         BoardChoices boardChoice;
                         choiceHandler.ChooseCards(
@@ -76,11 +76,11 @@ namespace HighTreasonGame.CardTemplates
 
                         return boardChoice;
                     },
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
                         int numCardsToMul = choices.SelectedCards.Count;
                         choices.SelectedCards.Keys.ToList().ForEach(c => game.Discards.MoveCard(c));
-                        game.Deck.DealCards(numCardsToMul).ForEach(c => game.CurPlayer.Hand.MoveCard(c));
+                        game.Deck.DealCards(numCardsToMul).ForEach(c => choosingPlayer.Hand.MoveCard(c));
                     }));
         }
 
@@ -90,7 +90,7 @@ namespace HighTreasonGame.CardTemplates
                 new CardEffectPair(
                     doNothingChoice,
                     doNothingEffect,
-                    (Game game) =>
+                    (Game game, Player choosingPlayer) =>
                     {
                         return false;
                     }));

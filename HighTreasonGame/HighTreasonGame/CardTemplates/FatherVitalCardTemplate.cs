@@ -32,9 +32,9 @@ namespace HighTreasonGame.CardTemplates
             TrialEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        game.GetInsanityTrack().AddToValue(1);
+                        game.Board.GetInsanityTrack().AddToValue(1);
                     }));
 
             TrialEvents.Add(
@@ -48,9 +48,9 @@ namespace HighTreasonGame.CardTemplates
             SummationEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        game.GetInsanityTrack().AddToValue(1);
+                        game.Board.GetInsanityTrack().AddToValue(1);
                     }));
         }
     }

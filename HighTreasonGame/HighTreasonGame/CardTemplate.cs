@@ -10,7 +10,7 @@ namespace HighTreasonGame
     public abstract class CardTemplate
     {
         public delegate BoardChoices CardChoice(Game game, Player choosingPlayer, ChoiceHandler choiceHandler);
-        public delegate void CardEffect(Game game, BoardChoices choices);
+        public delegate void CardEffect(Game game, Player choosingPlayer, BoardChoices choices);
 
         public class CardEffectPair
         {
@@ -24,17 +24,17 @@ namespace HighTreasonGame
                 get; private set;
             }
 
-            public Func<Game, bool> Selectable
+            public Func<Game, Player, bool> Selectable
             {
                 get; private set;
             }
 
-            public CardEffectPair(CardChoice choiceFunc, CardEffect effectFunc, Func<Game, bool> selectable = null)
+            public CardEffectPair(CardChoice choiceFunc, CardEffect effectFunc, Func<Game, Player, bool> selectable = null)
             {
                 CardChoice = choiceFunc;
                 CardEffect = effectFunc;
 
-                Selectable = (Game game) => { return true; };
+                Selectable = (Game game, Player player) => { return true; };
                 if (selectable != null)
                 {
                     Selectable = selectable;
@@ -171,7 +171,7 @@ namespace HighTreasonGame
         protected bool handleMomentOfInsightChoice(Player.PlayerSide[] supportedSides, Game game, Player choosingPlayer, ChoiceHandler choiceHandler, out BoardChoices.MomentOfInsightInfo moiInfo)
         {
             moiInfo = new BoardChoices.MomentOfInsightInfo();
-            if (!supportedSides.Contains(game.CurPlayer.Side))
+            if (!supportedSides.Contains(choosingPlayer.Side))
             {
                 moiInfo.Use = BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.NotChosen;
                 return true;
@@ -198,7 +198,7 @@ namespace HighTreasonGame
                                 valid &= htgo.Properties.Contains(prop);
                             }
 
-                            int mod = affectedByPlayerSide ? calcModValueBasedOnSide(modValue, game) : modValue;
+                            int mod = affectedByPlayerSide ? calcModValueBasedOnSide(modValue, choosingPlayer) : modValue;
                             return valid && ((Track)htgo).CanModify(mod);
                         });
 
@@ -242,7 +242,7 @@ namespace HighTreasonGame
                                 valid &= htgo.Properties.Contains(prop);
                             }
 
-                            return valid && (isReveal ? !((Jury.JuryAspect)htgo).IsRevealed : !((Jury.JuryAspect)htgo).IsVisibleToPlayer(game.CurPlayer.Side));
+                            return valid && (isReveal ? !((Jury.JuryAspect)htgo).IsRevealed : !((Jury.JuryAspect)htgo).IsVisibleToPlayer(choosingPlayer.Side));
                         });
 
                     BoardChoices boardChoices;
@@ -268,15 +268,15 @@ namespace HighTreasonGame
 
         #region Effect Utility
 
-        protected void doNothingEffect(Game game, BoardChoices choices)
+        protected void doNothingEffect(Game game, Player choosingPlayer, BoardChoices choices)
         {
             // Do nothing.
         }
 
         // Common enough in cards that we'll just simplify it for ourselves.
-        protected void raiseGuiltAndOneAspectEffect(Game game, BoardChoices choices)
+        protected void raiseGuiltAndOneAspectEffect(Game game, Player choosingPlayer, BoardChoices choices)
         {
-            game.GetGuiltTrack().AddToValue(1);
+            game.Board.GetGuiltTrack().AddToValue(1);
             choices.SelectedObjs.Keys.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(1));
         }
 
@@ -302,30 +302,30 @@ namespace HighTreasonGame
                 }).Cast<AspectTrack>().ToList();
         }
 
-        protected void revealAllAspects(Game game, BoardChoices choices)
+        protected void revealAllAspects(Game game, Player choosingPlayer, BoardChoices choices)
         {
             choices.SelectedObjs.Keys.Cast<Jury.JuryAspect>().ToList().ForEach(a => a.Reveal());
         }
 
-        protected void peekAllAspects(Game game, BoardChoices choices)
+        protected void peekAllAspects(Game game, Player choosingPlayer, BoardChoices choices)
         {
-            choices.SelectedObjs.Keys.Cast<Jury.JuryAspect>().ToList().ForEach(a => a.Peek(game.CurPlayer.Side));
+            choices.SelectedObjs.Keys.Cast<Jury.JuryAspect>().ToList().ForEach(a => a.Peek(choosingPlayer.Side));
         }
 
-        protected int calcModValueBasedOnSide(int value, Game game)
+        protected int calcModValueBasedOnSide(int value, Player player)
         {
-            return value * ((game.CurPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1);
+            return value * ((player.Side == Player.PlayerSide.Prosecution) ? 1 : -1);
         }
 
-        protected void handleMomentOfInsight(Game game, BoardChoices choices)
+        protected void handleMomentOfInsight(Game game, Player choosingPlayer, BoardChoices choices)
         {
             if (choices.MoIInfo.Use == BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Reveal)
             {
-                game.GetOtherPlayer(game.CurPlayer).RevealCardInSummation();
+                game.GetOtherPlayer(choosingPlayer).RevealCardInSummation();
             }
             else if (choices.MoIInfo.Use == BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Swap)
             {
-                Player player = game.CurPlayer;
+                Player player = choosingPlayer;
 
                 player.SummationDeck.MoveCard(choices.MoIInfo.HandCard);
                 player.Hand.MoveCard(choices.MoIInfo.SummationCard);

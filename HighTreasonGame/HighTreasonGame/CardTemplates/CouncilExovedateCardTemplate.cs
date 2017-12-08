@@ -30,27 +30,27 @@ namespace HighTreasonGame.CardTemplates
             TrialEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        int modValue = calcModValueBasedOnSide(2, game);
+                        int modValue = calcModValueBasedOnSide(2, choosingPlayer);
                         findAspectTracksWithProp(game, Property.French)[0].AddToValue(modValue);
                     }));
 
             TrialEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        int modValue = calcModValueBasedOnSide(2, game);
+                        int modValue = calcModValueBasedOnSide(2, choosingPlayer);
                         findAspectTracksWithProp(game, Property.English)[0].AddToValue(modValue);
                     }));
 
             TrialEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        int modValue = calcModValueBasedOnSide(1, game);
+                        int modValue = calcModValueBasedOnSide(1, choosingPlayer);
                         findAspectTracksWithProp(game, Property.Merchant, Property.Farmer).ForEach(t => t.AddToValue(modValue));
                     }));
         }
@@ -60,27 +60,27 @@ namespace HighTreasonGame.CardTemplates
             SummationEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        int modValue = calcModValueBasedOnSide(2, game);
+                        int modValue = calcModValueBasedOnSide(2, choosingPlayer);
                         findAspectTracksWithProp(game, Property.French)[0].AddToValue(modValue);
                     }));
 
             SummationEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        int modValue = calcModValueBasedOnSide(2, game);
+                        int modValue = calcModValueBasedOnSide(2, choosingPlayer);
                         findAspectTracksWithProp(game, Property.English)[0].AddToValue(modValue);
                     }));
 
             SummationEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        int modValue = calcModValueBasedOnSide(1, game);
+                        int modValue = calcModValueBasedOnSide(1, choosingPlayer);
                         findAspectTracksWithProp(game, Property.Merchant, Property.Farmer).ForEach(t => t.AddToValue(modValue));
                     }));
         }

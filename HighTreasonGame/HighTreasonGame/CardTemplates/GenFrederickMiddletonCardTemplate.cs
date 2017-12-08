@@ -50,9 +50,9 @@ namespace HighTreasonGame.CardTemplates
             TrialEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        game.GetGuiltTrack().AddToValue(1);
+                        game.Board.GetGuiltTrack().AddToValue(1);
 
                         findAspectTracksWithProp(game, Property.English, Property.GovWorker).ForEach(t => t.AddToValue(t.Properties.Contains(Property.English) ? 2 : 1));
 
@@ -65,7 +65,7 @@ namespace HighTreasonGame.CardTemplates
             SummationEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
                         List<AspectTrack> aspectTracks = findAspectTracksWithProp(game, Property.Occupation, Property.English, Property.Catholic);
                         aspectTracks.ForEach(t => t.AddToValue((t.Properties.Contains(Property.Occupation) || t.Properties.Contains(Property.English)) ? 2 : 1));

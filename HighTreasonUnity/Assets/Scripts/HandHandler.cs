@@ -37,7 +37,7 @@ public class HandHandler : MonoBehaviour
         }
     }
 
-    private void playerActionPerformed(Player.PlayerActionParams usageParams)
+    private void playerActionPerformed(ChoiceHandler.PlayerActionParams usageParams)
     {
         initHandDisplay();
     }

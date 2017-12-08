@@ -30,11 +30,11 @@ namespace HighTreasonGame
             TrialEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        game.GetInsanityTrack().AddToValue(-1);
+                        game.Board.GetInsanityTrack().AddToValue(-1);
                     },
-                    (Game game) =>
+                    (Game game, Player choosingPlayer) =>
                     {
                         return game.OfficersRecalledPlayable;
                     }));
@@ -42,13 +42,13 @@ namespace HighTreasonGame
             TrialEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        int modVal = calcModValueBasedOnSide(2, game);
+                        int modVal = calcModValueBasedOnSide(2, choosingPlayer);
 
                         findAspectTracksWithProp(game, Property.Catholic)[0].AddToValue(modVal);
                     },
-                    (Game game) =>
+                    (Game game, Player choosingPlayer) =>
                     {
                         return game.OfficersRecalledPlayable;
                     }));
@@ -59,11 +59,11 @@ namespace HighTreasonGame
             SummationEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        game.GetInsanityTrack().AddToValue(-1);
+                        game.Board.GetInsanityTrack().AddToValue(-1);
                     },
-                    (Game game) =>
+                    (Game game, Player choosingPlayer) =>
                     {
                         return game.OfficersRecalledPlayable;
                     }));

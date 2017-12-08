@@ -18,7 +18,7 @@ namespace HighTreasonGame.GameStates
                 game.Board.Juries.RemoveRange(0, 6);
             }
 
-            game.CurPlayer = game.GetPlayerOfSide(Player.PlayerSide.Prosecution);
+            curPlayer = game.GetPlayerOfSide(Player.PlayerSide.Prosecution);
 
             if (game.NotifyStateStart != null)
             {
@@ -35,7 +35,7 @@ namespace HighTreasonGame.GameStates
 
         private void handleGuiltTrackEffect(Game game)
         {
-            EvidenceTrack guiltTrack = game.GetGuiltTrack();
+            EvidenceTrack guiltTrack = game.Board.GetGuiltTrack();
             int modValue = guiltTrack.Value - 2;
 
             if (modValue > 0)
@@ -47,7 +47,7 @@ namespace HighTreasonGame.GameStates
 
         private void handleInsanityTrackEffect(Game game)
         {
-            EvidenceTrack insanityTrack = game.GetInsanityTrack();
+            EvidenceTrack insanityTrack = game.Board.GetInsanityTrack();
             int modValue = (insanityTrack.Value - 1);
 
             if (modValue > 0)
@@ -70,7 +70,7 @@ namespace HighTreasonGame.GameStates
                 jury.Aspects.ForEach(a => a.Reveal());
             }
 
-            EvidenceTrack guiltTrack = game.GetGuiltTrack();
+            EvidenceTrack guiltTrack = game.Board.GetGuiltTrack();
 
             if (guiltTrack.Value < 2)
             {
@@ -94,7 +94,7 @@ namespace HighTreasonGame.GameStates
             {
                 List<Jury> lockedJuries;
 
-                if (game.CurPlayer.Side == Player.PlayerSide.Prosecution)
+                if (curPlayer.Side == Player.PlayerSide.Prosecution)
                 {
                     lockedJuries = game.Board.Juries.FindAll(j => j.SwayTrack.IsLocked && j.SwayTrack.Value == j.SwayTrack.MaxValue);
                 }
@@ -107,18 +107,18 @@ namespace HighTreasonGame.GameStates
 
                 if (lockedJuries.Count > 0)
                 {
-                    Jury usedJury = game.CurPlayer.PerformJuryForDeliberation(lockedJuries);
+                    Jury usedJury = performJuryForDeliberation(lockedJuries, curPlayer);
 
                     usedJuries.Add(usedJury);
                 }
                 else
                 {
-                    playerSidePassed[game.CurPlayer.Side] = true;
+                    playerSidePassed[curPlayer.Side] = true;
                 }
 
-                if (!playerSidePassed.ContainsKey(game.GetOtherPlayer(game.CurPlayer).Side))
+                if (!playerSidePassed.ContainsKey(game.GetOtherPlayer(curPlayer).Side))
                 {
-                    game.PassToNextPlayer();
+                    passToNextPlayer();
                 }
             }
 
@@ -141,6 +141,55 @@ namespace HighTreasonGame.GameStates
             {
                 GotoNextState();
             }
+        }
+
+        private Jury performJuryForDeliberation(List<Jury> juries, Player curPlayer)
+        {
+            Jury usedJury;
+            while (true)
+            {
+                usedJury = chooseJuryChoice(juries, curPlayer, "Select Jury for Deliberation");
+
+                int modValue = (curPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
+                List<BoardObject> choices = game.FindBO(
+                    (BoardObject htgo) =>
+                    {
+                        return (htgo.Properties.Contains(Property.Track) &&
+                        ((htgo.Properties.Contains(Property.Jury) && htgo.Properties.Contains(Property.Sway))
+                        || (htgo.Properties.Contains(Property.Aspect)))
+                        && (htgo.Properties.Contains(usedJury.Aspects[0].Aspect) || htgo.Properties.Contains(usedJury.Aspects[1].Aspect) || htgo.Properties.Contains(usedJury.Aspects[2].Aspect)))
+                        && ((Track)htgo).CanModifyByAction(modValue);
+                    });
+
+                BoardChoices boardChoices;
+                curPlayer.ChoiceHandler.ChooseBoardObjects(choices,
+                    HTUtility.GenActionValidateChoicesFunc(usedJury.ActionPoints, usedJury),
+                    HTUtility.GenActionFilterChoicesFunc(usedJury.ActionPoints, usedJury),
+                    HTUtility.GenActionChoicesCompleteFunc(usedJury.ActionPoints, usedJury),
+                    game,
+                    curPlayer,
+                    "Select usage for " + usedJury.ActionPoints + " deliberation points",
+                    out boardChoices);
+
+                if (boardChoices.NotCancelled)
+                {
+                    foreach (BoardObject bo in boardChoices.SelectedObjs.Keys)
+                    {
+                        if (bo.GetType() == typeof(AspectTrack))
+                        {
+                            ((AspectTrack)bo).ModTrackByAction(modValue * boardChoices.SelectedObjs[bo]);
+                        }
+                        else
+                        {
+                            ((Track)bo).AddToValue(modValue * boardChoices.SelectedObjs[bo]);
+                        }
+                    }
+
+                    break;
+                }
+            }
+
+            return usedJury;
         }
     }
 }

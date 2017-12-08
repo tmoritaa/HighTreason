@@ -13,7 +13,7 @@ namespace HighTreasonGame.GameStates
 
         public override void StartState()
         {
-            game.CurPlayer = game.GetPlayerOfSide(Player.PlayerSide.Prosecution);
+            curPlayer = game.GetPlayerOfSide(Player.PlayerSide.Prosecution);
 
             if (game.NotifyStateStart != null)
             {
@@ -37,19 +37,34 @@ namespace HighTreasonGame.GameStates
                     game.NotifyStartOfTurn();
                 }
 
-                game.CurPlayer.DismissJury();
+                dismissJury(curPlayer);
 
                 if (game.Board.Juries.Count == GameConstants.NUM_JURY_AFTER_DISMISSAL)
                 {
                     break;
                 }
 
-                game.PassToNextPlayer();
+                passToNextPlayer();
             }
 
-            game.ShuffleDiscardBackToDeck();
+            shuffleDiscardBackToDeck();
 
             GotoNextState();
+        }
+
+        private void dismissJury(Player curPlayer)
+        {
+            Jury jury = chooseJuryChoice(game.Board.Juries, curPlayer, "Select Jury to Dismiss");
+
+            Console.WriteLine("Dismissed Jury\n" + jury);
+
+            game.Board.RemoveJury(jury);
+        }
+
+        private void shuffleDiscardBackToDeck()
+        {
+            game.Discards.MoveAllCardsToHolder(game.Deck);
+            game.Deck.Shuffle();
         }
     }
 }

@@ -59,7 +59,7 @@ namespace HighTreasonGame.CardTemplates
             SummationEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
                         findAspectTracksWithProp(game, Property.English)[0].AddToValue(2);
                     }));

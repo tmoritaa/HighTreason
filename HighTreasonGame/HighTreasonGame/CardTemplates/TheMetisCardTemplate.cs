@@ -48,15 +48,15 @@ namespace HighTreasonGame
 
                         return boardChoices;
                     },
-                    (Game game, BoardChoices boardChoices) =>
+                    (Game game, Player choosingPlayer, BoardChoices boardChoices) =>
                     {
                         Card card = boardChoices.SelectedCards.Keys.First();
                         int idx = boardChoices.PlayInfo.eventIdx;
-                        card.Template.SelectionEvents[idx].CardEffect(game, boardChoices.PlayInfo.resultBoardChoice);
+                        card.Template.SelectionEvents[idx].CardEffect(game, choosingPlayer, boardChoices.PlayInfo.resultBoardChoice);
                     },
-                    (Game game) =>
+                    (Game game, Player choosingPlayer) =>
                     {
-                        return game.CurPlayer.Hand.Cards.Count == 3;
+                        return choosingPlayer.Hand.Cards.Count == 3;
                     }));
         }
 
@@ -65,7 +65,7 @@ namespace HighTreasonGame
             TrialEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
                         List<AspectTrack> ats = findAspectTracksWithProp(game, Property.English, Property.French);
                         ats.ForEach(t => t.AddToValue(t.Properties.Contains(Property.English) ? 2 : 3));
@@ -104,7 +104,7 @@ namespace HighTreasonGame
 
                         return boardChoices;
                     },
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
                         choices.SelectedObjs.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(-2));
 

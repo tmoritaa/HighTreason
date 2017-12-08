@@ -63,7 +63,7 @@ namespace HighTreasonGame
 
             if (choices.NotCancelled)
             {
-                cardEffect(game, choices);
+                cardEffect(game, choosingPlayer, choices);
             }
 
             return choices.NotCancelled;
@@ -73,7 +73,7 @@ namespace HighTreasonGame
         {
             bool isSummation = game.CurState.StateType == GameState.GameStateType.Summation;
 
-            int modValue = (game.CurPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
+            int modValue = (choosingPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
             List<BoardObject> choices = game.FindBO(
                 (BoardObject bo) =>
                 {

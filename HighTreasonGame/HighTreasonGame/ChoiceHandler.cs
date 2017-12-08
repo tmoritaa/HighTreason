@@ -12,12 +12,27 @@ namespace HighTreasonGame
             get; protected set;
         }
 
+        public class PlayerActionParams
+        {
+            public enum UsageType
+            {
+                Event,
+                Action,
+                Mulligan,
+                Cancelled,
+            }
+
+            public Card card;
+            public UsageType usage;
+            public List<object> misc = new List<object>();
+        }
+
         public ChoiceHandler(Player.PlayerType playerType)
         {
             PlayerType = playerType;
         }
 
-        public abstract void ChoosePlayerAction(List<Card> cards, Game game, Player choosingPlayer, out Player.PlayerActionParams outCardUsage);
+        public abstract void ChoosePlayerAction(List<Card> cards, Game game, Player choosingPlayer, out ChoiceHandler.PlayerActionParams outCardUsage);
         public abstract bool ChooseMomentOfInsightUse(Game game, Player choosingPlayer, out BoardChoices.MomentOfInsightInfo outMoIInfo);
         public abstract void ChooseBoardObjects(List<BoardObject> choices, 
             Func<Dictionary<BoardObject, int>, bool> validateChoices, 

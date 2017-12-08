@@ -33,6 +33,22 @@ namespace HighTreasonGame
             initJury();
         }
 
+        public void RemoveJury(Jury jury)
+        {
+            Juries.Remove(jury);
+            game.RemoveBoardObject(jury);
+        }
+
+        public EvidenceTrack GetInsanityTrack()
+        {
+            return EvidenceTracks.Find(t => t.Properties.Contains(Property.Insanity));
+        }
+
+        public EvidenceTrack GetGuiltTrack()
+        {
+            return EvidenceTracks.Find(t => t.Properties.Contains(Property.Guilt));
+        }
+
         public override string ToString()
         {
             string outStr = String.Empty;

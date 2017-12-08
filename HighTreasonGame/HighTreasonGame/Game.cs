@@ -11,7 +11,7 @@ namespace HighTreasonGame
     {
         public delegate void StateStartEvent();
         public delegate void StartOfTurnEvent();
-        public delegate void PlayedCardEvent(Player.PlayerActionParams usageParams);
+        public delegate void PlayedCardEvent(ChoiceHandler.PlayerActionParams usageParams);
         public delegate void GameEndEvent(Player.PlayerSide winningPlayerSide, bool winByNotEnoughGuilt, int finalScore);
 
         public StateStartEvent NotifyStateStart;
@@ -29,10 +29,6 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        public Player CurPlayer {
-            get; set;
-        }
-        
         public DiscardHolder Discards
         {
             get; private set;
@@ -78,8 +74,6 @@ namespace HighTreasonGame
                 idx += 1;
             }
 
-            CurPlayer = players[0];
-
             initStates();
         }
 
@@ -101,23 +95,6 @@ namespace HighTreasonGame
         public void SignifyEndGame()
         {
             gameEnd = true;
-        }
-
-        public void PassToNextPlayer()
-        {
-            CurPlayer = GetOtherPlayer(CurPlayer);
-        }
-
-        public void ShuffleDiscardBackToDeck()
-        {
-            Discards.MoveAllCardsToHolder(Deck);
-            Deck.Shuffle();
-        }
-
-        public void RemoveJury(Jury jury)
-        {
-            Board.Juries.Remove(jury);
-            RemoveBoardObject(jury);
         }
 
         public List<Player> GetPlayers()
@@ -150,16 +127,6 @@ namespace HighTreasonGame
         public List<BoardObject> FindBO(Func<BoardObject, bool> condition)
         {
             return boardObjects.FindAll(htgo => condition(htgo));
-        }
-
-        public EvidenceTrack GetInsanityTrack()
-        {
-            return Board.EvidenceTracks.Find(t => t.Properties.Contains(Property.Insanity));
-        }
-
-        public EvidenceTrack GetGuiltTrack()
-        {
-            return Board.EvidenceTracks.Find(t => t.Properties.Contains(Property.Guilt));
         }
 
         public override string ToString()

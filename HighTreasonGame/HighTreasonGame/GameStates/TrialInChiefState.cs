@@ -43,17 +43,17 @@ namespace HighTreasonGame.GameStates
                     game.NotifyStartOfTurn();
                 }
 
-                game.CurPlayer.PerformPlayerAction();
+                performPlayerAction(curPlayer);
 
-                if (game.CurPlayer.Hand.Cards.Count == 2)
+                if (curPlayer.Hand.Cards.Count == 2)
                 {
                     numPlayersFinished += 1;
-                    game.CurPlayer.AddHandToSummation();
+                    curPlayer.AddHandToSummation();
                 }
 
-                if (game.GetOtherPlayer(game.CurPlayer).Hand.Cards.Count > 2)
+                if (game.GetOtherPlayer(curPlayer).Hand.Cards.Count > 2)
                 {
-                    game.PassToNextPlayer();
+                    passToNextPlayer();
                 }
             }
 

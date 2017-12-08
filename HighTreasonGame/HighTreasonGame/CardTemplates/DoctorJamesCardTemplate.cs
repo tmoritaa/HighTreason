@@ -39,10 +39,10 @@ namespace HighTreasonGame.CardTemplates
 
                         return choices;
                     },
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        game.GetInsanityTrack().AddToValue(-1);
-                        handleMomentOfInsight(game, choices);
+                        game.Board.GetInsanityTrack().AddToValue(-1);
+                        handleMomentOfInsight(game, choosingPlayer, choices);
                     }));
         }
 
@@ -51,7 +51,7 @@ namespace HighTreasonGame.CardTemplates
             SummationEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
                         findAspectTracksWithProp(game, Property.English, Property.Protestant).ForEach(t => t.AddToValue(2));
                     }));

@@ -30,9 +30,9 @@ namespace HighTreasonGame.CardTemplates
             TrialEvents.Add(
                 new CardEffectPair(
                     genAspectTrackForModCardChoice(new HashSet<Property>(), 1, 1, false, this.CardInfo.TrialInChiefInfos[0].Description),
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        raiseGuiltAndOneAspectEffect(game, choices);
+                        raiseGuiltAndOneAspectEffect(game, choosingPlayer, choices);
                         game.OfficersRecalledPlayable = true;
                     }));
         }
@@ -42,7 +42,7 @@ namespace HighTreasonGame.CardTemplates
             SummationEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
                         findAspectTracksWithProp(game, Property.Occupation).ForEach(t => t.AddToValue(1));
 

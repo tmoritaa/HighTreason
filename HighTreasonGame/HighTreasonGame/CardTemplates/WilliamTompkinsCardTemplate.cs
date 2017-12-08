@@ -38,7 +38,7 @@ namespace HighTreasonGame.CardTemplates
                 new CardEffectPair(
                     (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
                     {
-                        int modValue = calcModValueBasedOnSide(2, game);
+                        int modValue = calcModValueBasedOnSide(2, choosingPlayer);
 
                         List<BoardObject> options = game.FindBO(
                             (BoardObject htgo) =>
@@ -71,11 +71,11 @@ namespace HighTreasonGame.CardTemplates
 
                         return boardChoices;
                     },
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        int modValue = calcModValueBasedOnSide(2, game);
+                        int modValue = calcModValueBasedOnSide(2, choosingPlayer);
                         choices.SelectedObjs.Keys.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(modValue));
-                        handleMomentOfInsight(game, choices);
+                        handleMomentOfInsight(game, choosingPlayer, choices);
                     }));
         }
 
@@ -84,10 +84,10 @@ namespace HighTreasonGame.CardTemplates
             SummationEvents.Add(
                 new CardEffectPair(
                     doNothingChoice,
-                    (Game game, BoardChoices choices) =>
+                    (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        int modVal = calcModValueBasedOnSide(2, game);
-                        int oppModVal = -calcModValueBasedOnSide(1, game);
+                        int modVal = calcModValueBasedOnSide(2, choosingPlayer);
+                        int oppModVal = -calcModValueBasedOnSide(1, choosingPlayer);
 
                         List<AspectTrack> ats = findAspectTracksWithProp(game, Property.GovWorker, Property.Merchant, Property.Farmer);
 
