@@ -249,5 +249,29 @@
 		"jury_selection":[{"text":"Peek at any 2 Traits.", "desc":"Select 2 Traits"}],
 		"trial_in_chief":[{"type":"defense", "text":"+1 Ins, <-2 to the French aspect, and <-2 each to the Protestant and Catholic aspects.", "desc":""}],
 		"summation":[{"type":"defense", "text":"+1 Ins;", "desc":""}, {"type":"defense", "text":"<-2 each to any three aspects except English;", "desc":"Select 3 non-English aspects"}]
+	},
+	"Doctor Daniel Clark":{
+		"typing":"Defense Witness",
+		"jury_selection":[{"text":"Reveal 3 Occupation.", "desc":"Select 3 Occupation Traits"}, {"text":"Reveal 2 Religion.", "desc":"Select 2 Religion Traits"}],
+		"trial_in_chief":[{"type":"defense", "text":"+1 Ins and <-2 each to the English aspect and either Religion Trait.", "desc":"Select 1 Religion Aspect Track"}],
+		"summation":[{"type":"defense", "text":"+1 Ins;", "desc":""}, {"type":"defense", "text":"Add 2 Defense Sway markers to each Unlocked Juror;", "desc":""}]
+	},
+	"Doctor Augustus Jukes":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 2 Language.", "desc":"Select 2 Language Traits"}, {"text":"Reveal 1 Occupation.", "desc":"Select 1 Occupation Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"-1 Ins.", "desc":""}],
+		"summation":[{"type":"neutral", "text":"No special event, just... 2 Sway markers, total, on Unlocked Jurors;", "desc":""}]
+	},
+	"Philip Garnot":{
+		"typing":"Defense Witness",
+		"jury_selection":[{"text":"Reveal 3 Language.", "desc":"Select 3 Language Traits"}, {"text":"Reveal 2 Occupation.", "desc":"Select 2 Occupation Traits"}],
+		"trial_in_chief":[{"type":"defense", "text":"+1 Ins and <-1 each to the French and the Catholic aspects.", "desc":""}],
+		"summation":[{"type":"defense", "text":"<-2 each to the French and Catholic aspects and <-1 to the Farmer aspect.", "desc":""}]
+	},
+	"Louis David Riel":{
+		"typing":"Defendant",
+		"jury_selection":[{"text":"Reveal any combination of up to 5 Traits, but no more than 3 from any single aspect.", "desc":"Select 5 Traits, up to 3 of any single Trait"}],
+		"trial_in_chief":[{"type":"neutral", "text":"+1 or -1 Ins and <-1-> each for one Language, one Religion, and one Occupation Aspect Track.", "desc":"Select 1 Language, 1 Religion, and 1 Occupation Aspect Track"}],
+		"summation":[{"type":"neutral", "text":"+1 or -1 Ins.", "desc":""}, {"type":"neutral", "text":"<-2-> each for any two Aspect Tracks.", "desc":"Select two Aspect Tracks"}]
 	}
 }

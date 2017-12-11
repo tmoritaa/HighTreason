@@ -31,15 +31,10 @@ namespace HighTreasonGame
             // TODO: only for now until we have enough cards.
             while (CardTemplates.Keys.Count < 45)
             {
-                CardTemplate tmp1 = new JohnAstleyCardTemplate();
+                CardTemplate tmp1 = new LouisDavidRielCardTemplate();
                 tmp1.Init(InfoRoot);
                 tmp1.SetName(tmp1.Name + CardTemplates.Keys.Count.ToString().PadLeft(2, '0'));
                 CardTemplates.Add(tmp1.Name, tmp1);
-
-                CardTemplate tmp2 = new GeorgeBurbidgeCardTemplate();
-                tmp2.Init(InfoRoot);
-                tmp2.SetName(tmp2.Name + CardTemplates.Keys.Count.ToString().PadLeft(2, '0'));
-                CardTemplates.Add(tmp2.Name, tmp2);
             }
 
             return CardTemplates.Values.ToList();

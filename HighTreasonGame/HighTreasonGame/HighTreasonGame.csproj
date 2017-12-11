@@ -63,6 +63,8 @@
     <Compile Include="CardTemplates\CharlesNolinCardTemplate.cs" />
     <Compile Include="CardTemplates\ChristopherRobinsonCardTemplate.cs" />
     <Compile Include="CardTemplates\CouncilExovedateCardTemplate.cs" />
+    <Compile Include="CardTemplates\DoctorAugustusJukesCardTemplate.cs" />
+    <Compile Include="CardTemplates\DoctorDanielClarkCardTemplate.cs" />
     <Compile Include="CardTemplates\DoctorFrancoisRoyCardTemplate.cs" />
     <Compile Include="CardTemplates\DoctorJamesCardTemplate.cs" />
     <Compile Include="CardTemplates\ExovedeCardTemplate.cs" />
@@ -81,9 +83,11 @@
     <Compile Include="CardTemplates\JohnLashCardTemplate.cs" />
     <Compile Include="CardTemplates\JohnWilloughbyCardTemplate.cs" />
     <Compile Include="CardTemplates\LetterToMajorCrozierCardTemplate.cs" />
+    <Compile Include="CardTemplates\LouisDavidRielCardTemplate.cs" />
     <Compile Include="CardTemplates\MatterOfThirtyFiveThousandCardTemplate.cs" />
     <Compile Include="CardTemplates\OfficersRecalledCardTemplate.cs" />
     <Compile Include="CardTemplates\PeterTomkinsCardTemplate.cs" />
+    <Compile Include="CardTemplates\PhilipGarnotCardTemplate.cs" />
     <Compile Include="CardTemplates\PurelyConstitutionalCardTemplate.cs" />
     <Compile Include="CardTemplates\TheMetisCardTemplate.cs" />
     <Compile Include="CardTemplates\RobertJeffersonCardTemplate.cs" />
