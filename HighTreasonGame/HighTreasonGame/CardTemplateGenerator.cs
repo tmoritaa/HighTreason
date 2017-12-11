@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 
 using Newtonsoft.Json.Linq;
-using HighTreasonGame.CardTemplates;
 
 namespace HighTreasonGame
 {
@@ -15,9 +14,6 @@ namespace HighTreasonGame
             private set;
         }
 
-        // TODO: only necessary since generating cards. Should be deleted once enough cards are implemented.
-        public JObject InfoRoot;
-
         public CardTemplateGenerator(string cardInfoJson)
         {
             CardTemplates = new Dictionary<string, CardTemplate>();
@@ -27,15 +23,6 @@ namespace HighTreasonGame
         public List<CardTemplate> GetAllCardTemplates()
         {
             List<CardTemplate> cards = CardTemplates.Values.ToList();
-
-            // TODO: only for now until we have enough cards.
-            while (CardTemplates.Keys.Count < 45)
-            {
-                CardTemplate tmp1 = new LouisDavidRielCardTemplate();
-                tmp1.Init(InfoRoot);
-                tmp1.SetName(tmp1.Name + CardTemplates.Keys.Count.ToString().PadLeft(2, '0'));
-                CardTemplates.Add(tmp1.Name, tmp1);
-            }
 
             return CardTemplates.Values.ToList();
         }
@@ -49,12 +36,12 @@ namespace HighTreasonGame
                 where attributes != null && attributes.Length > 0
                 select new { Type = t, Attributes = attributes.Cast<CardTemplateAttribute>() };
 
-            InfoRoot = JObject.Parse(cardInfoJson);
+            JObject infoRoot = JObject.Parse(cardInfoJson);
 
             foreach (var type in cardTemplateTypes)
             {
                 CardTemplate template = (CardTemplate)Activator.CreateInstance(type.Type);
-                template.Init(InfoRoot);
+                template.Init(infoRoot);
                 CardTemplates.Add(template.Name, template);
             }
         }

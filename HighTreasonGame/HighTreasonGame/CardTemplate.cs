@@ -46,12 +46,6 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        // TODO: for now until we have enough cards.
-        public void SetName(string name)
-        {
-            Name = name;
-        }
-
         public int ActionPts {
             get; private set;
         }

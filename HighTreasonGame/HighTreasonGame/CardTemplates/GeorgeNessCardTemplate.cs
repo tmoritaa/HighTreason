@@ -8,27 +8,22 @@ using Newtonsoft.Json.Linq;
 namespace HighTreasonGame
 {
     [CardTemplateAttribute]
-    public class WilliamTompkinsCardTemplate : CardTemplate
+    public class GeorgeNessCardTemplate : CardTemplate
     {
-        public WilliamTompkinsCardTemplate()
-            : base("William Tompkins", 3, Player.PlayerSide.Prosecution)
+        public GeorgeNessCardTemplate()
+            : base("George Ness", 3, Player.PlayerSide.Prosecution)
         { }
 
         protected override void addSelectionEventsAndChoices()
         {
             SelectionEvents.Add(
                 new CardEffectPair(
-                    genRevealOrPeakCardChoice(new HashSet<Property> { Property.Occupation }, 3, true, this.CardInfo.JurySelectionInfos[0].Description),
+                    genRevealOrPeakCardChoice(new HashSet<Property> { Property.Occupation }, 2, true, this.CardInfo.JurySelectionInfos[0].Description),
                     revealAllAspects));
 
             SelectionEvents.Add(
                 new CardEffectPair(
-                    genRevealOrPeakCardChoice(new HashSet<Property> { Property.Language }, 2, true, this.CardInfo.JurySelectionInfos[1].Description),
-                    revealAllAspects));
-
-            SelectionEvents.Add(
-                new CardEffectPair(
-                    genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Religion }, 1, true, this.CardInfo.JurySelectionInfos[2].Description),
+                    genRevealOrPeakCardChoice(new HashSet<Property> { Property.Religion }, 2, true, this.CardInfo.JurySelectionInfos[1].Description),
                     revealAllAspects));
         }
 
@@ -38,8 +33,8 @@ namespace HighTreasonGame
                 new CardEffectPair(
                     (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
                     {
-                        CardChoice pickAspectFunc = genAspectTrackForModCardChoice(new HashSet<Property>() { Property.Occupation }, 1, 2, true, this.CardInfo.TrialInChiefInfos[0].Description);
-                        BoardChoices boardChoices = pickAspectFunc(game, choosingPlayer, choiceHandler);
+                        CardChoice peekFunc = genRevealOrPeakCardChoice(new HashSet<Property>() { Property.Language }, 2, false, this.CardInfo.TrialInChiefInfos[0].Description);
+                        BoardChoices boardChoices = peekFunc(game, choosingPlayer, choiceHandler);
 
                         if (boardChoices.NotCancelled)
                         {
@@ -51,8 +46,7 @@ namespace HighTreasonGame
                     },
                     (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        int modValue = calcModValueBasedOnSide(2, choosingPlayer);
-                        choices.SelectedObjs.Keys.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(modValue));
+                        peekAllAspects(game, choosingPlayer, choices);
                         handleMomentOfInsight(game, choosingPlayer, choices);
                     }));
         }
@@ -65,11 +59,9 @@ namespace HighTreasonGame
                     (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
                         int modVal = calcModValueBasedOnSide(2, choosingPlayer);
-                        int oppModVal = -calcModValueBasedOnSide(1, choosingPlayer);
+                        int oppVal = -calcModValueBasedOnSide(1, choosingPlayer);
 
-                        List<AspectTrack> ats = findAspectTracksWithProp(game, Property.GovWorker, Property.Merchant, Property.Farmer);
-
-                        ats.ForEach(t => t.AddToValue(t.Properties.Contains(Property.Farmer) ? oppModVal : modVal));
+                        findAspectTracksWithProp(game, Property.Farmer, Property.Catholic, Property.Protestant).ForEach(t => t.AddToValue(t.Properties.Contains(Property.Protestant) ? oppVal : modVal));
                     }));
         }
     }

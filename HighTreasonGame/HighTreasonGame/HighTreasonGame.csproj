@@ -75,8 +75,11 @@
     <Compile Include="CardTemplates\DavidLynchScottCardTemplate.cs" />
     <Compile Include="CardTemplates\GeorgeBurbidgeCardTemplate.cs" />
     <Compile Include="CardTemplates\GeorgeHolmesYoungCardTemplate.cs" />
+    <Compile Include="CardTemplates\GeorgeKerrCardTemplate.cs" />
+    <Compile Include="CardTemplates\GeorgeNessCardTemplate.cs" />
     <Compile Include="CardTemplates\HaroldRossCardTemplate.cs" />
     <Compile Include="CardTemplates\HenryWaltersCardTemplate.cs" />
+    <Compile Include="CardTemplates\HillyardMitchellCardTemplate.cs" />
     <Compile Include="CardTemplates\JailersCardTemplate.cs" />
     <Compile Include="CardTemplates\JamesGreenshieldsCardTemplate.cs" />
     <Compile Include="CardTemplates\JohnAstleyCardTemplate.cs" />
@@ -84,11 +87,13 @@
     <Compile Include="CardTemplates\JohnWilloughbyCardTemplate.cs" />
     <Compile Include="CardTemplates\LetterToMajorCrozierCardTemplate.cs" />
     <Compile Include="CardTemplates\LouisDavidRielCardTemplate.cs" />
+    <Compile Include="CardTemplates\MajorCrozierCardTemplate.cs" />
     <Compile Include="CardTemplates\MatterOfThirtyFiveThousandCardTemplate.cs" />
     <Compile Include="CardTemplates\OfficersRecalledCardTemplate.cs" />
     <Compile Include="CardTemplates\PeterTomkinsCardTemplate.cs" />
     <Compile Include="CardTemplates\PhilipGarnotCardTemplate.cs" />
     <Compile Include="CardTemplates\PurelyConstitutionalCardTemplate.cs" />
+    <Compile Include="CardTemplates\ReverendCharlesPitbladoCardTemplate.cs" />
     <Compile Include="CardTemplates\TheMetisCardTemplate.cs" />
     <Compile Include="CardTemplates\RobertJeffersonCardTemplate.cs" />
     <Compile Include="CardTemplates\ThomasCasgrainCardTemplate.cs" />
@@ -96,6 +101,7 @@
     <Compile Include="CardTemplates\ThomasJohnstoneCardTemplate.cs" />
     <Compile Include="CardTemplates\ThomasMcKayCardTemplate.cs" />
     <Compile Include="CardTemplates\ThomasSandersonCardTemplate.cs" />
+    <Compile Include="CardTemplates\TwoCursesCardTemplate.cs" />
     <Compile Include="CardTemplates\WilliamTompkinsCardTemplate.cs" />
     <Compile Include="CardHolder\DeckHolder.cs" />
     <Compile Include="CardHolder\DiscardHolder.cs" />

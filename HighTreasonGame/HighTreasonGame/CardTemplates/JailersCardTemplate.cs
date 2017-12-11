@@ -5,7 +5,7 @@ using System.Text;
 
 using Newtonsoft.Json.Linq;
 
-namespace HighTreasonGame.CardTemplates
+namespace HighTreasonGame
 {
     [CardTemplateAttribute]
     public class JailersCardTemplate : CardTemplate
