@@ -63,6 +63,8 @@ namespace HighTreasonGame
 
             if (choices.NotCancelled)
             {
+                FileLogger.Instance.Log(choices.ToStringForEvent());
+
                 cardEffect(game, choosingPlayer, choices);
             }
 
@@ -97,20 +99,29 @@ namespace HighTreasonGame
 
             if (boardChoices.NotCancelled)
             {
+                string str = "";
+
                 foreach (BoardObject bo in boardChoices.SelectedObjs.Keys)
                 {
+                    str += bo + " modified by " + modValue * boardChoices.SelectedObjs[bo] + "\n";
                     if (bo.GetType() == typeof(AspectTrack))
                     {
                         ((AspectTrack)bo).ModTrackByAction(modValue * boardChoices.SelectedObjs[bo]);
                     }
                     else
-                    {
+                    {   
                         ((Track)bo).AddToValue(modValue * boardChoices.SelectedObjs[bo]);
                     }
                 }
+                FileLogger.Instance.Log(str);
             }
 
             return boardChoices.NotCancelled;
+        }
+
+        public override string ToString()
+        {
+            return Template.Name;
         }
     }
 }

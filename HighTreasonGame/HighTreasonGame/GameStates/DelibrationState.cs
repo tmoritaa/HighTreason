@@ -149,6 +149,7 @@ namespace HighTreasonGame.GameStates
             while (true)
             {
                 usedJury = chooseJuryChoice(juries, curPlayer, "Select Jury for Deliberation");
+                FileLogger.Instance.Log(curPlayer.Side + " chose " + usedJury + " for deliberation");
 
                 int modValue = (curPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
                 List<BoardObject> choices = game.FindBO(
@@ -173,8 +174,10 @@ namespace HighTreasonGame.GameStates
 
                 if (boardChoices.NotCancelled)
                 {
+                    string str = "";
                     foreach (BoardObject bo in boardChoices.SelectedObjs.Keys)
                     {
+                        str += bo + " modified by " + modValue * boardChoices.SelectedObjs[bo] + "\n";
                         if (bo.GetType() == typeof(AspectTrack))
                         {
                             ((AspectTrack)bo).ModTrackByAction(modValue * boardChoices.SelectedObjs[bo]);
@@ -184,6 +187,7 @@ namespace HighTreasonGame.GameStates
                             ((Track)bo).AddToValue(modValue * boardChoices.SelectedObjs[bo]);
                         }
                     }
+                    FileLogger.Instance.Log(str);
 
                     break;
                 }

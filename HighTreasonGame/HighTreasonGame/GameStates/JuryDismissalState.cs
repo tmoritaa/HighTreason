@@ -56,7 +56,7 @@ namespace HighTreasonGame.GameStates
         {
             Jury jury = chooseJuryChoice(game.Board.Juries, curPlayer, "Select Jury to Dismiss");
 
-            Console.WriteLine("Dismissed Jury\n" + jury);
+            FileLogger.Instance.Log(curPlayer.Side + " dismissed " + jury);
 
             game.Board.RemoveJury(jury);
         }

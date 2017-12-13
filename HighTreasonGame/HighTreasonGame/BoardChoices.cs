@@ -19,6 +19,11 @@ namespace HighTreasonGame
             public MomentOfInsightUse Use;
             public Card SummationCard;
             public Card HandCard;
+
+            public MomentOfInsightInfo()
+            {
+                Use = MomentOfInsightUse.NotChosen;
+            }
         }
 
         public class CardPlayInfo
@@ -33,5 +38,46 @@ namespace HighTreasonGame
         public CardPlayInfo PlayInfo = new CardPlayInfo();
 
         public bool NotCancelled = true;
+
+        // Note that this function assumes that a card and a board object cannot be selected at the same time, which is currently true.
+        public string ToStringForEvent()
+        {
+            string str = "";
+
+            if (SelectedObjs.Count > 0)
+            {
+                foreach(var kv in SelectedObjs)
+                {
+                    str += kv.Key + " selected " + kv.Value + " times\n";
+                }
+            }
+            else if (SelectedCards.Count > 0)
+            {
+                foreach(var kv in SelectedCards)
+                {
+                    str += kv.Key + " selected " + kv.Value + " times\n";
+                }
+            }
+
+            if (MoIInfo.Use != MomentOfInsightInfo.MomentOfInsightUse.NotChosen)
+            {
+                if (MoIInfo.Use == MomentOfInsightInfo.MomentOfInsightUse.Reveal)
+                {
+                    str += "Reveal selected for MoI\n";
+                }
+                else if (MoIInfo.Use == MomentOfInsightInfo.MomentOfInsightUse.Swap)
+                {
+                    str += "Swap selected for MoI. Hand=" + MoIInfo.HandCard + " Sum=" + MoIInfo.SummationCard + "\n";
+                }
+            }
+
+            if (PlayInfo.eventIdx >= 0)
+            {
+                str += "event idx=" + PlayInfo.eventIdx + " selected with choices\n";
+                str += PlayInfo.resultBoardChoice.ToStringForEvent();
+            }
+
+            return str;
+        }
     }
 }

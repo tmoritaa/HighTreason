@@ -105,6 +105,7 @@
     <Compile Include="CardTemplates\WilliamTompkinsCardTemplate.cs" />
     <Compile Include="CardHolder\DeckHolder.cs" />
     <Compile Include="CardHolder\DiscardHolder.cs" />
+    <Compile Include="FileLogger.cs" />
     <Compile Include="GameStates\GameState.cs" />
     <Compile Include="GameStates\CardPlayState.cs" />
     <Compile Include="GameStates\DelibrationState.cs" />

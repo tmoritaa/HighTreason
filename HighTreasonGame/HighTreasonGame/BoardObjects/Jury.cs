@@ -87,21 +87,7 @@ namespace HighTreasonGame
 
             public override string ToString()
             {
-                string outStr = "Owner Id = " + Owner.Id + "\n";
-
-                foreach (Property str in Properties)
-                {
-                    outStr += str + " ";
-                }
-
-                outStr += "\n";
-
-                foreach (Player.PlayerSide side in seenStatus.Keys)
-                {
-                    outStr += side + " seen=" + seenStatus[side] + "\n";
-                }
-
-                return outStr;
+                return Owner + " Aspect " + Trait + " " + Aspect;
             }
         }
 
@@ -132,7 +118,7 @@ namespace HighTreasonGame
 
             ActionPoints = _actionPoints;
 
-            SwayTrack = new SwayTrack(-swayMax, swayMax, game, Property.Jury);
+            SwayTrack = new SwayTrack(-swayMax, swayMax, game, this, Property.Jury);
 
             Aspects = new List<JuryAspect>();
             Aspects.Add(new JuryAspect(game, this, Property.Religion, religionAspect));
@@ -180,17 +166,7 @@ namespace HighTreasonGame
 
         public override string ToString()
         {
-            string outStr = "Id = " + Id + "\n";
-            outStr += SwayTrack.ToString() + "\n";
-            outStr += "Action Points=" + ActionPoints + "\n";
-            foreach (JuryAspect aspect in Aspects)
-            {
-                outStr += "---------------------------------------\n";
-                outStr += aspect;
-            }
-            outStr += "---------------------------------------\n";
-
-            return outStr;
+            return "Jury " + Id;
         }
     }
 }

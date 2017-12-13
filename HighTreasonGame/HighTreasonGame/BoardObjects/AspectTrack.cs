@@ -14,9 +14,12 @@ namespace HighTreasonGame
             get; private set;
         }
 
+        private Property[] uniqueProps;
+
         public AspectTrack(int _value, Game _game, params Property[] _properties) 
             : base(_value, 1, 10, _game, _properties)
         {
+            uniqueProps = _properties;
             Properties.Add(Property.Aspect);
             TimesAffectedByAction = 0;
         }
@@ -41,9 +44,13 @@ namespace HighTreasonGame
 
         public override string ToString()
         {
-            string outStr = "-" + base.ToString() + "\n";
+            string outStr = "";
 
-            outStr += "\t" + "times modified=" + TimesAffectedByAction + "\n";
+            foreach (Property prop in uniqueProps)
+            {
+                outStr += prop + " ";
+            }
+            outStr += "Aspect Track";
 
             return outStr;
         }

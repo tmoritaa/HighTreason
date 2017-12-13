@@ -74,6 +74,9 @@ namespace HighTreasonGame
                 idx += 1;
             }
 
+            NotifyStateStart += logStartOfState;
+            NotifyGameEnd += logEndOfGame;
+
             initStates();
         }
 
@@ -157,6 +160,17 @@ namespace HighTreasonGame
             states.Add(GameState.GameStateType.TrialInChief, new TrialInChiefState(this));
             states.Add(GameState.GameStateType.Summation, new SummationState(this));
             states.Add(GameState.GameStateType.Deliberation, new DelibrationState(this));
+        }
+
+        private void logStartOfState()
+        {
+            FileLogger.Instance.Log("Started " + CurState.StateType + " state");
+        }
+
+        private void logEndOfGame(Player.PlayerSide winningPlayerSide, bool winByNotEnoughGuilt, int finalScore)
+        {
+            string str = winningPlayerSide + " won with " + (winByNotEnoughGuilt ? "not enough guilt" : finalScore + " points");
+            FileLogger.Instance.Log(str);
         }
     }
 }

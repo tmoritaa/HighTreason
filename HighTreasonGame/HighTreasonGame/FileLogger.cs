@@ -13,18 +13,22 @@ namespace HighTreasonGame
 
         private StreamWriter file;
 
-        public static FileLogger Instance()
+        public static FileLogger Instance
         {
-            if (instance == null)
+            get
             {
-                instance = new FileLogger();
-            }
+                if (instance == null)
+                {
+                    instance = new FileLogger();
+                }
 
-            return instance;
+                return instance;
+            }
         }
 
         private FileLogger()
         {
+            File.WriteAllText(filePath, String.Empty);
             file = new StreamWriter(filePath);
         }
 
@@ -38,12 +42,19 @@ namespace HighTreasonGame
             file.Close();
 
             filePath = str;
-            file = new StreamWriter(filePath);
+            File.WriteAllText(filePath, String.Empty);
+
+            file = new StreamWriter(filePath, true);
         }
 
         public void Log(string str)
         {
             file.WriteLine(str);
+        }
+
+        public void Close()
+        {
+            file.Close();
         }
     }
 }

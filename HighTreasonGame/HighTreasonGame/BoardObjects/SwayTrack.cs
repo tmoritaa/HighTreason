@@ -31,9 +31,12 @@ namespace HighTreasonGame
             }
         }
 
-        public SwayTrack(int min, int max, Game game, params Property[] _properties)
+        private Jury owner;
+
+        public SwayTrack(int min, int max, Game game, Jury _owner, params Property[] _properties)
             : base(0, min, max, game, _properties)
         {
+            owner = _owner;
             Properties.Add(Property.Sway);
         }
 
@@ -44,7 +47,7 @@ namespace HighTreasonGame
 
         public override string ToString()
         {
-            return base.ToString() + "\n";
+            return owner + " Sway Track";
         }
     }
 }

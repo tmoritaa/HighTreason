@@ -3,6 +3,7 @@
 
 # Custom
 *.mdb
+logs.txt
 
 # User-specific files
 *.suo

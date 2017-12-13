@@ -34,7 +34,7 @@ namespace HighTreasonGame
                     (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
                     {
                         BoardChoices boardChoices = new BoardChoices();
-                        handleMomentOfInsightChoice(
+                        boardChoices.NotCancelled = handleMomentOfInsightChoice(
                             new Player.PlayerSide[] { Player.PlayerSide.Prosecution, Player.PlayerSide.Defense }, 
                             game, choosingPlayer, choiceHandler, out boardChoices.MoIInfo);
 
@@ -51,7 +51,7 @@ namespace HighTreasonGame
                     (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
                     {
                         BoardChoices boardChoices = new BoardChoices();
-                        handleMomentOfInsightChoice(
+                        boardChoices.NotCancelled = handleMomentOfInsightChoice(
                             new Player.PlayerSide[] { Player.PlayerSide.Defense },
                             game, choosingPlayer, choiceHandler, out boardChoices.MoIInfo);
 

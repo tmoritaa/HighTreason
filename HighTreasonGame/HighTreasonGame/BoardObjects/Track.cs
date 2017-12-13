@@ -51,19 +51,5 @@ namespace HighTreasonGame
         {
             return CanModify(modValue);
         }
-
-        public override string ToString()
-        {
-            string outStr = "-";
-
-            foreach (Property str in Properties)
-            {
-                outStr += str + " ";
-            }
-
-            outStr += " value=" + Value + " min=" + MinValue + " max=" + MaxValue;
-
-            return outStr;
-        }
     }
 }

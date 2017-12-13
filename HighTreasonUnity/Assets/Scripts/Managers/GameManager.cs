@@ -6,6 +6,8 @@ using System.Linq;
 
 using UnityEngine;
 
+using System.IO;
+
 using HighTreasonGame;
 
 public class GameManager : MonoBehaviour 
@@ -70,6 +72,7 @@ public class GameManager : MonoBehaviour
 
     void OnDestroy()
     {
+        FileLogger.Instance.Close();
         gameThread.Abort();
     }
 

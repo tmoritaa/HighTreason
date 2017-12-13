@@ -43,6 +43,8 @@ namespace HighTreasonGame.GameStates
                     continue;
                 }
 
+                FileLogger.Instance.Log(playerAction.ToString(curPlayer, game.CurState.StateType));
+
                 bool cardPlayed = false;
                 if (playerAction.usage == ChoiceHandler.PlayerActionParams.UsageType.Mulligan
                     && game.CurState.StateType == GameState.GameStateType.TrialInChief
@@ -123,6 +125,9 @@ namespace HighTreasonGame.GameStates
                 if (boardChoices.SelectedCards.Count > 0)
                 {
                     Card objectCard = boardChoices.SelectedCards.Keys.First();
+
+                    FileLogger.Instance.Log(curPlayer + " objected with " + objectCard.Template.Name);
+
                     game.Discards.MoveCard(objectCard);
                     objected = true;
                 }
