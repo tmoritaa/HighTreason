@@ -20,7 +20,7 @@ namespace HighTreasonGame
 
         public void SetupHand(List<Card> cards)
         {
-            Debug.Assert(cards.Count == 0, "HandHolder SetupHand called when hand size was not zero.");
+            Debug.Assert(Cards.Count == 0, "HandHolder SetupHand called when hand size was not zero.");
 
             cards.ForEach(c => MoveCard(c));
         }

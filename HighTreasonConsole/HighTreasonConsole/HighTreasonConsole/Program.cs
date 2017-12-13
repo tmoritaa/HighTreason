@@ -12,21 +12,9 @@ namespace HighTreasonConsole
     {
         static void Main(string[] args)
         {
-            Game game = new Game(new ChoiceHandler[] { new ConsolePlayerChoiceHandler(), new ConsolePlayerChoiceHandler() });
-            game.NotifyStateStart += () =>
-            {
-                System.Console.WriteLine("=========================================================================");
-                System.Console.WriteLine("Going to state " + game.CurState.GetType());
-                System.Console.WriteLine("=========================================================================");
-            };
-            game.NotifyPlayedCard += (Player.CardUsageParams cardUsage) =>
-            {
-                System.Console.WriteLine("Player " + game.CurPlayer.Side + " played " + cardUsage.card.Name + " as event at idx " + (int)cardUsage.misc[0]);
-            };
-            game.NotifyGameEnd += (Player.PlayerSide winningSide) =>
-            {
-                Console.WriteLine("Player " + winningSide + " won");
-            };
+            string jsonText = System.IO.File.ReadAllText("HighTreasonCardTexts.json");
+
+            Game game = new Game(new ChoiceHandler[] { new RandomAIChoiceHandler(), new RandomAIChoiceHandler() }, jsonText);
 
             game.StartGame();
 

@@ -1,0 +1,313 @@
+{
+	"Thomas McKay":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal any 2 different Traits.", "desc":"Select 2 different Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"+1 Guilt and 1-> to any one aspect.", "desc":"Select 1 aspect"}],
+		"summation":[{"type":"prosecution", "text":"2-> to the English aspect.", "desc":""}]
+	},
+	"John W. Astley":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 3 Occupation;", "desc":"Select 3 Occupation Traits"}, {"text":"OR 2 Religion.", "desc":"Select 2 Religion Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui and 1-> to any one aspect.", "desc":"Select 1 aspect"}],
+		"summation":[{"type":"prosecution", "text":"1-> each to any three aspects except French.", "desc":"Select 3 non-French Aspects"}]
+	},
+	"Doctor James Wallace":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 3 Occupation;", "desc":"Select 3 Occupation Traits"}, {"text":"OR 2 Religion.", "desc":"Select 2 Religion Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"-1 Ins and 1 P.MoI.", "desc":""}],
+		"summation":[{"type":"prosecution", "text":"2-> each to the English and Protestant aspects.", "desc":""}]
+	},
+	"Harold Ross":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 3 Occupation;", "desc":"Select 3 Occupation Traits"},{"text":"OR 4 Language.", "desc":"Select 4 Language Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"-1 Ins and 1-> to any one aspect;", "desc":""}, {"type":"neutral", "text":"OR <-2-> to any one aspect.", "desc":"Select 1 Aspect"}],
+		"summation":[{"type":"prosecution", "text":"2-> each to the English and Protestant aspects;", "desc":""}, {"type":"defense", "text":"OR <-1 each to the Farmer and French aspects.", "desc":""}]
+	},
+	"\"A Purely Constitutional Movement\"":{
+		"typing":"Defense Evidence",
+		"jury_selection":[{"text":"Reveal 1 Trait marker of each type.", "desc":"Select 1 Trait of each type"}],
+		"trial_in_chief":[{"type":"defense", "text":"Either +1 Ins and 1 D.MoI;", "desc":""}, {"type":"defense", "text":"OR <-2 to the Farmer and <-2 to the French aspects.", "desc":""}],
+		"summation":[{"type":"defense", "text":"+1 Ins", "desc":""}]
+	},
+	"William Tompkins":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 3 Occupation;", "desc":"Select 3 Occupation Traits"}, {"text":"OR 2 Language;", "desc":"Select 2 Language Traits"}, {"text":"OR 1 Religion.", "desc":"Select 1 Religion Trait"}],
+		"trial_in_chief":[{"type":"neutral", "text":"<-2-> to any Occupation Trait aspect, and 1 MoI", "desc":"Select 1 Occupation Aspect"}],
+		"summation":[{"type":"neutral", "text":"<-2-> to the Government aspect, and <-2-> to the Merchant aspect, with 1 in the opposite direction to the Farmer aspect.", "desc":""}]
+	},
+	"Council of the Exovedate":{
+		"typing":"Defense Testimony",
+		"jury_selection":[{"text":"Reveal any 2 Traits;", "desc":"Select any 2 Traits"}, {"text":"OR peek at any 1 Trait.", "desc":"Select any 1 Trait"}],
+		"trial_in_chief":[{"type":"neutral", "text":"Either <-2-> to the French aspect;", "desc":""}, {"type":"neutral", "text":"OR <-2-> to the English aspect;", "desc":""}, {"type":"neutral", "text":"OR <-1-> to the Merchant and Farmer aspects.", "desc":""}],
+		"summation":[{"type":"neutral", "text":"Either <-2-> to the French aspect;", "desc":""}, {"type":"neutral", "text":"OR <-2-> to the English aspect;", "desc":""}, {"type":"neutral", "text":"OR <-1-> to the Merchant and Farmer aspects.", "desc":""}]
+	},
+	"Father Vital Fourmond":{
+		"typing":"Defense Witness",
+		"jury_selection":[{"text":"Reveal any 2 Traits;", "desc":"Select any 2 Traits"},{"text":"OR peek at 1 Relgion.", "desc":"Select 1 Religion Trait"}],
+		"trial_in_chief":[{"type":"defense", "text":"Either +1 Ins;", "desc":""}, {"type":"neutral", "text":"OR peek at 3 Relgion Traits.", "desc":"Select 3 Religion Traits"}],
+		"summation":[{"type":"defense", "text":"+1 Ins", "desc":""}]
+	},
+	"Jailers":{
+		"typing":"Prosecution Allies",
+		"jury_selection":[{"text":"Peek at any 1 Trait marker.", "desc":"Select any 1 Trait"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"Either -1 Ins;"}, {"type":"neutral", "text":"OR discard this and any 1 or 2 other cards in your hand and redraw that many cards from the deck."}],
+		"summation":[{"type":"neutral", "text":"No special event"}]
+	},
+	"George Holmes Young":{
+		"typing":"Prosecution Witness",
+		"notes":"After playing this card during the Trial In Chief or Summation round, the Officers Recalled Card Events can be played.",
+		"jury_selection":[{"text":"Reveal 2 Occupation", "desc":"Select 2 Occupation Traits"}, {"text":"OR 1 Religion.", "desc":"Select 1 Religion Trait"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui and 1-> to any aspect.", "desc":"Select 1 aspect"}],
+		"summation":[{"type":"prosecution", "text":"1-> to all Occupation Traits.", "desc":""}]
+	},
+	"Gen. Frederick Middleton":{
+		"typing":"Prosecution Witness",
+		"notes":"After playing this card during the Trial or Summation round, the Officers Recalled Card Events can be played.",
+		"jury_selection":[{"text":"Reveal 1 aspect from each Trait.", "desc":"Select 1 Trait of each type"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui, 2-> to the English aspect, and 1-> to the Government aspect.", "desc":""}],
+		"summation":[{"type":"prosecution", "text":"2-> each to the Occupation Trait aspect, and 2-> to the English aspect, and 1-> to the Catholic aspect.", "desc":""}]
+	},
+	"Officers Recalled":{
+		"typing":"Rebuttal Testimony",
+		"notes":"Cannot use the Trial or Summation Events on this card unless either General Middleton or George Holmes Young have been played.",
+		"jury_selection":[{"text":"Reveal 4 Language.", "desc":"Select 4 Language Traits"}, {"text":"Reveal 3 Occupation.", "desc":"Select 3 Occupation Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"-1 Ins;", "desc":""}, {"type":"neutral", "text":"OR <-2-> to the Catholic aspect.", "desc":""}],
+		"summation":[{"type":"prosecution", "text":"-1 Ins.", "desc":""}]
+	},
+	"The Metis":{
+		"typing":"Defense Allies",
+		"jury_selection":[{"text":"Play this card last. Take any one card from Discard pile and reuse its Jury Selection ability", "desc":"Select a card in the Discard pile"}],
+		"trial_in_chief":[{"type":"defense", "text":"<-2 to the English aspect and <-3 to the French aspect.", "desc":""}],
+		"summation":[{"type":"defense", "text":"<-2 each to any three aspects except for 1-> to the Government and Merchant aspects.", "desc":""}]	
+	},
+	"Letter to Major Crozier":{
+		"typing":"Prosecution Evidence",
+		"jury_selection":[{"text":"Reveal 4 Occupation;", "desc":"Select 4 Occupation Traits"}, {"text":"OR 2 Religion.", "desc":"Select 2 Religion Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui and 1-> to any one aspect.", "desc":"Select 1 aspect"}],
+		"summation":[{"type":"prosecution", "text":"1-> each to any four aspects.", "desc":"Select 4 Aspects"}]
+	},
+	"Thomas Sanderson":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 2 Language;", "desc":"Select 2 Language Traits"}, {"text":"OR 1 Religion.", "desc":"Select 1 Religion Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui and 1-> to any one aspect;", "desc":"Select 1 aspect"}, {"type":"prosecution", "text":"OR 1-> to the Protestant aspect and 1-> to the Farmer aspect.", "desc":""}],
+		"summation":[{"type":"prosecution", "text":"2-> to the Protestant aspect.", "desc":""}]
+	},
+	"Robert Jefferson":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 2 Language;", "desc":"Select 2 Language Traits"}, {"text":"OR 2 Occupation.", "desc":"Select 2 Occupation Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"2-> to the Farmer aspect and 1-> to the Merchant aspect.", "desc":""}],
+		"summation":[{"type":"prosecution", "text":"2-> to the Merchant aspect.", "desc":""}]	
+	},
+	"George W. Burbidge":{
+		"typing":"Prosecution Attorney",
+		"jury_selection":[{"text":"If you are the prosecution, peek at 2 Traits; if you are the Defense, peek at 1 Trait.", "desc":"Select Traits to peek"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"Prosecution can play in reaction to cancel a Defense Event;", "desc":""}, 
+							{"type":"neutral", "text":"Play to remove all Sway markers affecting one aspect, and then <-2-> that aspect;", "desc":"Select an Aspect track"},
+							{"type":"neutral", "text":"Play to place 2 Sway markers (total) on any Juror(s), even locked ones.", "desc":"Select Jurors to place 2 Sway markers"}],
+		"summation":[{"type":"prosecution", "text":"Prosecution can play in reaction to cancel a Defense Event;", "desc":""}, 
+						{"type":"neutral", "text":"Place 2 Sway markers (total) on Unlocked Jurors (only);", "desc":"Select Jurors to place 2 Sway markers"},
+						{"type":"neutral", "text":"Play to remove all Sway markers affecting one Juror, even a Locked one, and then place one Sway marker on that Juror.", "desc":"Select a Juror"}]
+	},
+	"Lt. Col. David Lynch Scott":{
+		"typing":"Prosecution Attorney",
+		"jury_selection":[{"text":"If you are the prosecution, peek at 2 Traits; if you are the Defense, peek at 1 Trait.", "desc":"Select Traits to peek"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"Prosecution can play in reaction to cancel a Defense Event;", "desc":""}, 
+							{"type":"neutral", "text":"Play to remove all Sway markers affecting one aspect, and then <-2-> that aspect;", "desc":"Select an Aspect track"},
+							{"type":"neutral", "text":"Play to place 2 Sway markers (total) on any Juror(s), even locked ones.", "desc":"Select Jurors to place 2 Sway markers"}],
+		"summation":[{"type":"prosecution", "text":"Prosecution can play in reaction to cancel a Defense Event;", "desc":""}, 
+						{"type":"neutral", "text":"Place 2 Sway markers (total) on Unlocked Jurors (only);", "desc":"Select Jurors to place 2 Sway markers"},
+						{"type":"neutral", "text":"Play to remove all Sway markers affecting one Juror, even a Locked one, and then place one Sway marker on that Juror.", "desc":"Select a Juror"}]
+	},
+	"Britton Bath Osler":{
+		"typing":"Prosecution Attorney",
+		"jury_selection":[{"text":"If you are the prosecution, peek at 4 Traits; if you are the Defense, peek at 2 Trait.", "desc":"Select Traits to peek"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"Prosecution can play in reaction to cancel a Defense Event;", "desc":""}, 
+							{"type":"neutral", "text":"Play to remove all Sway markers affecting one aspect, and then <-2-> that aspect;", "desc":"Select an Aspect track"},
+							{"type":"neutral", "text":"Play to place 4 Sway markers (total) on any Juror(s), even locked ones.", "desc":"Select Jurors to place 4 Sway markers"}],
+		"summation":[{"type":"prosecution", "text":"Prosecution can play in reaction to cancel a Defense Event;", "desc":""}, 
+						{"type":"neutral", "text":"Place 4 Sway markers (total) on Unlocked Jurors (only);", "desc":"Select Jurors to place 4 Sway markers"},
+						{"type":"neutral", "text":"Play to remove all Sway markers affecting one Juror, even a Locked one, and then place one Sway marker on that Juror.", "desc":"Select a Juror"}]
+	},
+	"Thomas Chase-Casgrin":{
+		"typing":"Prosecution Attorney",
+		"jury_selection":[{"text":"If you are the prosecution, peek at 3 Traits; if you are the Defense, peek at 2 Trait.", "desc":"Select Traits to peek"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"Prosecution can play in reaction to cancel a Defense Event;", "desc":""}, 
+							{"type":"neutral", "text":"Play to remove all Sway markers affecting one aspect, and then <-2-> that aspect;", "desc":"Select an Aspect track"},
+							{"type":"neutral", "text":"Play to place 3 Sway markers (total) on any Juror(s), even locked ones.", "desc":"Select Jurors to place 3 Sway markers"}],
+		"summation":[{"type":"prosecution", "text":"Prosecution can play in reaction to cancel a Defense Event;", "desc":""}, 
+						{"type":"neutral", "text":"Place 3 Sway markers (total) on Unlocked Jurors (only);", "desc":"Select Jurors to place 3 Sway markers"},
+						{"type":"neutral", "text":"Play to remove all Sway markers affecting one Juror, even a Locked one, and then place one Sway marker on that Juror.", "desc":"Select a Juror"}]
+	},
+	"Christopher Robinson":{
+		"typing":"Prosecution Attorney",
+		"jury_selection":[{"text":"If you are the prosecution, peek at 4 Traits; if you are the Defense, peek at 2 Trait.", "desc":"Select Traits to peek"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"Prosecution can play in reaction to cancel a Defense Event;", "desc":""}, 
+							{"type":"neutral", "text":"Play to remove all Sway markers affecting one aspect, and then <-2-> that aspect;", "desc":"Select an Aspect track"},
+							{"type":"neutral", "text":"Play to place 4 Sway markers (total) on any Juror(s), even locked ones.", "desc":"Select Jurors to place 4 Sway markers"}],
+		"summation":[{"type":"prosecution", "text":"Prosecution can play in reaction to cancel a Defense Event;", "desc":""}, 
+						{"type":"neutral", "text":"Place 4 Sway markers (total) on Unlocked Jurors (only);", "desc":"Select Jurors to place 4 Sway markers"},
+						{"type":"neutral", "text":"Play to remove all Sway markers affecting one Juror, even a Locked one, and then place one Sway marker on that Juror.", "desc":"Select a Juror"}]
+	},
+	"Thomas Cooke Johnstone":{
+		"typing":"Defense Attorney",
+		"jury_selection":[{"text":"If you are the Defense, peek at 2 Traits; if you are the Prosecution, peek at 1 Trait.", "desc":"Select Traits to peek"}],
+		"trial_in_chief":[{"type":"defense", "text":"Defense can play in reaction to cancel a Prosecution Event;", "desc":""}, 
+							{"type":"neutral", "text":"Play to remove all Sway markers affecting one aspect, and then <-2-> that aspect;", "desc":"Select an Aspect track"},
+							{"type":"neutral", "text":"Play to place 2 Sway markers (total) on any Juror(s), even locked ones.", "desc":"Select Jurors to place 2 Sway markers"}],
+		"summation":[{"type":"defense", "text":"Defense can play in reaction to cancel a Prosecution Event;", "desc":""}, 
+						{"type":"neutral", "text":"Place 2 Sway markers (total) on Unlocked Jurors (only);", "desc":"Select Jurors to place 2 Sway markers"},
+						{"type":"neutral", "text":"Play to remove all Sway markers affecting one Juror, even a Locked one, and then place one Sway marker on that Juror.", "desc":"Select a Juror"}]
+	},
+	"Charles Fitzpatrick":{
+		"typing":"Defense Attorney",
+		"jury_selection":[{"text":"If you are the Defense, peek at 4 Traits; if you are the Prosecution, peek at 2 Trait.", "desc":"Select Traits to peek"}],
+		"trial_in_chief":[{"type":"defense", "text":"Defense can play in reaction to cancel a Prosecution Event;", "desc":""}, 
+							{"type":"neutral", "text":"Play to remove all Sway markers affecting one aspect, and then <-2-> that aspect;", "desc":"Select an Aspect track"},
+							{"type":"neutral", "text":"Play to place 4 Sway markers (total) on any Juror(s), even locked ones.", "desc":"Select Jurors to place 4 Sway markers"}],
+		"summation":[{"type":"defense", "text":"Defense can play in reaction to cancel a Prosecution Event;", "desc":""}, 
+						{"type":"neutral", "text":"Place 4 Sway markers (total) on Unlocked Jurors (only);", "desc":"Select Jurors to place 4 Sway markers"},
+						{"type":"neutral", "text":"Play to remove all Sway markers affecting one Juror, even a Locked one, and then place one Sway marker on that Juror.", "desc":"Select a Juror"}]
+	},
+	"James N. Greenshields":{
+		"typing":"Defense Attorney",
+		"jury_selection":[{"text":"If you are the Defense, peek at 4 Traits; if you are the Prosecution, peek at 2 Trait.", "desc":"Select Traits to peek"}],
+		"trial_in_chief":[{"type":"defense", "text":"Defense can play in reaction to cancel a Prosecution Event;", "desc":""}, 
+							{"type":"neutral", "text":"Play to remove all Sway markers affecting one aspect, and then <-2-> that aspect;", "desc":"Select an Aspect track"},
+							{"type":"neutral", "text":"Play to place 4 Sway markers (total) on any Juror(s), even locked ones.", "desc":"Select Jurors to place 4 Sway markers"}],
+		"summation":[{"type":"defense", "text":"Defense can play in reaction to cancel a Prosecution Event;", "desc":""}, 
+						{"type":"neutral", "text":"Place 4 Sway markers (total) on Unlocked Jurors (only);", "desc":"Select Jurors to place 4 Sway markers"},
+						{"type":"neutral", "text":"Play to remove all Sway markers affecting one Juror, even a Locked one, and then place one Sway marker on that Juror.", "desc":"Select a Juror"}]
+	},
+	"Francois-Xavier Lemieux":{
+		"typing":"Defense Attorney",
+		"jury_selection":[{"text":"If you are the Defense, peek at 5 Traits; if you are the Prosecution, peek at 3 Trait.", "desc":"Select Traits to peek"}],
+		"trial_in_chief":[{"type":"defense", "text":"Defense can play in reaction to cancel a Prosecution Event;", "desc":""}, 
+							{"type":"neutral", "text":"Play to remove all Sway markers affecting one aspect, and then <-2-> that aspect;", "desc":"Select an Aspect track"},
+							{"type":"neutral", "text":"Play to place 5 Sway markers (total) on any Juror(s), even locked ones.", "desc":"Select Jurors to place 5 Sway markers"}],
+		"summation":[{"type":"defense", "text":"Defense can play in reaction to cancel a Prosecution Event;", "desc":""}, 
+						{"type":"neutral", "text":"Place 5 Sway markers (total) on Unlocked Jurors (only);", "desc":"Select Jurors to place 5 Sway markers"},
+						{"type":"neutral", "text":"Play to remove all Sway markers affecting one Juror, even a Locked one, and then place one Sway marker on that Juror.", "desc":"Select a Juror"}]
+	},
+	"Dr. John H. Willoughby":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 1 Language;", "desc":"Select 1 Language Traits"}, {"text":"OR 2 Religion.", "desc":"Select 2 Religion Traits"}],
+		"trial_in_chief":[{"type":"defense", "text":"+1 Ins.", "desc":""}],
+		"summation":[{"type":"neutral", "text":"<-3-> to the Catholic aspect with 1 in the opposite direction to the Protestant aspect.", "desc":""}]
+	},
+	"Henry Walters":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 3 Language;", "desc":"Select 3 Language Traits"}, {"text":"OR 2 Occupation.", "desc":"Select 2 Occupation Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui and 1-> to any one aspect.", "desc":"Select 1 aspect"}, {"type":"defense", "text":"+1 Ins.", "desc":""}],
+		"summation":[{"type":"prosecution", "text":"3-> to the Merchant aspect.", "desc":""}]
+	},
+	"John B. Lash":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 3 Occupation;", "desc":"Select 3 Occupation Traits"}, {"text":"OR 1 Religion.", "desc":"Select 1 Religion Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui and 1-> to any one aspect.", "desc":"Select 1 aspect"}, {"type":"defense", "text":"+1 Ins.", "desc":""}],
+		"summation":[{"type":"prosecution", "text":"2-> to the Government aspect.", "desc":""}, {"type":"prosecution", "text":"-1 Ins.", "desc":""}]
+	},
+	"Peter Tomkins":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 2 Occupation;", "desc":"Select 2 Occupation Traits"}, {"text":"OR 1 Religion.", "desc":"Select 1 Religion Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui and 1-> to any one aspect;", "desc":"Select 1 aspect"}, {"type":"neutral", "text":"peek at all unrevealed Language Trait markers", "desc":""}],
+		"summation":[{"type":"prosecution", "text":"2-> to the French aspect.", "desc":""}]
+	},
+	"Thomas E. Jackson":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 4 Language;", "desc":"Select 4 Language Traits"}, {"text":"OR 3 Occupation.", "desc":"Select 3 Occupation Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui and 1-> to any one aspect;", "desc":"Select 1 aspect"}, 
+			{"type":"prosecution", "text":"2-> to the English aspect;", "desc":""},
+			{"type":"neutral", "text":"<-1-> to the Farmer aspect and <-1-> to the Government aspect.", "desc":""}],
+		"summation":[{"type":"neutral", "text":"1-> each to English and Government aspects, <-1 to the Farmer aspect, and <-2-> to the Merchant aspect.", "desc":""}]
+	},
+	"A Matter of $35000":{
+		"typing":"Prosecution Version",
+		"jury_selection":[{"text":"Reveal any 3 Traits.", "desc":"Select 3 Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"-1 Ins and 2-> to the French aspect.", "desc":""}],
+		"summation":[{"type":"prosecution", "text":"-1 Ins and 1-> each to French, Catholic, and Farmer aspects.", "desc":""}]
+	},
+	"Father Alexis Andre":{
+		"typing":"Neutral Witness",
+		"jury_selection":[{"text":"Reveal any 3 Traits.", "desc":"Select 3 Traits"}, {"text":"Peek at 2 Religion.", "desc":"Select 2 Religion Traits"}],
+		"trial_in_chief":[{"type":"neutral", "text":"<-2-> to the French aspect, and <-2-> to the Catholic aspect, and <-2-> to the Farmer aspect.", "desc":""}],
+		"summation":[{"type":"neutral", "text":"+1 OR -1 Ins", "desc":""}]
+	},
+	"Exovede":{
+		"typing":"Defense Testimony",
+		"jury_selection":[{"text":"Reveal 1 Occupation and 1 Language;", "desc":"Select 1 Occupation and 1 Religion Trait"}, {"text":"Reveal 2 Religion.", "desc":"Select 2 Religion Traits"}],
+		"trial_in_chief":[{"type":"neutral", "text":"<-2-> to the Protestant aspect, and <-1-> to the Catholic aspect.", "desc":""}],
+		"summation":[{"type":"neutral", "text":"<-1-> each to the Protestant and Catholic aspects.", "desc":""}]
+	},
+	"Charles Nolin":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal any 3 Traits.", "desc":"Select 3 Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"+1 Gui and 2-> to the English aspect and 1-> to all Occupation Traits;", "desc":""}, {"type":"neutral", "text":"+1 Gui and <-2-> to both Religion Traits.", "desc":""}],
+		"summation":[{"type":"prosecution", "text":"3-> to the English aspect and 1-> to all three Occupation Traits.", "desc":""}]
+	},
+	"Doctor Francois Roy":{
+		"typing":"Defense Witness",
+		"jury_selection":[{"text":"Peek at any 2 Traits.", "desc":"Select 2 Traits"}],
+		"trial_in_chief":[{"type":"defense", "text":"+1 Ins, <-2 to the French aspect, and <-2 each to the Protestant and Catholic aspects.", "desc":""}],
+		"summation":[{"type":"defense", "text":"+1 Ins;", "desc":""}, {"type":"defense", "text":"<-2 each to any three aspects except English;", "desc":"Select 3 non-English aspects"}]
+	},
+	"Doctor Daniel Clark":{
+		"typing":"Defense Witness",
+		"jury_selection":[{"text":"Reveal 3 Occupation.", "desc":"Select 3 Occupation Traits"}, {"text":"Reveal 2 Religion.", "desc":"Select 2 Religion Traits"}],
+		"trial_in_chief":[{"type":"defense", "text":"+1 Ins and <-2 each to the English aspect and either Religion Trait.", "desc":"Select 1 Religion Aspect Track"}],
+		"summation":[{"type":"defense", "text":"+1 Ins;", "desc":""}, {"type":"defense", "text":"Add 2 Defense Sway markers to each Unlocked Juror;", "desc":""}]
+	},
+	"Doctor Augustus Jukes":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 2 Language.", "desc":"Select 2 Language Traits"}, {"text":"Reveal 1 Occupation.", "desc":"Select 1 Occupation Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"-1 Ins.", "desc":""}],
+		"summation":[{"type":"neutral", "text":"No special event, just... 2 Sway markers, total, on Unlocked Jurors;", "desc":""}]
+	},
+	"Philip Garnot":{
+		"typing":"Defense Witness",
+		"jury_selection":[{"text":"Reveal 3 Language.", "desc":"Select 3 Language Traits"}, {"text":"Reveal 2 Occupation.", "desc":"Select 2 Occupation Traits"}],
+		"trial_in_chief":[{"type":"defense", "text":"+1 Ins and <-1 each to the French and the Catholic aspects.", "desc":""}],
+		"summation":[{"type":"defense", "text":"<-2 each to the French and Catholic aspects and <-1 to the Farmer aspect.", "desc":""}]
+	},
+	"Louis David Riel":{
+		"typing":"Defendant",
+		"jury_selection":[{"text":"Reveal any combination of up to 5 Traits, but no more than 3 from any single aspect.", "desc":"Select 5 Traits, up to 3 of any single Trait"}],
+		"trial_in_chief":[{"type":"neutral", "text":"+1 or -1 Ins and <-1-> each for one Language, one Religion, and one Occupation Aspect Track.", "desc":"Select 1 Language, 1 Religion, and 1 Occupation Aspect Track"}],
+		"summation":[{"type":"neutral", "text":"+1 or -1 Ins.", "desc":""}, {"type":"neutral", "text":"<-2-> each for any two Aspect Tracks.", "desc":"Select two Aspect Tracks"}]
+	},
+	"Hillyard Mitchell":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 3 Occupation;", "desc":"Select 3 Occupation Traits"}, {"text":"OR 3 Language;", "desc":"Select 3 Language Traits"}],
+		"trial_in_chief":[{"type":"neutral", "text":"Peek at any 2 Trait markers and 1 MoI", "desc":"Select 2 Traits"}],
+		"summation":[{"type":"prosecution", "text":"2-> to the Merchant aspect and 2-> to the Government aspect.", "desc":""}]
+	},
+	"George Ness":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 2 Occupation;", "desc":"Select 2 Occupation Traits"}, {"text":"OR 2 Religion;", "desc":"Select 2 Religion Traits"}],
+		"trial_in_chief":[{"type":"neutral", "text":"Peek at 2 Language Trait markers and 1 MoI", "desc":"Select 2 Language Traits"}],
+		"summation":[{"type":"neutral", "text":"<-2-> to the Farmer aspect, and <-2-> to Catholic aspect, with 1 in the opposite direction to the Protestant aspect.", "desc":""}]
+	},
+	"Reverend Charles Pitblado":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 2 Language;", "desc":"Select 2 Language Traits"}, {"text":"OR 1 Religion;", "desc":"Select 1 Religion Traits"}],
+		"trial_in_chief":[{"type":"prosecution", "text":"-1 Ins", "desc":""}, {"type":"prosecution", "text":"Peek at 2 Religion Trait markers and 1 P.MoI", "desc":"Select 2 Language Traits"}],
+		"summation":[{"type":"prosecution", "text":"2-> each to the English and Protestant aspects.", "desc":""}]
+	},
+	"Major Crozier":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 3 Language;", "desc":"Select 3 Language Traits"}, {"text":"OR 1 Religion;", "desc":"Select 1 Religion Traits"}],
+		"trial_in_chief":[{"type":"neutral", "text":"<-2-> to the Farmer aspect and 1 MoI", "desc":""}, {"type":"defense", "text":"<-2 to the French aspect and 1 D.MoI", "desc":""}],
+		"summation":[{"type":"neutral", "text":"-1 or +1 Gui and <-1-> to any aspect.", "desc":"Select 1 Aspect Track"}]
+	},
+	"\"Two Curses\"":{
+		"typing":"Prosecution Testimony",
+		"jury_selection":[{"text":"Reveal 3 Language;", "desc":"Select 3 Language Traits"}, {"text":"OR 2 Occupation.", "desc":"Select 2 Occupation Traits"}],
+		"trial_in_chief":[{"type":"neutral", "text":"Peek at all unrevealed Occupation Trait markers, and 1 MoI", "desc":""}],
+		"summation":[{"type":"neutral", "text":"1-> each to the Merchant and Government aspects, and <-2 to the Farmer aspect.", "desc":""}]
+	},
+	"George Kerr":{
+		"typing":"Prosecution Witness",
+		"jury_selection":[{"text":"Reveal 2 Occupation;", "desc":"Select 2 Occupation Traits"}, {"text":"OR 3 Language.", "desc":"Select 3 Language Traits"}],
+		"trial_in_chief":[{"type":"defense", "text":"<-2 to any one aspect and 1 D.MoI", "desc":"Select 1 Aspect Track"}],
+		"summation":[{"type":"defense", "text":"<-2 to the Merchant and <-1 to the English aspects.", "desc":""}]
+	}
+}
