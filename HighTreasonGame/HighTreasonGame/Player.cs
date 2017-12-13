@@ -87,21 +87,7 @@ namespace HighTreasonGame
 
         public override string ToString()
         {
-            string outStr = Side + " player:\n";
-
-            outStr += "Hand = \n";
-            foreach (Card card in Hand.Cards)
-            {
-                outStr += card.Template.Name + "\n";
-            }
-
-            outStr += "Summation = \n";
-            foreach (Card card in SummationDeck.Cards)
-            {
-                outStr += card.Template.Name + "\n";
-            }
-
-            return outStr;
+            return Side.ToString();
         }
     }
 }

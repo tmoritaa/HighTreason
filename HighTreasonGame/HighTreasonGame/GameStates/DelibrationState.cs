@@ -149,7 +149,7 @@ namespace HighTreasonGame.GameStates
             while (true)
             {
                 usedJury = chooseJuryChoice(juries, curPlayer, "Select Jury for Deliberation");
-                FileLogger.Instance.Log(curPlayer.Side + " chose " + usedJury + " for deliberation");
+                FileLogger.Instance.Log(curPlayer + " chose " + usedJury + " for deliberation");
 
                 int modValue = (curPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
                 List<BoardObject> choices = game.FindBO(
