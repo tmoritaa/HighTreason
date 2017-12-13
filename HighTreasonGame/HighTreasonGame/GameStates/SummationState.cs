@@ -53,7 +53,10 @@ namespace HighTreasonGame.GameStates
                     game.NotifyStartOfTurn();
                 }
 
-                performPlayerAction(curPlayer);
+                if (curPlayer.Hand.SelectableCards.Count > 0)
+                {
+                    performPlayerAction(curPlayer);
+                }
 
                 int numPlayersFinished = 0;
                 List<Player> players = game.GetPlayers();

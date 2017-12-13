@@ -43,7 +43,10 @@ namespace HighTreasonGame.GameStates
                     game.NotifyStartOfTurn();
                 }
 
-                performPlayerAction(curPlayer);
+                if (curPlayer.Hand.SelectableCards.Count > 2)
+                {
+                    performPlayerAction(curPlayer);
+                }
 
                 if (curPlayer.Hand.Cards.Count == 2)
                 {
@@ -51,7 +54,7 @@ namespace HighTreasonGame.GameStates
                     curPlayer.AddHandToSummation();
                 }
 
-                if (game.GetOtherPlayer(curPlayer).Hand.Cards.Count > 2)
+                if (game.GetOtherPlayer(curPlayer).Hand.Cards.Count >= 2)
                 {
                     passToNextPlayer();
                 }

@@ -126,7 +126,7 @@ namespace HighTreasonGame.GameStates
                 {
                     Card objectCard = boardChoices.SelectedCards.Keys.First();
 
-                    FileLogger.Instance.Log(curPlayer + " objected with " + objectCard.Template.Name);
+                    FileLogger.Instance.Log(curPlayer + " objected with " + objectCard.Template.Name + "\n");
 
                     game.Discards.MoveCard(objectCard);
                     objected = true;

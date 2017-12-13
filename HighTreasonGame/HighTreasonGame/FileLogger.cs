@@ -32,11 +32,6 @@ namespace HighTreasonGame
             file = new StreamWriter(filePath);
         }
 
-        ~FileLogger()
-        {
-            file.Close();
-        }
-
         public void SetPath(string str)
         {
             file.Close();
@@ -50,6 +45,7 @@ namespace HighTreasonGame
         public void Log(string str)
         {
             file.WriteLine(str);
+            file.Flush();
         }
 
         public void Close()

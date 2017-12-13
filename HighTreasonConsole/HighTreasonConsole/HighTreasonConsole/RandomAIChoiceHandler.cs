@@ -27,36 +27,40 @@ namespace HighTreasonConsole
                 outCardUsage.card = card;
 
                 List<CardTemplate.CardEffectPair> pairs = card.Template.SelectionEvents;
-                int modVal = 0;
+
                 if (game.CurState.StateType == GameState.GameStateType.JurySelection)
                 {
-                    pairs = card.Template.SelectionEvents.Where(p => p.Selectable(game, choosingPlayer)).ToList();
-                    modVal = pairs.Count;
+                    pairs = card.Template.SelectionEvents;
                 }
                 else if (game.CurState.StateType == GameState.GameStateType.TrialInChief)
                 {
-                    pairs = card.Template.TrialEvents.Where(p => p.Selectable(game, choosingPlayer)).ToList();
-                    modVal = pairs.Count + 1;
+                    pairs = card.Template.TrialEvents;
                 }
                 else if (game.CurState.StateType == GameState.GameStateType.Summation)
                 {
-                    pairs = card.Template.SummationEvents.Where(p => p.Selectable(game, choosingPlayer)).ToList();
-                    modVal = pairs.Count + 1;
+                    pairs = card.Template.SummationEvents;
                 }
 
-                if (pairs.Count == 0)
+                List<int> validIndices = new List<int>();
+                for (int i = 0; i < pairs.Count; ++i)
                 {
-                    if (game.CurState.StateType != GameState.GameStateType.JurySelection)
+                    if (pairs[i].Selectable(game, choosingPlayer))
                     {
-                        modVal = 1;
-                    }
-                    else
-                    {
-                        continue;
+                        validIndices.Add(i);
                     }
                 }
 
-                int idx = rand.Next() % modVal;
+                if (game.CurState.StateType != GameState.GameStateType.JurySelection)
+                {
+                    validIndices.Add(pairs.Count);
+                }
+
+                if (validIndices.Count == 0)
+                {
+                    continue;
+                }
+
+                int idx = rand.Next() % validIndices.Count;
                 if (idx == pairs.Count)
                 {
                     outCardUsage.usage = PlayerActionParams.UsageType.Action;
@@ -217,24 +221,15 @@ namespace HighTreasonConsole
             // swap
             else
             {
-                List<Card> cards = choosingPlayer.Hand.SelectableCards;
+                List<Card> handCards = choosingPlayer.Hand.SelectableCards;
+                List<Card> sumCards = choosingPlayer.SummationDeck.Cards;
 
-                int handCardIdx = rand.Next() % cards.Count;
-                int sumCardIdx = 0;
-
-                while (true)
-                {
-                    sumCardIdx = rand.Next() % cards.Count;
-
-                    if (sumCardIdx != handCardIdx)
-                    {
-                        break;
-                    }
-                }
-
+                int handCardIdx = rand.Next() % handCards.Count;
+                int sumCardIdx = rand.Next() % sumCards.Count;
+                
                 outMoIInfo.Use = BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Swap;
-                outMoIInfo.HandCard = cards[handCardIdx];
-                outMoIInfo.SummationCard = cards[sumCardIdx];
+                outMoIInfo.HandCard = handCards[handCardIdx];
+                outMoIInfo.SummationCard = sumCards[sumCardIdx];
             }
 
             return true;

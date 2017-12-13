@@ -106,7 +106,7 @@ namespace HighTreasonGame
                     },
                     (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
-                        choices.SelectedObjs.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(-2));
+                        choices.SelectedObjs.Keys.Cast<AspectTrack>().ToList().ForEach(t => t.AddToValue(-2));
 
                         findAspectTracksWithProp(game, Property.GovWorker, Property.Merchant).ForEach(t => t.AddToValue(1));
                     }));
