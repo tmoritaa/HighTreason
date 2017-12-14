@@ -7,9 +7,9 @@ using Newtonsoft.Json.Linq;
 
 namespace HighTreasonGame
 {
+    [CardTemplateAttribute]
     public class PurelyConstitutionalCardTemplate : CardTemplate
     {
-        [CardTemplateAttribute]
         public PurelyConstitutionalCardTemplate()
             : base("\"A Purely Constitutional Movement\"", 3, Player.PlayerSide.Defense)
         {}
