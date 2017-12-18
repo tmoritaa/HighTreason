@@ -49,11 +49,9 @@ namespace HighTreasonGame
         {
             TrialEvents.Add(
                 new CardEffectPair(
-                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer) =>
                     {
-                        BoardChoices choices = new BoardChoices();
-                        choices.NotCancelled = handleMomentOfInsightChoice(new Player.PlayerSide[] { Player.PlayerSide.Defense }, game, choosingPlayer, choiceHandler, out choices.MoIInfo);
-                        return choices;
+                        return handleMomentOfInsightChoice(new Player.PlayerSide[] { Player.PlayerSide.Defense }, game, choosingPlayer);
                     },
                     (Game game, Player choosingPlayer, BoardChoices choices) => 
                     {

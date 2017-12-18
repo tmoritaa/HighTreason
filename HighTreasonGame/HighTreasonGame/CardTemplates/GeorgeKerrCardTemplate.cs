@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 
 namespace HighTreasonGame
 {
-    [CardTemplateAttribute]
+    /*[CardTemplateAttribute]
     public class GeorgeKerrCardTemplate : CardTemplate
     {
         public GeorgeKerrCardTemplate()
@@ -61,5 +61,5 @@ namespace HighTreasonGame
                         findAspectTracksWithProp(game, Property.Merchant, Property.English).ForEach(t => t.AddToValue(t.Properties.Contains(Property.Merchant) ? -2 : -1));
                     }));
         }
-    }
+    }*/
 }

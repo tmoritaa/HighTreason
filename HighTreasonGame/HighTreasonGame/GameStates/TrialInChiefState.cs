@@ -13,7 +13,7 @@ namespace HighTreasonGame.GameStates
             : base(GameStateType.TrialInChief, _game)
         {}
 
-        public override void StartState()
+        public override void InitState()
         {
             if (game.StartState == this.StateType)
             {
@@ -24,43 +24,13 @@ namespace HighTreasonGame.GameStates
             }
 
             numVisits += 1;
-            base.StartState();
+            base.InitState();
         }
 
         public override void GotoNextState()
         {
             GameState.GameStateType nextStateType = (numVisits < 2) ? GameState.GameStateType.TrialInChief : GameState.GameStateType.Summation;
             game.SetNextState(nextStateType);
-        }
-
-        protected override void mainLoop()
-        {
-            int numPlayersFinished = 0;
-            while (numPlayersFinished < 2)
-            {
-                if (game.NotifyStartOfTurn != null)
-                {
-                    game.NotifyStartOfTurn();
-                }
-
-                if (curPlayer.Hand.SelectableCards.Count > 2)
-                {
-                    performPlayerAction(curPlayer);
-                }
-
-                if (curPlayer.Hand.Cards.Count == 2)
-                {
-                    numPlayersFinished += 1;
-                    curPlayer.AddHandToSummation();
-                }
-
-                if (game.GetOtherPlayer(curPlayer).Hand.Cards.Count >= 2)
-                {
-                    passToNextPlayer();
-                }
-            }
-
-            GotoNextState();
         }
     }
 }

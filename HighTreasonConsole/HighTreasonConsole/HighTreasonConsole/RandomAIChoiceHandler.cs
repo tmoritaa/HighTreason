@@ -10,20 +10,20 @@ namespace HighTreasonConsole
 {
     public class RandomAIChoiceHandler : ChoiceHandler
     {
+        protected Random random = new Random();
+
         public RandomAIChoiceHandler() : base(Player.PlayerType.AI)
         {
         }
 
         public override void ChoosePlayerAction(List<Card> cards, Game game, Player choosingPlayer, out PlayerActionParams outCardUsage)
         {
-            Random rand = new Random();
-
             outCardUsage = new PlayerActionParams();
 
             while (true)
             {
                 // Pick card
-                Card card = cards[rand.Next() % cards.Count];
+                Card card = cards[random.Next() % cards.Count];
                 outCardUsage.card = card;
 
                 List<CardTemplate.CardEffectPair> pairs = card.Template.SelectionEvents;
@@ -60,7 +60,7 @@ namespace HighTreasonConsole
                     continue;
                 }
 
-                int idx = rand.Next() % validIndices.Count;
+                int idx = validIndices[random.Next() % validIndices.Count];
                 if (idx == pairs.Count)
                 {
                     outCardUsage.usage = PlayerActionParams.UsageType.Action;
@@ -87,7 +87,6 @@ namespace HighTreasonConsole
             Dictionary<BoardObject, int> selected = new Dictionary<BoardObject, int>();
             List<BoardObject> remainingChoices = new List<BoardObject>(choices);
 
-            Random random = new Random();
             while (true)
             {
                 if (remainingChoices.Count <= 0)
@@ -141,7 +140,6 @@ namespace HighTreasonConsole
             Dictionary<Card, int> selected = new Dictionary<Card, int>();
             List<Card> remainingChoices = new List<Card>(choices);
 
-            Random random = new Random();
             while (true)
             {
                 if (remainingChoices.Count <= 0)
@@ -185,7 +183,6 @@ namespace HighTreasonConsole
 
         public override void ChooseCardEffect(Card card, Game game, Player choosingPlayer, string description, out BoardChoices.CardPlayInfo cardPlayInfo)
         {
-            Random rand = new Random();
             cardPlayInfo = new BoardChoices.CardPlayInfo();
 
             List<CardTemplate.CardEffectPair> pairs = card.Template.SelectionEvents;
@@ -202,7 +199,7 @@ namespace HighTreasonConsole
                 pairs = card.Template.SummationEvents;
             }
 
-            int idx = rand.Next() % pairs.Count;
+            int idx = random.Next() % pairs.Count;
             cardPlayInfo.eventIdx = idx;
         }
 
@@ -210,8 +207,7 @@ namespace HighTreasonConsole
         {
             outMoIInfo = new BoardChoices.MomentOfInsightInfo();
 
-            Random rand = new Random();
-            int choice = rand.Next() % 2;
+            int choice = random.Next() % 2;
 
             // reveal
             if (choice == 0)
@@ -224,8 +220,8 @@ namespace HighTreasonConsole
                 List<Card> handCards = choosingPlayer.Hand.SelectableCards;
                 List<Card> sumCards = choosingPlayer.SummationDeck.Cards;
 
-                int handCardIdx = rand.Next() % handCards.Count;
-                int sumCardIdx = rand.Next() % sumCards.Count;
+                int handCardIdx = random.Next() % handCards.Count;
+                int sumCardIdx = random.Next() % sumCards.Count;
                 
                 outMoIInfo.Use = BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.Swap;
                 outMoIInfo.HandCard = handCards[handCardIdx];

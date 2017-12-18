@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 
 namespace HighTreasonGame
 {
+    /*
     [CardTemplateAttribute]
     public class WilliamTompkinsCardTemplate : CardTemplate
     {
@@ -72,5 +73,5 @@ namespace HighTreasonGame
                         ats.ForEach(t => t.AddToValue(t.Properties.Contains(Property.Farmer) ? oppModVal : modVal));
                     }));
         }
-    }
+    }*/
 }

@@ -69,48 +69,47 @@ namespace HighTreasonGame
         {
             TrialEvents.Add(
                 new CardEffectPair(
-                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer) =>
                     {
                         List<BoardObject> bos = findAspectTracksWithProp(game).Cast<BoardObject>().ToList();
 
-                        BoardChoices boardChoices;
-                        choiceHandler.ChooseBoardObjects(
+                        return new Action(
+                            ChoiceHandler.ChoiceType.BoardObjects,
+                            choosingPlayer.ChoiceHandler,
                             bos,
-                            (Dictionary<BoardObject, int> selected) => { return true; },
-                            (List<BoardObject> choices, Dictionary<BoardObject, int> selected) =>
-                            {
-                                List<BoardObject> newChoices = new List<BoardObject>(choices);
-                                foreach (BoardObject obj in selected.Keys)
+                            (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return true; }),
+                            (Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>>)
+                                ((List<BoardObject> choices, Dictionary<BoardObject, int> selected) =>
                                 {
-                                    if (obj.Properties.Contains(Property.Religion))
+                                    List<BoardObject> newChoices = new List<BoardObject>(choices);
+                                    foreach (BoardObject obj in selected.Keys)
                                     {
-                                        newChoices = newChoices.Where(c => !c.Properties.Contains(Property.Religion)).ToList();
+                                        if (obj.Properties.Contains(Property.Religion))
+                                        {
+                                            newChoices = newChoices.Where(c => !c.Properties.Contains(Property.Religion)).ToList();
+                                        }
+
+                                        if (obj.Properties.Contains(Property.Occupation))
+                                        {
+                                            newChoices = newChoices.Where(c => !c.Properties.Contains(Property.Occupation)).ToList();
+                                        }
+
+                                        if (obj.Properties.Contains(Property.Language))
+                                        {
+                                            newChoices = newChoices.Where(c => !c.Properties.Contains(Property.Language)).ToList();
+                                        }
                                     }
 
-                                    if (obj.Properties.Contains(Property.Occupation))
-                                    {
-                                        newChoices = newChoices.Where(c => !c.Properties.Contains(Property.Occupation)).ToList();
-                                    }
-
-                                    if (obj.Properties.Contains(Property.Language))
-                                    {
-                                        newChoices = newChoices.Where(c => !c.Properties.Contains(Property.Language)).ToList();
-                                    }
-                                }
-
-                                return newChoices;
-                            },
-                            (Dictionary<BoardObject, int> selected) =>
-                            {
-                                return selected.Count == 3;
-                            },
+                                    return newChoices;
+                                }),
+                            (Func<Dictionary<BoardObject, int>, bool>)
+                                ((Dictionary<BoardObject, int> selected) =>
+                                {
+                                    return selected.Count == 3;
+                                }),
                             game,
                             choosingPlayer,
-                            this.CardInfo.TrialInChiefInfos[0].Description,
-                            out boardChoices);
-
-                        return boardChoices;
-
+                            this.CardInfo.TrialInChiefInfos[0].Description);
                     },
                     (Game game, Player choosingPlayer, BoardChoices boardChoices) =>
                     {

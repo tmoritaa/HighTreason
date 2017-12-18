@@ -37,7 +37,7 @@ namespace HighTreasonGame
         {
             SummationEvents.Add(
                 new CardEffectPair(
-                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer) =>
                     {
                         List<BoardObject> options = game.FindBO(
                             (BoardObject htgo) =>
@@ -47,21 +47,20 @@ namespace HighTreasonGame
                                 && ((Track)htgo).CanModify(1));
                             });
 
-                        BoardChoices boardChoices;
-                        choiceHandler.ChooseBoardObjects(
+                        return new Action(
+                            ChoiceHandler.ChoiceType.BoardObjects,
+                            choosingPlayer.ChoiceHandler,
                             options,
-                            (Dictionary<BoardObject, int> selected) => { return true; },
-                            (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
-                            {
-                                return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
-                            },
-                            (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 4; },
+                            (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return true; }),
+                            (Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>>)
+                                ((List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
+                                {
+                                    return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
+                                }),
+                            (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 4; }),
                             game,
                             choosingPlayer,
-                            this.CardInfo.SummationInfos[0].Description,
-                            out boardChoices);
-
-                        return boardChoices;
+                            this.CardInfo.SummationInfos[0].Description);
                     },
                     (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {

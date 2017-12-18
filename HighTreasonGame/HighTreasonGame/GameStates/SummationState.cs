@@ -11,8 +11,13 @@ namespace HighTreasonGame.GameStates
             : base(GameStateType.Summation, _game)
         {}
 
-        public override void StartState()
+        public override void InitState()
         {
+            foreach (var substate in substates.Values)
+            {
+                substate.Init();
+            }
+
             if (game.StartState == this.StateType)
             {
                 game.Board.Juries.RemoveRange(0, 6);
@@ -30,50 +35,17 @@ namespace HighTreasonGame.GameStates
             }
 
             curPlayer = game.GetPlayerOfSide(Player.PlayerSide.Prosecution);
+            CurSubstate = substates[typeof(PlayerActionChoiceSubstate)];
 
             if (game.NotifyStateStart != null)
             {
                 game.NotifyStateStart();
             }
-
-            mainLoop();
         }
 
         public override void GotoNextState()
         {
             game.SetNextState(GameState.GameStateType.Deliberation);
-        }
-
-        protected override void mainLoop()
-        {
-            while (true)
-            {
-                if (game.NotifyStartOfTurn != null)
-                {
-                    game.NotifyStartOfTurn();
-                }
-
-                if (curPlayer.Hand.SelectableCards.Count > 0)
-                {
-                    performPlayerAction(curPlayer);
-                }
-
-                int numPlayersFinished = 0;
-                List<Player> players = game.GetPlayers();
-                players.ForEach(p => numPlayersFinished += (p.Hand.Cards.Count == 0) ? 1 : 0);
-                if (numPlayersFinished == players.Count)
-                {
-                    break;
-                }
-
-                if ((curPlayer.Side == Player.PlayerSide.Prosecution && curPlayer.Hand.Cards.Count == 3) 
-                    || curPlayer.Hand.Cards.Count == 0)
-                {
-                    passToNextPlayer();
-                }
-            }
-
-            GotoNextState();
         }
     }
 }

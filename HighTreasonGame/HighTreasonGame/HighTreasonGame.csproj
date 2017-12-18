@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Action.cs" />
     <Compile Include="BoardObjects\AspectTrack.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="BoardChoices.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="GameStates\DelibrationState.cs" />
     <Compile Include="GameStates\JuryDismissalState.cs" />
     <Compile Include="GameStates\JurySelectionState.cs" />
+    <Compile Include="GameSubState.cs" />
     <Compile Include="GlobalRandom.cs" />
     <Compile Include="ChoiceHandler.cs" />
     <Compile Include="BoardObjects\EvidenceTrack.cs" />
@@ -121,6 +123,7 @@
     <Compile Include="HTUtility.cs" />
     <Compile Include="BoardObjects\Jury.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="PlayerActionParams.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GameStates\SummationState.cs" />
     <Compile Include="CardHolder\SummationDeckHolder.cs" />

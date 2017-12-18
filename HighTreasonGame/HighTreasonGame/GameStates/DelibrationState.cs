@@ -5,95 +5,106 @@ using System.Text;
 
 namespace HighTreasonGame.GameStates
 {
-    public class DelibrationState : GameState
+    public class DeliberationState : GameState
     {
-        public DelibrationState(Game _game) 
-            : base(GameStateType.Deliberation, _game)
-        {}
+        public Dictionary<Player.PlayerSide, bool> playerSidePassed = new Dictionary<Player.PlayerSide, bool>();
+        public BoardChoices juryChoice = null;
 
-        public override void StartState()
+        private class PrecalcSubstate : GameSubState
         {
-            if (game.StartState == this.StateType)
+            bool skipToGameEnd = false;
+
+            public PrecalcSubstate(GameState _parent) : base(_parent)
             {
-                game.Board.Juries.RemoveRange(0, 6);
             }
 
-            curPlayer = game.GetPlayerOfSide(Player.PlayerSide.Prosecution);
-
-            if (game.NotifyStateStart != null)
+            public override void PreRun(Game game, Player curPlayer)
             {
-                game.NotifyStateStart();
-            }
+                game.Board.Juries.ForEach(j => j.RevealAllTraits());
 
-            mainLogic();
-        }
+                EvidenceTrack guiltTrack = game.Board.GetGuiltTrack();
 
-        public override void GotoNextState()
-        {
-            game.SignifyEndGame();
-        }
-
-        private void handleGuiltTrackEffect(Game game)
-        {
-            EvidenceTrack guiltTrack = game.Board.GetGuiltTrack();
-            int modValue = guiltTrack.Value - 2;
-
-            if (modValue > 0)
-            {
-                List<Jury> unlockedJuries = game.Board.Juries.FindAll(j => !j.SwayTrack.IsLocked);
-                unlockedJuries.ForEach(j => j.SwayTrack.AddToValue(modValue));
-            }
-        }
-
-        private void handleInsanityTrackEffect(Game game)
-        {
-            EvidenceTrack insanityTrack = game.Board.GetInsanityTrack();
-            int modValue = (insanityTrack.Value - 1);
-
-            if (modValue > 0)
-            {
-                modValue *= -1;
-                game.Board.AspectTracks.ForEach(t => t.AddToValue(modValue));
-            }
-        }
-
-        private void mainLogic()
-        {
-            if (game.NotifyStartOfTurn != null)
-            {
-                game.NotifyStartOfTurn();
-            }
-
-            // Reveal all jury aspects.
-            foreach (Jury jury in game.Board.Juries)
-            {
-                jury.Aspects.ForEach(a => a.Reveal());
-            }
-
-            EvidenceTrack guiltTrack = game.Board.GetGuiltTrack();
-
-            if (guiltTrack.Value < 2)
-            {
-                if (game.NotifyGameEnd != null)
+                if (guiltTrack.Value < 2)
                 {
-                    game.NotifyGameEnd(Player.PlayerSide.Defense, true, 0);
+                    skipToGameEnd = true;
                 }
-                
-                goto GameEnd;
+
+                handleGuiltTrackEffect(game);
+                handleInsanityTrackEffect(game);
             }
 
-            handleGuiltTrackEffect(game);
-            handleInsanityTrackEffect(game);
+            public override Action RequestAction(Game game, Player curPlayer)
+            {
+                return null;
+            }
 
-            game.Board.Juries.ForEach(j => j.RevealAllTraits());
+            public override void HandleRequestAction(Action action)
+            {
+                // Do nothing.
+            }
 
-            List<Jury> usedJuries = new List<Jury>();
+            public override void RunRest(Game game, Player curPlayer)
+            {
+            }
 
-            Dictionary<Player.PlayerSide, bool> playerSidePassed = new Dictionary<Player.PlayerSide, bool>();
-            while (playerSidePassed.Count < 2)
+            public override void PrepareNextSubstate()
+            {
+                if (skipToGameEnd)
+                {
+                    parentState.SetNextSubstate(typeof(GameEndSubstate));
+                }
+                else
+                {
+                    parentState.SetNextSubstate(typeof(DeliberationJuryChoiceSubstate));
+                }
+            }
+
+            private void handleGuiltTrackEffect(Game game)
+            {
+                EvidenceTrack guiltTrack = game.Board.GetGuiltTrack();
+                int modValue = guiltTrack.Value - 2;
+
+                if (modValue > 0)
+                {
+                    List<Jury> unlockedJuries = game.Board.Juries.FindAll(j => !j.SwayTrack.IsLocked);
+                    unlockedJuries.ForEach(j => j.SwayTrack.AddToValue(modValue));
+                }
+            }
+
+            private void handleInsanityTrackEffect(Game game)
+            {
+                EvidenceTrack insanityTrack = game.Board.GetInsanityTrack();
+                int modValue = (insanityTrack.Value - 1);
+
+                if (modValue > 0)
+                {
+                    modValue *= -1;
+                    game.Board.AspectTracks.ForEach(t => t.AddToValue(modValue));
+                }
+            }
+        }
+
+        private class DeliberationJuryChoiceSubstate : GameSubState
+        {
+            private List<Jury> usedJuries = new List<Jury>();
+
+            public DeliberationJuryChoiceSubstate(GameState _parent) : base(_parent)
+            {
+            }
+
+            public override void PreRun(Game game, Player curPlayer)
+            {
+                ((DeliberationState)parentState).juryChoice = null;
+
+                if (game.NotifyStartOfTurn != null)
+                {
+                    game.NotifyStartOfTurn();
+                }
+            }
+
+            public override Action RequestAction(Game game, Player curPlayer)
             {
                 List<Jury> lockedJuries;
-
                 if (curPlayer.Side == Player.PlayerSide.Prosecution)
                 {
                     lockedJuries = game.Board.Juries.FindAll(j => j.SwayTrack.IsLocked && j.SwayTrack.Value == j.SwayTrack.MaxValue);
@@ -102,54 +113,88 @@ namespace HighTreasonGame.GameStates
                 {
                     lockedJuries = game.Board.Juries.FindAll(j => j.SwayTrack.IsLocked && j.SwayTrack.Value == j.SwayTrack.MinValue);
                 }
-
                 lockedJuries = lockedJuries.Except(usedJuries).ToList();
 
                 if (lockedJuries.Count > 0)
                 {
-                    Jury usedJury = performJuryForDeliberation(lockedJuries, curPlayer);
-
-                    usedJuries.Add(usedJury);
+                    return
+                    new Action(
+                        ChoiceHandler.ChoiceType.BoardObjects,
+                        curPlayer.ChoiceHandler,
+                        lockedJuries.Cast<BoardObject>().ToList(),
+                        (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return true; }),
+                        (Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>>)((List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
+                        {
+                            return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
+                        }),
+                        (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 1; }),
+                        game,
+                        curPlayer,
+                        "Select Jury for Deliberation");
                 }
                 else
                 {
-                    playerSidePassed[curPlayer.Side] = true;
+                    ((DeliberationState)parentState).playerSidePassed[curPlayer.Side] = true;
+                    return null;
                 }
+            }
 
-                if (!playerSidePassed.ContainsKey(game.GetOtherPlayer(curPlayer).Side))
+            public override void HandleRequestAction(Action action)
+            {
+                if (action != null)
                 {
-                    passToNextPlayer();
+                    ((DeliberationState)parentState).juryChoice = (BoardChoices)action.ChoiceResult;
                 }
             }
 
-            // Calculate winning player.
-            int totalScore = 0;
-            foreach (Jury jury in game.Board.Juries)
+            public override void RunRest(Game game, Player curPlayer)
             {
-                int score = jury.CalculateGuiltScore();
-                totalScore += score;
+                BoardChoices boardChoices = ((DeliberationState)parentState).juryChoice;
+                if (boardChoices != null && boardChoices.NotCancelled)
+                {
+                    Jury usedJury = (Jury)boardChoices.SelectedObjs.Keys.First();
+                    usedJuries.Add(usedJury);
+                    FileLogger.Instance.Log(curPlayer + " chose " + usedJury + " for deliberation");
+                }
+                else if (boardChoices == null)
+                {
+                    if (!((DeliberationState)parentState).playerSidePassed.ContainsKey(game.GetOtherPlayer(curPlayer).Side))
+                    {
+                        parentState.PassToNextPlayer();
+                    }
+                }
             }
 
-            Player.PlayerSide winningPlayer = totalScore >= GameConstants.PROSECUTION_SCORE_THRESHOLD ? Player.PlayerSide.Prosecution : Player.PlayerSide.Defense;
-
-            if (game.NotifyGameEnd != null)
+            public override void PrepareNextSubstate()
             {
-                game.NotifyGameEnd(winningPlayer, false, totalScore);
-            }
+                if (((DeliberationState)parentState).playerSidePassed.Count >= 2)
+                {
+                    parentState.SetNextSubstate(typeof(GameEndSubstate));
+                }
 
-            GameEnd:
-            {
-                GotoNextState();
+                BoardChoices boardChoices = ((DeliberationState)parentState).juryChoice;
+                if (boardChoices != null && boardChoices.NotCancelled)
+                {
+                    parentState.SetNextSubstate(typeof(DeliberationActionSelectSubstate));
+                }
             }
         }
 
-        private Jury performJuryForDeliberation(List<Jury> juries, Player curPlayer)
+        private class DeliberationActionSelectSubstate : GameSubState
         {
-            Jury usedJury;
-            while (true)
+            private BoardChoices boardChoices;
+
+            public DeliberationActionSelectSubstate(GameState _parent) : base(_parent)
+            {}
+
+            public override void PreRun(Game game, Player curPlayer)
             {
-                usedJury = chooseJuryChoice(juries, curPlayer, "Select Jury for Deliberation");
-                FileLogger.Instance.Log(curPlayer + " chose " + usedJury + " for deliberation");
+                // Do nothing.
+            }
+
+            public override Action RequestAction(Game game, Player curPlayer)
+            {
+                Jury usedJury = (Jury)((DeliberationState)parentState).juryChoice.SelectedObjs.Keys.First();
 
                 int modValue = (curPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
                 List<BoardObject> choices = game.FindBO(
@@ -162,18 +207,29 @@ namespace HighTreasonGame.GameStates
                         && ((Track)htgo).CanModifyByAction(modValue);
                     });
 
-                BoardChoices boardChoices;
-                curPlayer.ChoiceHandler.ChooseBoardObjects(choices,
+                return new Action(
+                    ChoiceHandler.ChoiceType.BoardObjects,
+                    curPlayer.ChoiceHandler,
+                    choices,
                     HTUtility.GenActionValidateChoicesFunc(usedJury.ActionPoints, usedJury),
                     HTUtility.GenActionFilterChoicesFunc(usedJury.ActionPoints, usedJury),
                     HTUtility.GenActionChoicesCompleteFunc(usedJury.ActionPoints, usedJury),
                     game,
                     curPlayer,
-                    "Select usage for " + usedJury.ActionPoints + " deliberation points",
-                    out boardChoices);
+                    "Select usage for " + usedJury.ActionPoints + " deliberation points");
+            }
 
+            public override void HandleRequestAction(Action action)
+            {
+                boardChoices = (BoardChoices)action.ChoiceResult;
+            }
+
+            public override void RunRest(Game game, Player curPlayer)
+            {
                 if (boardChoices.NotCancelled)
                 {
+                    int modValue = (curPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
+
                     string str = "";
                     foreach (BoardObject bo in boardChoices.SelectedObjs.Keys)
                     {
@@ -189,11 +245,109 @@ namespace HighTreasonGame.GameStates
                     }
                     FileLogger.Instance.Log(str);
 
-                    break;
+                    if (!((DeliberationState)parentState).playerSidePassed.ContainsKey(game.GetOtherPlayer(curPlayer).Side))
+                    {
+                        parentState.PassToNextPlayer();
+                    }
                 }
             }
 
-            return usedJury;
+            public override void PrepareNextSubstate()
+            {
+                parentState.SetNextSubstate(typeof(DeliberationJuryChoiceSubstate));
+            }
+        }
+
+        private class GameEndSubstate : GameSubState
+        {
+            public GameEndSubstate(GameState parent) : base(parent)
+            { }
+
+            public override void PreRun(Game game, Player curPlayer)
+            {
+                EvidenceTrack guiltTrack = game.Board.GetGuiltTrack();
+
+                if (guiltTrack.Value < 2)
+                {
+                    if (game.NotifyGameEnd != null)
+                    {
+                        game.NotifyGameEnd(Player.PlayerSide.Defense, true, 0);
+                    }
+
+                    return;
+                }
+
+                // Calculate winning player.
+                int totalScore = 0;
+                foreach (Jury jury in game.Board.Juries)
+                {
+                    int score = jury.CalculateGuiltScore();
+                    totalScore += score;
+                }
+
+                Player.PlayerSide winningPlayer = totalScore >= GameConstants.PROSECUTION_SCORE_THRESHOLD ? Player.PlayerSide.Prosecution : Player.PlayerSide.Defense;
+
+                if (game.NotifyGameEnd != null)
+                {
+                    game.NotifyGameEnd(winningPlayer, false, totalScore);
+                }
+            }
+
+            public override void HandleRequestAction(Action action)
+            {
+                // Do nothing.
+            }
+
+            public override Action RequestAction(Game game, Player curPlayer)
+            {
+                return null;
+            }
+
+            public override void RunRest(Game game, Player curPlayer)
+            {
+                parentState.SignifyStateEnd();
+            }
+
+            public override void PrepareNextSubstate()
+            {
+                // Do nothing.
+            }
+        }
+
+        public DeliberationState(Game _game) 
+            : base(GameStateType.Deliberation, _game)
+        {}
+
+        public override void InitState()
+        {
+            base.InitState();
+
+            if (game.StartState == this.StateType)
+            {
+                game.Board.Juries.RemoveRange(0, 6);
+            }
+
+            curPlayer = game.GetPlayerOfSide(Player.PlayerSide.Prosecution);
+
+            CurSubstate = substates[typeof(PrecalcSubstate)];
+
+            if (game.NotifyStateStart != null)
+            {
+                game.NotifyStateStart();
+            }
+        }
+
+        public override void GotoNextState()
+        {
+            game.SignifyEndGame();
+        }
+
+        protected override void initSubStates(GameState parent)
+        {
+            substates.Add(typeof(PrecalcSubstate), new PrecalcSubstate(this));
+            substates.Add(typeof(DeliberationJuryChoiceSubstate), new DeliberationJuryChoiceSubstate(this));
+            substates.Add(typeof(DeliberationActionSelectSubstate), new DeliberationActionSelectSubstate(this));
+            substates.Add(typeof(GameEndSubstate), new GameEndSubstate(this));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HighTreasonGame.GameStates
 {
@@ -12,29 +13,6 @@ namespace HighTreasonGame.GameStates
         public override void GotoNextState()
         {
             game.SetNextState(GameState.GameStateType.JuryDismissal);
-        }
-
-        protected override void mainLoop()
-        {
-            int numPlayersFinished = 0;
-            while (numPlayersFinished < game.GetPlayers().Count)
-            {
-                if (game.NotifyStartOfTurn != null)
-                {
-                    game.NotifyStartOfTurn();
-                }
-
-                performPlayerAction(curPlayer);
-
-                if (curPlayer.Hand.Cards.Count == 2)
-                {
-                    numPlayersFinished += 1;
-                    curPlayer.AddHandToSummation();
-                    passToNextPlayer();
-                }
-            }
-            
-            GotoNextState();
         }
     }
 }

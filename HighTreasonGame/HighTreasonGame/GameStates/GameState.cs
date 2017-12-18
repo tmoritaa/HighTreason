@@ -16,11 +16,18 @@ namespace HighTreasonGame
             Deliberation,
         }
 
-        protected Game game;
-
-        protected Player curPlayer;
-
         public GameStateType StateType
+        {
+            get; protected set;
+        }
+
+        protected Game game;
+        protected Player curPlayer;
+        protected Dictionary<Type, GameSubState> substates = new Dictionary<Type, GameSubState>();
+
+        protected bool stateEnded = false;
+
+        public GameSubState CurSubstate
         {
             get; protected set;
         }
@@ -29,42 +36,78 @@ namespace HighTreasonGame
         {
             game = _game;
             StateType = _stateType;
+            initSubStates(this);
         }
 
         public abstract void GotoNextState();
-        public abstract void StartState();
 
-        protected void passToNextPlayer()
+        public virtual void InitState()
+        {
+            foreach (var substate in substates.Values)
+            {
+                substate.Init();
+            }
+        }
+
+        public Action Start()
+        {
+            CurSubstate.PreRun(game, curPlayer);
+            return CurSubstate.RequestAction(game, curPlayer);
+        }
+
+        public Action Continue(Action action)
+        {
+            Action response = action;
+            while (!stateEnded)
+            {
+                CurSubstate.HandleRequestAction(response);
+                CurSubstate.RunRest(game, curPlayer);
+                CurSubstate.PrepareNextSubstate();
+
+                if (stateEnded)
+                {
+                    break;
+                }
+
+                CurSubstate.PreRun(game, curPlayer);
+                Action a = CurSubstate.RequestAction(game, curPlayer);
+                if (a != null)
+                {
+                    return a;
+                }
+                else
+                {
+                    response = null;
+                }
+            }
+
+            GotoNextState();
+            if (game.GameEnd)
+            {
+                return null;
+            }
+            else
+            {
+                
+                return game.CurState.Start();
+            }
+        }
+
+        public void SetNextSubstate(Type type)
+        {
+            CurSubstate = substates[type];
+        }
+
+        public void SignifyStateEnd()
+        {
+            stateEnded = true;
+        }
+
+        public void PassToNextPlayer()
         {
             curPlayer = game.GetOtherPlayer(curPlayer);
         }
 
-        protected Jury chooseJuryChoice(List<Jury> juries, Player curPlayer, string desc)
-        {
-            Jury jury = null;
-            while (jury == null)
-            {
-                BoardChoices boardChoices;
-                curPlayer.ChoiceHandler.ChooseBoardObjects(
-                    juries.Cast<BoardObject>().ToList(),
-                    (Dictionary<BoardObject, int> selected) => { return true; },
-                    (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
-                    {
-                        return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
-                    },
-                    (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 1; },
-                    game,
-                    curPlayer,
-                    desc,
-                    out boardChoices);
-
-                if (boardChoices.NotCancelled)
-                {
-                    jury = (Jury)boardChoices.SelectedObjs.Keys.First();
-                }
-            }
-
-            return jury;
-        }
+        protected abstract void initSubStates(GameState parent);
     }
 }

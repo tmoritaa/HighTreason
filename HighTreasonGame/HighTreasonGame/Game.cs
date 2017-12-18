@@ -11,7 +11,7 @@ namespace HighTreasonGame
     {
         public delegate void StateStartEvent();
         public delegate void StartOfTurnEvent();
-        public delegate void PlayedCardEvent(ChoiceHandler.PlayerActionParams usageParams);
+        public delegate void PlayedCardEvent(PlayerActionParams usageParams);
         public delegate void GameEndEvent(Player.PlayerSide winningPlayerSide, bool winByNotEnoughGuilt, int finalScore);
 
         public StateStartEvent NotifyStateStart;
@@ -51,7 +51,10 @@ namespace HighTreasonGame
 
         public bool OfficersRecalledPlayable = false;
 
-        private bool gameEnd = false;
+        public bool GameEnd
+        {
+            get; private set;
+        }
 
         public Game(ChoiceHandler[] playerChoiceHandlers, string cardInfoJson, GameState.GameStateType startState=GameState.GameStateType.JurySelection)
         {
@@ -80,24 +83,26 @@ namespace HighTreasonGame
             initStates();
         }
 
-        public void StartGame()
+        public Action Start()
         {
             SetNextState(StartState);
+            return CurState.Start();
+        }
 
-            while (!gameEnd)
-            {
-                CurState.StartState();
-            }
+        public Action Continue(Action action)
+        {
+            return CurState.Continue(action);
         }
 
         public void SetNextState(GameState.GameStateType stateType)
         {
             CurState = states[stateType];
+            CurState.InitState();
         }
 
         public void SignifyEndGame()
         {
-            gameEnd = true;
+            GameEnd = true;
         }
 
         public List<Player> GetPlayers()
@@ -159,7 +164,7 @@ namespace HighTreasonGame
             states.Add(GameState.GameStateType.JuryDismissal, new JuryDismissalState(this));
             states.Add(GameState.GameStateType.TrialInChief, new TrialInChiefState(this));
             states.Add(GameState.GameStateType.Summation, new SummationState(this));
-            states.Add(GameState.GameStateType.Deliberation, new DelibrationState(this));
+            states.Add(GameState.GameStateType.Deliberation, new DeliberationState(this));
         }
 
         private void logStartOfState()

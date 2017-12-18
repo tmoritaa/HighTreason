@@ -9,7 +9,7 @@ namespace HighTreasonGame
 {
     public abstract class CardTemplate
     {
-        public delegate BoardChoices CardChoice(Game game, Player choosingPlayer, ChoiceHandler choiceHandler);
+        public delegate Action CardChoice(Game game, Player choosingPlayer);
         public delegate void CardEffect(Game game, Player choosingPlayer, BoardChoices choices);
 
         public class CardEffectPair
@@ -156,28 +156,38 @@ namespace HighTreasonGame
 
         #region Choice Utility
 
-        protected BoardChoices doNothingChoice(Game game, Player choosingPlayer, ChoiceHandler choiceHandler)
+        protected Action doNothingChoice(Game game, Player choosingPlayer)
         {
-            BoardChoices choices = new BoardChoices();
-            return choices;
+            return new Action(
+                ChoiceHandler.ChoiceType.DoNothing,
+                choosingPlayer.ChoiceHandler,
+                new BoardChoices());
         }
 
-        protected bool handleMomentOfInsightChoice(Player.PlayerSide[] supportedSides, Game game, Player choosingPlayer, ChoiceHandler choiceHandler, out BoardChoices.MomentOfInsightInfo moiInfo)
+        protected Action handleMomentOfInsightChoice(Player.PlayerSide[] supportedSides, Game game, Player choosingPlayer)
         {
-            moiInfo = new BoardChoices.MomentOfInsightInfo();
             if (!supportedSides.Contains(choosingPlayer.Side))
             {
-                moiInfo.Use = BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.NotChosen;
-                return true;
+                BoardChoices choices = new BoardChoices();
+                choices.MoIInfo.Use = BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.NotChosen;
+
+                return new Action(
+                    ChoiceHandler.ChoiceType.DoNothing,
+                    choosingPlayer.ChoiceHandler,
+                    choices);
             }
 
-            return choiceHandler.ChooseMomentOfInsightUse(game, choosingPlayer, out moiInfo);
+            return new Action(
+                ChoiceHandler.ChoiceType.MoI,
+                choosingPlayer.ChoiceHandler,
+                game,
+                choosingPlayer);
         }
 
         protected CardChoice genAspectTrackForModCardChoice(HashSet<Property> optionProps, int numChoices, int modValue, bool affectedByPlayerSide, string desc)
         {
             return
-                (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
+                (Game game, Player choosingPlayer) =>
                 {
                     List<BoardObject> options = game.FindBO(
                         (BoardObject htgo) =>
@@ -196,20 +206,20 @@ namespace HighTreasonGame
                             return valid && ((Track)htgo).CanModify(mod);
                         });
 
-                    BoardChoices boardChoices;
-                    choiceHandler.ChooseBoardObjects(options,
-                        (Dictionary<BoardObject, int> selected) => { return true; },
-                        (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
-                        {
-                            return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
-                        },
-                        (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == numChoices; },
+                    return new Action(
+                        ChoiceHandler.ChoiceType.BoardObjects,
+                        choosingPlayer.ChoiceHandler,
+                        options,
+                        (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return true; }),
+                        (Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>>)
+                            ((List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
+                            {
+                                return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
+                            }),
+                        (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == numChoices; }),
                         game,
                         choosingPlayer,
-                        desc,
-                        out boardChoices);
-
-                    return boardChoices;
+                        desc);
                 };
         }
 
@@ -221,7 +231,7 @@ namespace HighTreasonGame
             Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices = null)
         {
             return
-                (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
+                (Game game, Player choosingPlayer) =>
                 {
                     List<BoardObject> options = game.FindBO(
                         (BoardObject htgo) =>
@@ -239,8 +249,10 @@ namespace HighTreasonGame
                             return valid && (isReveal ? !((Jury.JuryAspect)htgo).IsRevealed : !((Jury.JuryAspect)htgo).IsVisibleToPlayer(choosingPlayer.Side));
                         });
 
-                    BoardChoices boardChoices;
-                    choiceHandler.ChooseBoardObjects(options,
+                    return new Action(
+                        ChoiceHandler.ChoiceType.BoardObjects,
+                        choosingPlayer.ChoiceHandler,
+                        options,
                         validateChoices != null ? validateChoices :
                         (Dictionary<BoardObject, int> selected) => { return true; },
                         filterChoices != null ? filterChoices :
@@ -248,13 +260,11 @@ namespace HighTreasonGame
                         {
                             return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
                         },
-                        (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == numChoices; },
+                        (Func<Dictionary<BoardObject, int>, bool>)
+                            ((Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == numChoices; }),
                         game,
                         choosingPlayer,
-                        desc,
-                        out boardChoices);
-
-                    return boardChoices;
+                        desc);
                 };
         }
 
@@ -332,12 +342,12 @@ namespace HighTreasonGame
         protected CardEffectPair genAttorneyJurySelectPeekEffectPair(int sameSideVal, int oppSideVal, int infoIdx)
         {
             return new CardEffectPair(
-                    (Game game, Player choosingPlayer, ChoiceHandler handler) =>
+                    (Game game, Player choosingPlayer) =>
                     {
                         int numChoices = (choosingPlayer.Side == side) ? sameSideVal : oppSideVal;
 
                         CardChoice func = genRevealOrPeakCardChoice(new HashSet<Property>() { }, numChoices, false, this.CardInfo.JurySelectionInfos[infoIdx].Description);
-                        return func(game, choosingPlayer, handler);
+                        return func(game, choosingPlayer);
                     },
                     peekAllAspects);
         }
@@ -345,28 +355,29 @@ namespace HighTreasonGame
         protected CardEffectPair genAttorneyTrialAspectClearEffectPair(int modVal, int infoIdx)
         {
             return new CardEffectPair(
-                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer) =>
                     {
                         List<AspectTrack> tracks = findAspectTracksWithProp(game);
 
-                        BoardChoices boardChoices;
-                        choiceHandler.ChooseBoardObjects(
+                        return new Action(
+                            ChoiceHandler.ChoiceType.BoardObjects,
+                            choosingPlayer.ChoiceHandler,
                             tracks.Cast<BoardObject>().ToList(),
-                            (Dictionary<BoardObject, int> selected) => { return true; },
-                            (List<BoardObject> choices, Dictionary<BoardObject, int> selected) =>
-                            {
-                                return choices;
-                            },
-                            (Dictionary<BoardObject, int> selected) =>
-                            {
-                                return selected.Count == 1;
-                            },
+                            (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return true; }),
+                            (Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>>)
+                                ((List<BoardObject> choices, Dictionary<BoardObject, int> selected) =>
+                                {
+                                    return choices;
+                                }),
+                            (Func<Dictionary<BoardObject, int>, bool>)
+                                ((Dictionary<BoardObject, int> selected) =>
+                                {
+                                    return selected.Count == 1;
+                                }),
                             game,
                             choosingPlayer,
-                            this.CardInfo.TrialInChiefInfos[infoIdx].Description,
-                            out boardChoices);
-
-                        return boardChoices;
+                            this.CardInfo.TrialInChiefInfos[infoIdx].Description
+                            );
                     },
                     (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
@@ -380,7 +391,7 @@ namespace HighTreasonGame
         protected CardEffectPair genAttorneyTrialAddSwayEffectPair(int infoIdx)
         {
             return new CardEffectPair(
-                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer) =>
                     {
                         List<BoardObject> bos = game.FindBO(
                             (BoardObject bo) =>
@@ -391,30 +402,32 @@ namespace HighTreasonGame
                                     && bo.Properties.Contains(Property.Jury);
                             });
 
-                        BoardChoices boardChoices;
-                        choiceHandler.ChooseBoardObjects(
+                        return new Action(
+                            ChoiceHandler.ChoiceType.BoardObjects,
+                            choosingPlayer.ChoiceHandler,
                             bos,
-                            (Dictionary<BoardObject, int> selected) =>
-                            {
-                                int actionPtsLeft = ActionPts - HTUtility.CalcActionPtUsage(selected);
-                                return (actionPtsLeft >= 0);
-                            },
-                            (List<BoardObject> choicesLeft, Dictionary<BoardObject, int> selected) =>
-                            {
-                                return choicesLeft.FindAll(t =>
-                                    (choosingPlayer.Side == Player.PlayerSide.Prosecution) ? !((SwayTrack)t).IsLockedByProsecution : !((SwayTrack)t).IsLockedByDefense);
-                            },
-                            (Dictionary<BoardObject, int> selected) =>
-                            {
-                                int actionPtsLeft = ActionPts - HTUtility.CalcActionPtUsage(selected);
-                                return (actionPtsLeft == 0);
-                            },
+                            (Func<Dictionary<BoardObject, int>, bool>)
+                                ((Dictionary<BoardObject, int> selected) =>
+                                {
+                                    int actionPtsLeft = ActionPts - HTUtility.CalcActionPtUsage(selected);
+                                    return (actionPtsLeft >= 0);
+                                }),
+                            (Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>>)
+                                ((List<BoardObject> choicesLeft, Dictionary<BoardObject, int> selected) =>
+                                {
+                                    return choicesLeft.FindAll(t =>
+                                        (choosingPlayer.Side == Player.PlayerSide.Prosecution) ? !((SwayTrack)t).IsLockedByProsecution : !((SwayTrack)t).IsLockedByDefense);
+                                }),
+                            (Func<Dictionary<BoardObject, int>, bool>)
+                                ((Dictionary<BoardObject, int> selected) =>
+                                {
+                                    int actionPtsLeft = ActionPts - HTUtility.CalcActionPtUsage(selected);
+                                    return (actionPtsLeft == 0);
+                                }),
                             game,
                             choosingPlayer,
-                            this.CardInfo.TrialInChiefInfos[infoIdx].Description,
-                            out boardChoices);
-
-                        return boardChoices;
+                            this.CardInfo.TrialInChiefInfos[infoIdx].Description
+                            );
                     },
                     (Game game, Player choosingPlayer, BoardChoices boardChoices) =>
                     {
@@ -430,7 +443,7 @@ namespace HighTreasonGame
         protected CardEffectPair genAttorneySummationAddSwayEffectPair(int infoIdx)
         {
             return new CardEffectPair(
-                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer) =>
                     {
                         List<BoardObject> bos = game.FindBO(
                             (BoardObject bo) =>
@@ -441,29 +454,30 @@ namespace HighTreasonGame
                                     && !((SwayTrack)bo).IsLocked;
                             });
 
-                        BoardChoices boardChoices;
-                        choiceHandler.ChooseBoardObjects(
+                        return new Action(
+                            ChoiceHandler.ChoiceType.BoardObjects,
+                            choosingPlayer.ChoiceHandler,
                             bos,
-                            (Dictionary<BoardObject, int> selected) =>
-                            {
-                                int actionPtsLeft = ActionPts - HTUtility.CalcActionPtUsage(selected);
-                                return (actionPtsLeft >= 0);
-                            },
-                            (List<BoardObject> choicesLeft, Dictionary<BoardObject, int> selected) =>
-                            {
-                                return choicesLeft.FindAll(t => !((SwayTrack)t).IsLocked);
-                            },
-                            (Dictionary<BoardObject, int> selected) =>
-                            {
-                                int actionPtsLeft = ActionPts - HTUtility.CalcActionPtUsage(selected);
-                                return (actionPtsLeft == 0);
-                            },
+                            (Func<Dictionary<BoardObject, int>, bool>)
+                                ((Dictionary<BoardObject, int> selected) =>
+                                {
+                                    int actionPtsLeft = ActionPts - HTUtility.CalcActionPtUsage(selected);
+                                    return (actionPtsLeft >= 0);
+                                }),
+                            (Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>>)
+                                ((List<BoardObject> choicesLeft, Dictionary<BoardObject, int> selected) =>
+                                {
+                                    return choicesLeft.FindAll(t => !((SwayTrack)t).IsLocked);
+                                }),
+                            (Func<Dictionary<BoardObject, int>, bool>)
+                                ((Dictionary<BoardObject, int> selected) =>
+                                {
+                                    int actionPtsLeft = ActionPts - HTUtility.CalcActionPtUsage(selected);
+                                    return (actionPtsLeft == 0);
+                                }),
                             game,
                             choosingPlayer,
-                            this.CardInfo.SummationInfos[infoIdx].Description,
-                            out boardChoices);
-
-                        return boardChoices;
+                            this.CardInfo.SummationInfos[infoIdx].Description);
                     },
                     (Game game, Player choosingPlayer, BoardChoices boardChoices) =>
                     {
@@ -479,7 +493,7 @@ namespace HighTreasonGame
         protected CardEffectPair genAttorneySummationClearSwayEffectPair(int infoIdx)
         {
             return new CardEffectPair(
-                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer) =>
                     {
                         List<BoardObject> bos = game.FindBO(
                             (BoardObject bo) =>
@@ -489,21 +503,21 @@ namespace HighTreasonGame
                                     && bo.Properties.Contains(Property.Jury);
                             });
 
-                        BoardChoices boardChoices;
-                        choiceHandler.ChooseBoardObjects(
+                        return new Action(
+                            ChoiceHandler.ChoiceType.BoardObjects,
+                            choosingPlayer.ChoiceHandler,
                             bos,
-                            (Dictionary<BoardObject, int> selected) => { return true; },
-                            (List<BoardObject> choicesLeft, Dictionary<BoardObject, int> selected) => { return choicesLeft; },
-                            (Dictionary<BoardObject, int> selected) =>
-                            {
-                                return selected.Count == 1;
-                            },
+                            (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return true; }),
+                            (Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>>)
+                                ((List<BoardObject> choicesLeft, Dictionary<BoardObject, int> selected) => { return choicesLeft; }),
+                            (Func<Dictionary<BoardObject, int>, bool>)
+                                ((Dictionary<BoardObject, int> selected) =>
+                                {
+                                    return selected.Count == 1;
+                                }),
                             game,
                             choosingPlayer,
-                            this.CardInfo.SummationInfos[infoIdx].Description,
-                            out boardChoices);
-
-                        return boardChoices;
+                            this.CardInfo.SummationInfos[infoIdx].Description);
                     },
                     (Game game, Player choosingPlayer, BoardChoices boardChoices) =>
                     {

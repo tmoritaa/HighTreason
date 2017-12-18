@@ -5,6 +5,7 @@ using System.Text;
 
 namespace HighTreasonGame
 {
+    /*
     [CardTemplateAttribute]
     public class TheMetisCardTemplate : CardTemplate
     {
@@ -16,7 +17,7 @@ namespace HighTreasonGame
         {
             SelectionEvents.Add(
                 new CardEffectPair(
-                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer) =>
                     {
                         BoardChoices boardChoices;
 
@@ -40,7 +41,7 @@ namespace HighTreasonGame
                             if (boardChoices.NotCancelled)
                             {
                                 int idx = boardChoices.PlayInfo.eventIdx;
-                                boardChoices.PlayInfo.resultBoardChoice = card.Template.SelectionEvents[idx].CardChoice(game, choosingPlayer, choiceHandler);
+                                boardChoices.PlayInfo.resultBoardChoice = card.Template.SelectionEvents[idx].CardChoice(game, choosingPlayer);
 
                                 boardChoices.NotCancelled = boardChoices.PlayInfo.resultBoardChoice.NotCancelled;
                             }
@@ -76,7 +77,7 @@ namespace HighTreasonGame
         {
             SummationEvents.Add(
                 new CardEffectPair(
-                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer) =>
                     {
                         List<BoardObject> choices = game.FindBO(
                             (BoardObject bo) =>
@@ -88,21 +89,20 @@ namespace HighTreasonGame
                                     && !bo.Properties.Contains(Property.Merchant);
                             });
 
-                        BoardChoices boardChoices;
-                        choiceHandler.ChooseBoardObjects(
+                        return new Action(
+                            ChoiceHandler.ChoiceType.BoardObjects,
+                            choosingPlayer.ChoiceHandler,
                             choices,
-                            (Dictionary<BoardObject, int> selected) => { return true; },
-                            (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
-                            {
-                                return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
-                            },
-                            (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 3; },
+                            (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return true; }),
+                            (Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>>)
+                                ((List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
+                                {
+                                    return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
+                                }),
+                            (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 3; }),
                             game,
                             choosingPlayer,
-                            CardInfo.SummationInfos[0].Description,
-                            out boardChoices);
-
-                        return boardChoices;
+                            CardInfo.SummationInfos[0].Description);
                     },
                     (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
@@ -111,5 +111,5 @@ namespace HighTreasonGame
                         findAspectTracksWithProp(game, Property.GovWorker, Property.Merchant).ForEach(t => t.AddToValue(1));
                     }));
         }
-    }
+    }*/
 }

@@ -31,14 +31,12 @@ namespace HighTreasonGame
         {
             TrialEvents.Add(
                 new CardEffectPair(
-                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer) =>
                     {
-                        BoardChoices boardChoices = new BoardChoices();
-                        boardChoices.NotCancelled = handleMomentOfInsightChoice(
+                        return handleMomentOfInsightChoice(
                             new Player.PlayerSide[] { Player.PlayerSide.Prosecution, Player.PlayerSide.Defense }, 
-                            game, choosingPlayer, choiceHandler, out boardChoices.MoIInfo);
-
-                        return boardChoices;
+                            game, 
+                            choosingPlayer);
                     },
                     (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {
@@ -48,14 +46,13 @@ namespace HighTreasonGame
 
             TrialEvents.Add(
                 new CardEffectPair(
-                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer) =>
                     {
                         BoardChoices boardChoices = new BoardChoices();
-                        boardChoices.NotCancelled = handleMomentOfInsightChoice(
+                        return handleMomentOfInsightChoice(
                             new Player.PlayerSide[] { Player.PlayerSide.Defense },
-                            game, choosingPlayer, choiceHandler, out boardChoices.MoIInfo);
-
-                        return boardChoices;
+                            game, 
+                            choosingPlayer);
                     },
                     (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {

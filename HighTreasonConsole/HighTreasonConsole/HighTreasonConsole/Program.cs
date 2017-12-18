@@ -77,7 +77,16 @@ namespace HighTreasonConsole
                         }
                     };
 
-                game.StartGame();
+                HighTreasonGame.Action action = game.Start();
+                while (!game.GameEnd)
+                {
+                    if (action != null)
+                    {
+                        action.RequestChoice();
+                    }
+                    action = game.Continue(action);
+                }
+                
                 Console.WriteLine("Game " + (i + 1) + " has ended");
             }
 

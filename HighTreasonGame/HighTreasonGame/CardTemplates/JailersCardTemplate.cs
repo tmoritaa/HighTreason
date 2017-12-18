@@ -34,47 +34,49 @@ namespace HighTreasonGame
 
             TrialEvents.Add(
                 new CardEffectPair(
-                    (Game game, Player choosingPlayer, ChoiceHandler choiceHandler) =>
+                    (Game game, Player choosingPlayer) =>
                     {
                         List<Card> selectableCards = choosingPlayer.Hand.Cards;
 
-                        BoardChoices boardChoice;
-                        choiceHandler.ChooseCards(
+                        return new Action(
+                            ChoiceHandler.ChoiceType.Cards,
+                            choosingPlayer.ChoiceHandler,
                             selectableCards,
-                            (Dictionary<Card, int> selected) =>
-                            {
-                                bool noDup = true;
-
-                                foreach (var val in selected.Values) {
-                                    if (val != 1)
-                                    {
-                                        noDup = false;
-                                        break;
-                                    }
-                                }
-
-                                return noDup;
-                            },
-                            (List<Card> remainingChoices, Dictionary<Card, int> selected) =>
-                            {
-                                foreach (var card in selected.Keys)
+                            (Func<Dictionary<Card, int>, bool>)
+                                ((Dictionary<Card, int> selected) =>
                                 {
-                                    remainingChoices.Remove(card);
-                                }
+                                    bool noDup = true;
 
-                                return remainingChoices;
-                            },
-                            (Dictionary<Card, int> selected, bool isDone) =>
-                            {
-                                return (isDone && selected.Count == 1) || selected.Count == 2;
-                            },
+                                    foreach (var val in selected.Values)
+                                    {
+                                        if (val != 1)
+                                        {
+                                            noDup = false;
+                                            break;
+                                        }
+                                    }
+
+                                    return noDup;
+                                }),
+                            (Func<List<Card>, Dictionary<Card, int>, List<Card>>)
+                                ((List<Card> remainingChoices, Dictionary<Card, int> selected) =>
+                                {
+                                    foreach (var card in selected.Keys)
+                                    {
+                                        remainingChoices.Remove(card);
+                                    }
+
+                                    return remainingChoices;
+                                }),
+                            (Func<Dictionary<Card, int>, bool, bool>)
+                                ((Dictionary<Card, int> selected, bool isDone) =>
+                                {
+                                    return (isDone && selected.Count == 1) || selected.Count == 2;
+                                }),
                             true,
                             game,
                             choosingPlayer,
-                            this.CardInfo.TrialInChiefInfos[0].Description,
-                            out boardChoice);
-
-                        return boardChoice;
+                            this.CardInfo.TrialInChiefInfos[0].Description);
                     },
                     (Game game, Player choosingPlayer, BoardChoices choices) =>
                     {

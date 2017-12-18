@@ -34,7 +34,7 @@ namespace HighTreasonGame
             Template = _cardTemplate;
         }
 
-        public bool PlayAsEvent(Game game, Player choosingPlayer, int idx, ChoiceHandler choiceHandler)
+        public CardTemplate.CardEffectPair GetEventEffectPair(Game game, int idx)
         {
             GameState.GameStateType curStateType = game.CurState.StateType;
 
@@ -57,21 +57,10 @@ namespace HighTreasonGame
                 cardEffect = Template.SummationEvents[idx].CardEffect;
             }
 
-            System.Diagnostics.Debug.Assert(cardChoice != null && cardEffect != null, "Card choice or card effect is null. Should never happen");
-
-            BoardChoices choices = cardChoice(game, choosingPlayer, choiceHandler);
-
-            if (choices.NotCancelled)
-            {
-                FileLogger.Instance.Log(choices.ToStringForEvent());
-
-                cardEffect(game, choosingPlayer, choices);
-            }
-
-            return choices.NotCancelled;
+            return new CardTemplate.CardEffectPair(cardChoice, cardEffect);
         }
 
-        public bool PlayAsAction(Game game, Player choosingPlayer, ChoiceHandler choiceHandler)
+        public Action PerformActionChoice(Game game, Player choosingPlayer)
         {
             bool isSummation = game.CurState.StateType == GameState.GameStateType.Summation;
 
@@ -87,36 +76,36 @@ namespace HighTreasonGame
 
             int actionPtsForState = isSummation ? 2 : Template.ActionPts;
 
-            BoardChoices boardChoices;
-            choiceHandler.ChooseBoardObjects(choices,
+            return new Action(
+                ChoiceHandler.ChoiceType.BoardObjects,
+                choosingPlayer.ChoiceHandler,
+                choices,
                 HTUtility.GenActionValidateChoicesFunc(actionPtsForState, null),
                 HTUtility.GenActionFilterChoicesFunc(actionPtsForState, null),
                 HTUtility.GenActionChoicesCompleteFunc(actionPtsForState, null),
                 game,
                 choosingPlayer,
-                "Select usage for " + actionPtsForState + " action points",
-                out boardChoices);
+                "Select usage for " + actionPtsForState + " action points");
+        }
 
-            if (boardChoices.NotCancelled)
+        public void PerformAction(Player choosingPlayer, BoardChoices boardChoices)
+        {
+            int modValue = (choosingPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
+            string str = "";
+
+            foreach (BoardObject bo in boardChoices.SelectedObjs.Keys)
             {
-                string str = "";
-
-                foreach (BoardObject bo in boardChoices.SelectedObjs.Keys)
+                str += bo + " modified by " + modValue * boardChoices.SelectedObjs[bo] + "\n";
+                if (bo.GetType() == typeof(AspectTrack))
                 {
-                    str += bo + " modified by " + modValue * boardChoices.SelectedObjs[bo] + "\n";
-                    if (bo.GetType() == typeof(AspectTrack))
-                    {
-                        ((AspectTrack)bo).ModTrackByAction(modValue * boardChoices.SelectedObjs[bo]);
-                    }
-                    else
-                    {   
-                        ((Track)bo).AddToValue(modValue * boardChoices.SelectedObjs[bo]);
-                    }
+                    ((AspectTrack)bo).ModTrackByAction(modValue * boardChoices.SelectedObjs[bo]);
                 }
-                FileLogger.Instance.Log(str);
+                else
+                {
+                    ((Track)bo).AddToValue(modValue * boardChoices.SelectedObjs[bo]);
+                }
             }
-
-            return boardChoices.NotCancelled;
+            FileLogger.Instance.Log(str);
         }
 
         public override string ToString()

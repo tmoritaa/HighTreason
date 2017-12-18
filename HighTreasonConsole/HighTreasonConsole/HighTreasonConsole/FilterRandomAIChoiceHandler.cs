@@ -16,14 +16,12 @@ namespace HighTreasonConsole
 
         public override void ChoosePlayerAction(List<Card> cards, Game game, Player choosingPlayer, out PlayerActionParams outCardUsage)
         {
-            Random rand = new Random();
-
             outCardUsage = new PlayerActionParams();
 
             while (true)
             {
                 // Pick card
-                Card card = cards[rand.Next() % cards.Count];
+                Card card = cards[random.Next() % cards.Count];
                 outCardUsage.card = card;
 
                 List<CardTemplate.CardEffectPair> pairs = card.Template.SelectionEvents;
@@ -75,7 +73,7 @@ namespace HighTreasonConsole
                     continue;
                 }
 
-                int idx = rand.Next() % validIndices.Count;
+                int idx = validIndices[random.Next() % validIndices.Count];
                 if (idx == pairs.Count)
                 {
                     outCardUsage.usage = PlayerActionParams.UsageType.Action;

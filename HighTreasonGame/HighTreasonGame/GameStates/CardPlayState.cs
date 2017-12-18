@@ -7,71 +7,225 @@ namespace HighTreasonGame.GameStates
 {
     public abstract class CardPlayState : GameState
     {
-        public CardPlayState(GameStateType _stateType, Game _game) 
-            : base(_stateType, _game)
-        {}
-
-        public override void StartState()
+        public Action PlayerActionResponse = null;
+        protected class PlayerActionChoiceSubstate : GameSubState
         {
-            foreach (Player.PlayerSide side in new Player.PlayerSide[] { Player.PlayerSide.Prosecution, Player.PlayerSide.Defense })
+            public PlayerActionChoiceSubstate(GameState parentState) : base(parentState)
+            { }
+
+            public override void PreRun(Game game, Player curPlayer)
             {
-                game.GetPlayerOfSide(side).Hand.SetupHand(game.Deck.DealCards(GameConstants.NUM_HAND_SIZE));
+                if (game.NotifyStartOfTurn != null)
+                {
+                    game.NotifyStartOfTurn();
+                }
             }
 
-            curPlayer = game.GetPlayerOfSide(Player.PlayerSide.Prosecution);
-
-            if (game.NotifyStateStart != null)
+            public override Action RequestAction(Game game, Player curPlayer)
             {
-                game.NotifyStateStart();
+                bool canPlay = game.CurState.StateType == GameStateType.JurySelection
+                                || (game.CurState.StateType == GameStateType.TrialInChief && curPlayer.Hand.SelectableCards.Count > 2)
+                                || (game.CurState.StateType == GameStateType.Summation && curPlayer.Hand.SelectableCards.Count > 0);
+
+                if (canPlay)
+                {
+                    return
+                            new Action(
+                                ChoiceHandler.ChoiceType.PlayerAction,
+                                curPlayer.ChoiceHandler,
+                                curPlayer.Hand.SelectableCards,
+                                game,
+                                curPlayer);
+                }
+                else
+                {
+                    return null;
+                }
             }
 
-            mainLoop();
+            public override void HandleRequestAction(Action action)
+            {
+                if (action != null)
+                {
+                    ((CardPlayState)parentState).PlayerActionResponse = action;
+                }
+            }
+
+            public override void RunRest(Game game, Player curPlayer)
+            {
+                if (((CardPlayState)parentState).PlayerActionResponse != null)
+                {
+                    PlayerActionParams actionParams = (PlayerActionParams)((CardPlayState)parentState).PlayerActionResponse.ChoiceResult;
+                    FileLogger.Instance.Log(actionParams.ToString(curPlayer, game.CurState.StateType));
+                }
+            }
+
+            public override void PrepareNextSubstate()
+            {
+                if (((CardPlayState)parentState).PlayerActionResponse != null)
+                {
+                    PlayerActionParams actionParams = (PlayerActionParams)((CardPlayState)parentState).PlayerActionResponse.ChoiceResult;
+                    if (actionParams.usage == PlayerActionParams.UsageType.Cancelled)
+                    {
+                        parentState.SetNextSubstate(typeof(PlayerActionChoiceSubstate));
+                    }
+                    else
+                    {
+                        parentState.SetNextSubstate(typeof(ObjectionSubstate));
+                    }
+                }
+                else
+                {
+                    parentState.SetNextSubstate(typeof(PlayerActionResolutionSubstate));
+                }
+            }
         }
 
-        protected abstract void mainLoop();
-
-        protected void performPlayerAction(Player curPlayer)
+        protected class ObjectionSubstate : GameSubState
         {
-            bool actionPerformed = false;
-            while (!actionPerformed)
-            {
-                ChoiceHandler.PlayerActionParams playerAction;
-                curPlayer.ChoiceHandler.ChoosePlayerAction(curPlayer.Hand.SelectableCards, game, curPlayer, out playerAction);
+            private bool objected = false;
+            private Action objectionResponse = null;
 
-                if (playerAction.usage == ChoiceHandler.PlayerActionParams.UsageType.Cancelled)
+            public ObjectionSubstate(GameState parentState) : base(parentState)
+            { }
+
+            public override void PreRun(Game game, Player curPlayer)
+            {
+                objected = false;
+                objectionResponse = null;
+            }
+
+            public override Action RequestAction(Game game, Player curPlayer)
+            {
+                PlayerActionParams actionParams = (PlayerActionParams)((CardPlayState)parentState).PlayerActionResponse.ChoiceResult;
+                List<Card> attorneyCards = curPlayer.Hand.Cards.FindAll(c => c.Template.CanBeUsedToObject(curPlayer));
+                if ((actionParams.usage != PlayerActionParams.UsageType.Event
+                    || (game.CurState.StateType != GameState.GameStateType.TrialInChief && game.CurState.StateType != GameState.GameStateType.Summation)
+                    || attorneyCards.Count == 0))
                 {
-                    continue;
+                    return null;
                 }
 
-                FileLogger.Instance.Log(playerAction.ToString(curPlayer, game.CurState.StateType));
+                return
+                    new Action(
+                        ChoiceHandler.ChoiceType.Cards,
+                        curPlayer.ChoiceHandler,
+                        attorneyCards,
+                        (Func<Dictionary<Card, int>, bool>)((Dictionary<Card, int> selected) => { return true; }),
+                        (Func<List<Card>, Dictionary<Card, int>, List<Card>>)((List<Card> choices, Dictionary<Card, int> selected) => { return choices; }),
+                        (Func<Dictionary<Card, int>, bool, bool>)((Dictionary<Card, int> selected, bool isDone) => { return selected.Count == 1 || isDone; }),
+                        true,
+                        game,
+                        curPlayer,
+                        "Select attorney card to object " + actionParams.card.Template.Name + ", or press done to pass");
+            }
 
+            public override void HandleRequestAction(Action action)
+            {
+                objectionResponse = action;
+            }
+
+            public override void RunRest(Game game, Player curPlayer)
+            {
+                if (objectionResponse != null)
+                {
+                    BoardChoices boardChoices = (BoardChoices)objectionResponse.ChoiceResult;
+
+                    if (boardChoices.SelectedCards.Count > 0)
+                    {
+                        Card objectCard = boardChoices.SelectedCards.Keys.First();
+
+                        FileLogger.Instance.Log(curPlayer + " objected with " + objectCard.Template.Name + "\n");
+
+                        game.Discards.MoveCard(objectCard);
+                        objected = true;
+                    }
+                }
+
+                return;
+            }
+
+            public override void PrepareNextSubstate()
+            {
+                Type nextSubstateType = (objected) ? typeof(PlayerTurnCompleteSubstate) : typeof(PlayerActionResolutionSubstate);
+
+                parentState.SetNextSubstate(nextSubstateType);
+            }
+        }
+
+        protected class PlayerActionResolutionSubstate : GameSubState
+        {
+            public Action CardUsageResponse = null;
+            public bool notCancelled = false;
+
+            public PlayerActionResolutionSubstate(GameState _parent) : base(_parent)
+            {}
+
+            public override void PreRun(Game game, Player curPlayer)
+            {
+                CardUsageResponse = null;
+                notCancelled = false;
+            }
+
+            public override Action RequestAction(Game game, Player curPlayer)
+            {
+                PlayerActionParams playerAction = (PlayerActionParams)((CardPlayState)parentState).PlayerActionResponse.ChoiceResult;
+
+                if (playerAction.usage == PlayerActionParams.UsageType.Event)
+                {
+                    playerAction.card.BeingPlayed = true;
+                    CardTemplate.CardEffectPair effectPair = playerAction.card.GetEventEffectPair(game, (int)playerAction.misc[0]);
+
+                    return effectPair.CardChoice(game, curPlayer);
+                }
+                else if (playerAction.usage == PlayerActionParams.UsageType.Action)
+                {
+                    playerAction.card.BeingPlayed = true;
+                    return playerAction.card.PerformActionChoice(game, curPlayer);
+                }
+
+                return null;
+            }
+
+            public override void HandleRequestAction(Action action)
+            {
+                CardUsageResponse = action;
+            }
+
+            public override void RunRest(Game game, Player curPlayer)
+            {
+                PlayerActionParams playerAction = (PlayerActionParams)((CardPlayState)parentState).PlayerActionResponse.ChoiceResult;
+
+                bool actionPerformed = false;
                 bool cardPlayed = false;
-                if (playerAction.usage == ChoiceHandler.PlayerActionParams.UsageType.Mulligan
+                if (playerAction.usage == PlayerActionParams.UsageType.Mulligan
                     && game.CurState.StateType == GameState.GameStateType.TrialInChief
                     && !curPlayer.PerformedMulligan)
                 {
                     curPlayer.PerformMulligan();
                     actionPerformed = true;
                 }
-                else if (playerAction.usage == ChoiceHandler.PlayerActionParams.UsageType.Event)
+                else if (CardUsageResponse != null)
                 {
-                    playerAction.card.BeingPlayed = true;
-
-                    bool objected = performObjectionPhase(playerAction.card, game.GetOtherPlayer(curPlayer));
-                    actionPerformed = objected;
-
-                    if (!objected)
+                    BoardChoices boardChoices = (BoardChoices)CardUsageResponse.ChoiceResult;
+                    notCancelled = boardChoices.NotCancelled;
+                    if (notCancelled)
                     {
-                        actionPerformed = playerAction.card.PlayAsEvent(game, curPlayer, (int)playerAction.misc[0], curPlayer.ChoiceHandler);
-                    }
+                        actionPerformed = true;
+                        if (playerAction.usage == PlayerActionParams.UsageType.Event)
+                        {
+                            FileLogger.Instance.Log(boardChoices.ToStringForEvent());
 
-                    cardPlayed = true;
-                }
-                else if (playerAction.usage == ChoiceHandler.PlayerActionParams.UsageType.Action)
-                {
-                    playerAction.card.BeingPlayed = true;
-                    actionPerformed = playerAction.card.PlayAsAction(game, curPlayer, curPlayer.ChoiceHandler);
-                    cardPlayed = true;
+                            CardTemplate.CardEffectPair effectPair = playerAction.card.GetEventEffectPair(game, (int)playerAction.misc[0]);
+                            effectPair.CardEffect(game, curPlayer, boardChoices);
+                            cardPlayed = true;
+                        }
+                        else if (playerAction.usage == PlayerActionParams.UsageType.Action)
+                        {
+                            playerAction.card.PerformAction(curPlayer, boardChoices);
+                            cardPlayed = true;
+                        }
+                    }
                 }
 
                 if (actionPerformed)
@@ -93,47 +247,128 @@ namespace HighTreasonGame.GameStates
                     playerAction.card.BeingPlayed = false;
                 }
             }
+
+            public override void PrepareNextSubstate()
+            {
+                if (!notCancelled)
+                {
+                    parentState.SetNextSubstate(typeof(PlayerActionChoiceSubstate));
+                }
+                else
+                {
+                    parentState.SetNextSubstate(typeof(PlayerTurnCompleteSubstate));
+                }
+
+            }
         }
 
-        protected bool performObjectionPhase(Card card, Player curPlayer)
+        protected class PlayerTurnCompleteSubstate : GameSubState
         {
-            bool objected = false;
+            private int numPlayersFinished = 0;
 
-            if (game.CurState.StateType != GameState.GameStateType.TrialInChief && game.CurState.StateType != GameState.GameStateType.Summation)
+            public PlayerTurnCompleteSubstate(GameState _parent) : base(_parent)
             {
-                return objected;
             }
 
-            List<Card> attorneyCards = curPlayer.Hand.Cards.FindAll(c => c.Template.CanBeUsedToObject(curPlayer));
-            if (attorneyCards.Count > 0)
+            public override void Init()
             {
-                // TODO: later should also have some way of showing which event was picked by opponent. Should be done on Unity side.
-                string desc = "Select attorney card to object " + card.Template.Name + ", or press done to pass";
+                numPlayersFinished = 0;
+            }
 
-                BoardChoices boardChoices;
-                curPlayer.ChoiceHandler.ChooseCards(
-                    attorneyCards,
-                    (Dictionary<Card, int> selected) => { return true; },
-                    (List<Card> choices, Dictionary<Card, int> selected) => { return choices; },
-                    (Dictionary<Card, int> selected, bool isDone) => { return selected.Count == 1 || isDone; },
-                    true,
-                    game,
-                    curPlayer,
-                    desc,
-                    out boardChoices);
+            public override void PreRun(Game game, Player curPlayer)
+            { }
 
-                if (boardChoices.SelectedCards.Count > 0)
+            public override Action RequestAction(Game game, Player curPlayer)
+            {
+                return null;
+            }
+
+            public override void HandleRequestAction(Action action)
+            { }
+
+            public override void RunRest(Game game, Player curPlayer)
+            {
+                if (game.CurState.StateType == GameStateType.JurySelection)
                 {
-                    Card objectCard = boardChoices.SelectedCards.Keys.First();
+                    if (curPlayer.Hand.Cards.Count == 2)
+                    {
+                        numPlayersFinished += 1;
+                        curPlayer.AddHandToSummation();
+                        parentState.PassToNextPlayer();
+                    }
+                }
+                else if (game.CurState.StateType == GameStateType.TrialInChief)
+                {
+                    if (curPlayer.Hand.Cards.Count == 2)
+                    {
+                        numPlayersFinished += 1;
+                        curPlayer.AddHandToSummation();
+                    }
 
-                    FileLogger.Instance.Log(curPlayer + " objected with " + objectCard.Template.Name + "\n");
+                    if (game.GetOtherPlayer(curPlayer).Hand.Cards.Count >= 2)
+                    {
+                        parentState.PassToNextPlayer();
+                    }
+                }
+                else if (game.CurState.StateType == GameStateType.Summation)
+                {
+                    if (curPlayer.Hand.Cards.Count == 0)
+                    {
+                        numPlayersFinished += 1;
+                    }
 
-                    game.Discards.MoveCard(objectCard);
-                    objected = true;
+                    if ((curPlayer.Side == Player.PlayerSide.Prosecution && curPlayer.Hand.Cards.Count == 3)
+                    || curPlayer.Hand.Cards.Count == 0)
+                    {
+                        parentState.PassToNextPlayer();
+                    }
                 }
             }
 
-            return objected;
+            public override void PrepareNextSubstate()
+            {
+                if (numPlayersFinished < 2)
+                {
+                    parentState.SetNextSubstate(typeof(PlayerActionChoiceSubstate));
+                }
+                else
+                {
+                    parentState.SignifyStateEnd();
+                }
+            }
+        }
+
+        public CardPlayState(GameStateType _stateType, Game _game) 
+            : base(_stateType, _game)
+        {}
+
+        public override void InitState()
+        {
+            base.InitState();
+
+            foreach (Player.PlayerSide side in new Player.PlayerSide[] { Player.PlayerSide.Prosecution, Player.PlayerSide.Defense })
+            {
+                game.GetPlayerOfSide(side).Hand.SetupHand(game.Deck.DealCards(GameConstants.NUM_HAND_SIZE));
+            }
+
+            curPlayer = game.GetPlayerOfSide(Player.PlayerSide.Prosecution);
+
+            stateEnded = false;
+
+            CurSubstate = substates[typeof(PlayerActionChoiceSubstate)];
+
+            if (game.NotifyStateStart != null)
+            {
+                game.NotifyStateStart();
+            }
+        }
+
+        protected override void initSubStates(GameState parent)
+        {
+            substates.Add(typeof(PlayerActionChoiceSubstate), new PlayerActionChoiceSubstate(this));
+            substates.Add(typeof(ObjectionSubstate), new ObjectionSubstate(this));
+            substates.Add(typeof(PlayerActionResolutionSubstate), new PlayerActionResolutionSubstate(this));
+            substates.Add(typeof(PlayerTurnCompleteSubstate), new PlayerTurnCompleteSubstate(this));
         }
     }
 }
