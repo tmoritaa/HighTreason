@@ -14,6 +14,10 @@ namespace HighTreasonGame
             Shuffle();
         }
 
+        public DeckHolder(DeckHolder holder)
+            : base(holder)
+        {}
+
         public List<Card> DealCards(int numCards)
         {
             List<Card> retCards = Cards.Take(numCards).ToList();

@@ -55,6 +55,7 @@
     <Compile Include="BoardChoices.cs" />
     <Compile Include="BoardObjects\Card.cs" />
     <Compile Include="CardHolder\CardHolder.cs" />
+    <Compile Include="CardHolder\PlayerCardHolder.cs" />
     <Compile Include="CardInfo.cs" />
     <Compile Include="CardTemplate.cs" />
     <Compile Include="CardTemplateAttribute.cs" />

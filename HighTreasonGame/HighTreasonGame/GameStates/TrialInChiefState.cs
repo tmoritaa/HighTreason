@@ -13,6 +13,23 @@ namespace HighTreasonGame.GameStates
             : base(GameStateType.TrialInChief, _game)
         {}
 
+        // Copy constructor
+        public TrialInChiefState(TrialInChiefState state, Game _game)
+            : base(state, _game)
+        {
+            numVisits = state.numVisits;
+        }
+
+        public override bool CheckCloneEquality(GameState state)
+        {
+            bool equal = base.CheckCloneEquality(state);
+
+            TrialInChiefState st = (TrialInChiefState)state;
+            equal &= numVisits == st.numVisits;
+
+            return equal;
+        }
+
         public override void InitState()
         {
             if (game.StartState == this.StateType)

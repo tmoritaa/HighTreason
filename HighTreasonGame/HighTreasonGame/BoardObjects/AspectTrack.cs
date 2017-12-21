@@ -24,6 +24,27 @@ namespace HighTreasonGame
             TimesAffectedByAction = 0;
         }
 
+        // Copy constructor
+        public AspectTrack(AspectTrack track, Game game)
+            : base(track.Value, track.MinValue, track.MaxValue, game, track.Properties.ToArray())
+        {
+            List<Property> props = new List<Property>(track.Properties);
+            props.Remove(Property.Track);
+            props.Remove(Property.Aspect);
+            uniqueProps = props.ToArray();
+
+            TimesAffectedByAction = track.TimesAffectedByAction;
+        }
+
+        public override bool CheckCloneEquality(BoardObject track)
+        {
+            bool equal = base.CheckCloneEquality(track);
+
+            equal &= TimesAffectedByAction == ((AspectTrack)track).TimesAffectedByAction;
+
+            return equal;
+        }
+
         public void ModTrackByAction(int modValue)
         {
             System.Diagnostics.Debug.Assert(TimesAffectedByAction < MAX_TIMES_MODABLE, "Sway track of Aspect track should never be full when being modified.");

@@ -15,6 +15,10 @@ namespace HighTreasonGame.GameStates
             {
             }
 
+            // Copy constructor
+            public DismissJurySubstate(DismissJurySubstate substate, GameState parentState, Game game) : base(parentState)
+            {}
+            
             public override void PreRun(Game game, Player curPlayer)
             {
                 boardChoices = null;
@@ -45,6 +49,9 @@ namespace HighTreasonGame.GameStates
 
             public override void RunRest(Game game, Player curPlayer)
             {
+                // TODO: for now, going to fix reference issues here, but later once HandleRequestAction and RunRest is combined, clean it up.
+                boardChoices = new BoardChoices(boardChoices, game);
+
                 if (boardChoices.NotCancelled)
                 {
                     Jury juryToDismiss = (Jury)boardChoices.SelectedObjs.Keys.First();
@@ -77,6 +84,10 @@ namespace HighTreasonGame.GameStates
             : base(GameStateType.JuryDismissal, _game)
         {}
 
+        public JuryDismissalState(JuryDismissalState state, Game _game)
+            : base(state, _game)
+        {}
+
         public override void InitState()
         {
             base.InitState();
@@ -99,6 +110,12 @@ namespace HighTreasonGame.GameStates
         protected override void initSubStates(GameState parent)
         {
             substates.Add(typeof(DismissJurySubstate), new DismissJurySubstate(this));
+        }
+
+        protected override void copySubstates(GameState state, Game game)
+        {
+            Type substateType = typeof(DismissJurySubstate);
+            substates[substateType] = new DismissJurySubstate((DismissJurySubstate)((JuryDismissalState)state).substates[substateType], this, game);
         }
     }
 }

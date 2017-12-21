@@ -5,16 +5,34 @@ using System.Text;
 
 namespace HighTreasonGame
 {
-    public class SummationDeckHolder : CardHolder
+    public class SummationDeckHolder : PlayerCardHolder
     {
         private List<bool> hiddenStatus = new List<bool>();
 
-        public SummationDeckHolder() : base(HolderId.Summation)
+        public SummationDeckHolder(Player player) : base(HolderId.Summation, player)
         {
             for (int i = 0; i < Cards.Count; ++i)
             {
                 hiddenStatus.Add(false);
             }
+        }
+
+        // Copy constructor
+        public SummationDeckHolder(SummationDeckHolder holder, Player player) : base(holder, player)
+        {
+            hiddenStatus = new List<bool>(holder.hiddenStatus);
+        }
+
+        public override bool CheckCloneEquality(CardHolder holder)
+        {
+            bool equal = base.CheckCloneEquality(holder);
+
+            for (int i = 0; i < hiddenStatus.Count; ++i)
+            {
+                equal &= hiddenStatus[i] == ((SummationDeckHolder)holder).hiddenStatus[i];
+            }
+
+            return equal;
         }
 
         protected override void AddCard(Card card)

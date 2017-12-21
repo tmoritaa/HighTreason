@@ -10,6 +10,11 @@ namespace HighTreasonGame.GameStates
             : base(GameStateType.JurySelection, _game)
         {}
 
+        // Copy constructor
+        public JurySelectionState(JurySelectionState state, Game _game)
+            : base(state, _game)
+        {}
+
         public override void GotoNextState()
         {
             game.SetNextState(GameState.GameStateType.JuryDismissal);

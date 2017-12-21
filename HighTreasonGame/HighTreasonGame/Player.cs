@@ -60,9 +60,36 @@ namespace HighTreasonGame
             game = _game;
             Side = _side;
             ChoiceHandler = _choiceHandler;
-            SummationDeck = new SummationDeckHolder();
-            Hand = new HandHolder();
+            SummationDeck = new SummationDeckHolder(this);
+            Hand = new HandHolder(this);
             PerformedMulligan = false;
+        }
+
+        // Copy constructor
+        public Player(Player player, Game _game)
+        {
+            game = _game;
+            Side = player.Side;
+            ChoiceHandler = player.ChoiceHandler;
+            SummationDeck = new SummationDeckHolder(player.SummationDeck, this);
+            Hand = new HandHolder(player.Hand, this);
+            PerformedMulligan = player.PerformedMulligan;
+        }
+
+        public bool CheckCloneEquality(Player player)
+        {
+            bool equal = true;
+
+            equal &= !object.ReferenceEquals(game, player.game);
+            equal &= !object.ReferenceEquals(this, player);
+            equal &= Side == player.Side;
+
+            equal &= SummationDeck.CheckCloneEquality(player.SummationDeck);
+            equal &= Hand.CheckCloneEquality(player.Hand);
+
+            equal &= PerformedMulligan == player.PerformedMulligan;
+
+            return equal;
         }
 
         public void AddHandToSummation()

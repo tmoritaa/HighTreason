@@ -81,7 +81,7 @@ namespace HighTreasonConsole
                 else
                 {
                     outCardUsage.usage = PlayerActionParams.UsageType.Event;
-                    outCardUsage.misc.Add(idx);
+                    outCardUsage.eventIdx = idx;
                 }
 
                 break;

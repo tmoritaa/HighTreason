@@ -34,6 +34,52 @@ namespace HighTreasonGame
             Template = _cardTemplate;
         }
 
+        // Copy constructor
+        public Card(Card card, CardHolder holder)
+        {
+            Template = card.Template;
+            CardHolder = holder;
+            
+            BeingPlayed = card.BeingPlayed;
+            Revealed = card.Revealed;
+        }
+
+        public bool CheckCloneEquality(Card card)
+        {
+            bool equal = true;
+
+            equal &= !object.ReferenceEquals(this, card);
+            if (!equal)
+            {
+                Console.WriteLine("Card references test failed");
+                return equal;
+            }
+
+            equal &= this.Template == card.Template;
+            if (!equal)
+            {
+                Console.WriteLine("Card Template was not equal");
+                return equal;
+            }
+
+            equal &= CardHolder.Id == card.CardHolder.Id;
+            if (!equal)
+            {
+                Console.WriteLine("Card Cardholder Id was not equal");
+                return equal;
+            }
+
+            equal &= BeingPlayed == card.BeingPlayed;
+            equal &= Revealed == card.Revealed;
+            if (!equal)
+            {
+                Console.WriteLine("Card Vars was not equal");
+                return equal;
+            }
+
+            return equal;
+        }
+
         public CardTemplate.CardEffectPair GetEventEffectPair(Game game, int idx)
         {
             GameState.GameStateType curStateType = game.CurState.StateType;

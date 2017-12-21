@@ -31,6 +31,19 @@ namespace HighTreasonGame
             MaxValue = _maxValue;
         }
 
+        public override bool CheckCloneEquality(BoardObject bo)
+        {
+            bool equal = base.CheckCloneEquality(bo);
+
+            Track track = (Track)bo;
+
+            equal &= Value == track.Value;
+            equal &= MaxValue == track.MaxValue;
+            equal &= MinValue == track.MinValue;            
+
+            return equal;
+        }
+
         public void AddToValue(int value)
         {
             Value += value;

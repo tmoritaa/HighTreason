@@ -22,6 +22,16 @@ namespace HighTreasonGame
             game.AddBoardObject(this);
         }
 
+        public virtual bool CheckCloneEquality(BoardObject bo)
+        {
+            bool equal = true;
+
+            equal &= !object.ReferenceEquals(this, bo);
+            equal &= Properties.SetEquals(bo.Properties);
+
+            return equal;
+        }
+
         public virtual void RemoveChildrenBoardObjects()
         {}
     }

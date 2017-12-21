@@ -31,6 +31,36 @@ namespace HighTreasonGame
             Cards = new List<Card>();
         }
 
+        // Copy constructor
+        public CardHolder(CardHolder holder)
+        {
+            Id = holder.Id;
+            Cards = new List<Card>();
+
+            foreach(Card card in holder.Cards)
+            {
+                Cards.Add(new Card(card, this));
+            }
+        }
+
+        public virtual bool CheckCloneEquality(CardHolder holder)
+        {
+            bool equal = true;
+
+            equal &= !object.ReferenceEquals(this, holder);
+            equal &= Id == holder.Id;
+
+            foreach(Card card in Cards)
+            {
+                Card holderCard = holder.Cards.Find(c => card.Template.Name.Equals(c.Template.Name));
+
+                equal &= !object.ReferenceEquals(card, holderCard);
+                equal &= card.CheckCloneEquality(holderCard);
+            }
+
+            return equal;
+        }
+
         public void MoveCard(Card card)
         {
             if (card.CardHolder != null)

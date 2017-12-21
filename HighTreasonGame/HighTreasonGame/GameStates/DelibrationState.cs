@@ -18,6 +18,22 @@ namespace HighTreasonGame.GameStates
             {
             }
 
+            // Copy constructor
+            public PrecalcSubstate(PrecalcSubstate substate, GameState parentState, Game game) : base(parentState)
+            {
+                skipToGameEnd = substate.skipToGameEnd;
+            }
+
+            public override bool CheckCloneEquality(GameSubState substate)
+            {
+                bool equal = base.CheckCloneEquality(substate);
+
+                PrecalcSubstate sub = (PrecalcSubstate)substate;
+                equal &= skipToGameEnd == sub.skipToGameEnd;
+
+                return equal;
+            }
+
             public override void PreRun(Game game, Player curPlayer)
             {
                 game.Board.Juries.ForEach(j => j.RevealAllTraits());
@@ -92,6 +108,30 @@ namespace HighTreasonGame.GameStates
             {
             }
 
+            // Copy constructor
+            public DeliberationJuryChoiceSubstate(DeliberationJuryChoiceSubstate substate, GameState parentState, Game game) : base(parentState)
+            {
+                foreach(Jury jury in substate.usedJuries)
+                {
+                    usedJuries.Add(game.Board.Juries.Find(j => j.Id == jury.Id));
+                }
+            }
+
+            public override bool CheckCloneEquality(GameSubState substate)
+            {
+                bool equal = base.CheckCloneEquality(substate);
+
+                DeliberationJuryChoiceSubstate sub = (DeliberationJuryChoiceSubstate)substate;
+
+                equal &= usedJuries.Count == sub.usedJuries.Count;
+                for (int i = 0; i < usedJuries.Count; ++i)
+                {
+                    equal &= usedJuries[i].CheckCloneEquality(sub.usedJuries[i]);
+                }
+
+                return equal;
+            }
+
             public override void PreRun(Game game, Player curPlayer)
             {
                 ((DeliberationState)parentState).juryChoice = null;
@@ -149,6 +189,12 @@ namespace HighTreasonGame.GameStates
 
             public override void RunRest(Game game, Player curPlayer)
             {
+                // TODO: for now, going to fix reference issues here, but later once HandleRequestAction and RunRest is combined, clean it up.
+                if (((DeliberationState)parentState).juryChoice != null)
+                {
+                    ((DeliberationState)parentState).juryChoice = new BoardChoices(((DeliberationState)parentState).juryChoice, game);
+                }
+
                 BoardChoices boardChoices = ((DeliberationState)parentState).juryChoice;
                 if (boardChoices != null && boardChoices.NotCancelled)
                 {
@@ -187,13 +233,29 @@ namespace HighTreasonGame.GameStates
             public DeliberationActionSelectSubstate(GameState _parent) : base(_parent)
             {}
 
+            // Copy constructor
+            public DeliberationActionSelectSubstate(DeliberationActionSelectSubstate substate, GameState parentState, Game game) : base(parentState)
+            {}
+
+            public override bool CheckCloneEquality(GameSubState substate)
+            {
+                bool equal = base.CheckCloneEquality(substate);
+
+                DeliberationActionSelectSubstate sub = (DeliberationActionSelectSubstate)substate;
+
+                return equal;
+            }
+
             public override void PreRun(Game game, Player curPlayer)
             {
-                // Do nothing.
+                boardChoices = null;
             }
 
             public override Action RequestAction(Game game, Player curPlayer)
             {
+                // TODO: for now, going to fix reference issues here, but later once HandleRequestAction and RunRest is combined, clean it up.
+                ((DeliberationState)parentState).juryChoice = new BoardChoices(((DeliberationState)parentState).juryChoice, game);
+
                 Jury usedJury = (Jury)((DeliberationState)parentState).juryChoice.SelectedObjs.Keys.First();
 
                 int modValue = (curPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
@@ -261,7 +323,11 @@ namespace HighTreasonGame.GameStates
         private class GameEndSubstate : GameSubState
         {
             public GameEndSubstate(GameState parent) : base(parent)
-            { }
+            {}
+
+            // Copy constructor
+            public GameEndSubstate(GameEndSubstate substate, GameState parentState, Game game) : base(parentState)
+            {}
 
             public override void PreRun(Game game, Player curPlayer)
             {
@@ -318,6 +384,54 @@ namespace HighTreasonGame.GameStates
             : base(GameStateType.Deliberation, _game)
         {}
 
+        // Copy constructor
+        public DeliberationState(DeliberationState state, Game game)
+            : base(state, game)
+        {
+            foreach(var kv in state.playerSidePassed)
+            {
+                playerSidePassed.Add(kv.Key, kv.Value);
+            }
+
+            if (state.juryChoice != null)
+            {
+                juryChoice = new BoardChoices(state.juryChoice, game);
+            }
+        }
+
+        public override bool CheckCloneEquality(GameState state)
+        {
+            bool equal = base.CheckCloneEquality(state);
+            
+            foreach (var kv in playerSidePassed)
+            {
+                equal &= kv.Value == ((DeliberationState)state).playerSidePassed[kv.Key];
+            }
+
+            if (!equal)
+            {
+                Console.WriteLine("PlayerSidePassed were not equal");
+                return equal;
+            }
+
+            if (juryChoice != null)
+            {
+                equal &= juryChoice.CheckCloneEquality(((DeliberationState)state).juryChoice);
+            }
+            else
+            {
+                equal &= juryChoice == ((DeliberationState)state).juryChoice;
+            }
+
+            if (!equal)
+            {
+                Console.WriteLine("JuryChoice was not equal");
+                return equal;
+            }
+
+            return equal;
+        }
+
         public override void InitState()
         {
             base.InitState();
@@ -342,12 +456,40 @@ namespace HighTreasonGame.GameStates
             game.SignifyEndGame();
         }
 
+        protected override void cleanup()
+        {
+            juryChoice = null;
+        }
+
         protected override void initSubStates(GameState parent)
         {
             substates.Add(typeof(PrecalcSubstate), new PrecalcSubstate(this));
             substates.Add(typeof(DeliberationJuryChoiceSubstate), new DeliberationJuryChoiceSubstate(this));
             substates.Add(typeof(DeliberationActionSelectSubstate), new DeliberationActionSelectSubstate(this));
             substates.Add(typeof(GameEndSubstate), new GameEndSubstate(this));
+        }
+
+        protected override void copySubstates(GameState state, Game _game)
+        {
+            foreach (var kv in ((DeliberationState)state).substates)
+            {
+                if (kv.Key == typeof(PrecalcSubstate))
+                {
+                    substates[kv.Key] = new PrecalcSubstate((PrecalcSubstate)kv.Value, this, _game);
+                }
+                else if (kv.Key == typeof(DeliberationJuryChoiceSubstate))
+                {
+                    substates[kv.Key] = new DeliberationJuryChoiceSubstate((DeliberationJuryChoiceSubstate)kv.Value, this, _game);
+                }
+                else if (kv.Key == typeof(DeliberationActionSelectSubstate))
+                {
+                    substates[kv.Key] = new DeliberationActionSelectSubstate((DeliberationActionSelectSubstate)kv.Value, this, _game);
+                }
+                else if (kv.Key == typeof(GameEndSubstate))
+                {
+                    substates[kv.Key] = new GameEndSubstate((GameEndSubstate)kv.Value, this, _game);
+                }
+            }
         }
     }
 }

@@ -33,6 +33,78 @@ namespace HighTreasonGame
             initJury();
         }
 
+        // Copy constructor.
+        public Board(Board board, Game _game)
+        {
+            game = _game;
+
+            EvidenceTracks = new List<EvidenceTrack>();
+            foreach (EvidenceTrack track in board.EvidenceTracks)
+            {
+                EvidenceTracks.Add(new EvidenceTrack(track, game));
+            }
+
+            AspectTracks = new List<AspectTrack>();
+            foreach (AspectTrack track in board.AspectTracks)
+            {
+                AspectTracks.Add(new AspectTrack(track, game));
+            }
+
+            Juries = new List<Jury>();
+            foreach (Jury jury in board.Juries)
+            {
+                Juries.Add(new Jury(jury, game));
+            }
+        }
+
+        public bool CheckCloneEquality(Board board)
+        {
+            bool equal = true;
+
+            equal &= !object.ReferenceEquals(this, board);
+
+            if (!equal)
+            {
+                Console.WriteLine("Board reference test failed");
+                return equal;
+            }
+
+            for (int i = 0; i < EvidenceTracks.Count; ++i)
+            {
+                equal &= EvidenceTracks[i].CheckCloneEquality(board.EvidenceTracks[i]);
+
+                if (!equal)
+                {
+                    Console.WriteLine("Evidence Track " + EvidenceTracks[i] + " equality test failed");
+                    return equal;
+                }
+            }
+
+            for (int i = 0; i < AspectTracks.Count; ++i)
+            {
+                equal &= AspectTracks[i].CheckCloneEquality(board.AspectTracks[i]);
+
+                if (!equal)
+                {
+                    Console.WriteLine("Aspect Track " + AspectTracks[i] + " equality test failed");
+                    return equal;
+                }
+            }
+
+            for (int i = 0; i < Juries.Count; ++i)
+            {
+                equal &= Juries[i].CheckCloneEquality(board.Juries[i]);
+
+                if (!equal)
+                {
+                    Console.WriteLine("Jury " + Juries[i] + " equality test failed");
+                    return equal;
+                }
+            }
+
+            return equal;
+        }
+
         public void RemoveJury(Jury jury)
         {
             Juries.Remove(jury);
@@ -47,43 +119,6 @@ namespace HighTreasonGame
         public EvidenceTrack GetGuiltTrack()
         {
             return EvidenceTracks.Find(t => t.Properties.Contains(Property.Guilt));
-        }
-
-        public override string ToString()
-        {
-            string outStr = String.Empty;
-
-            outStr += "*************************************************\n";
-            outStr += "Evidence Tracks:\n";
-            foreach (EvidenceTrack track in EvidenceTracks)
-            {
-                outStr += "++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-                outStr += track.ToString() + "\n";
-            }
-            outStr += "++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-            outStr += "*************************************************\n";
-
-            outStr += "*************************************************\n";
-            outStr += "Aspect Tracks:\n";
-            foreach (AspectTrack track in AspectTracks)
-            {
-                outStr += "++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-                outStr += track.ToString() + "\n";
-            }
-            outStr += "++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-            outStr += "*************************************************\n";
-
-            outStr += "*************************************************\n";
-            outStr += "Juries:\n";
-            foreach(Jury jury in Juries)
-            {
-                outStr += "++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-                outStr += jury.ToString() + "\n";
-            }
-            outStr += "++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-            outStr += "*************************************************\n";
-
-            return outStr;
         }
 
         private void initTracks()

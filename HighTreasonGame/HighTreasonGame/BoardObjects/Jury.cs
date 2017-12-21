@@ -57,6 +57,41 @@ namespace HighTreasonGame
                 Owner = _owner;
             }
 
+            // Copy constructor
+            public JuryAspect(JuryAspect ja, Jury _owner, Game game)
+                : base(game, ja.Properties.ToArray())
+            {
+                Trait = ja.Trait;
+                Aspect = ja.Aspect;
+
+                foreach (var kv in ja.seenStatus)
+                {
+                    seenStatus.Add(kv.Key, kv.Value);
+                }
+
+                Owner = _owner;
+            }
+
+            public override bool CheckCloneEquality(BoardObject bo)
+            {
+                bool equal = base.CheckCloneEquality(bo);
+
+                JuryAspect ja = (JuryAspect)bo;
+
+                equal &= !object.ReferenceEquals(this, ja);
+                equal &= Trait == ja.Trait;
+                equal &= Aspect == ja.Aspect;
+
+                foreach (var kv in seenStatus)
+                {
+                    equal &= kv.Value == ja.seenStatus[kv.Key];
+                }
+
+                equal &= Owner.Id == ja.Owner.Id;
+
+                return equal;
+            }
+
             public void Reveal()
             {
                 seenStatus[Player.PlayerSide.Prosecution] = true;
@@ -124,6 +159,43 @@ namespace HighTreasonGame
             Aspects.Add(new JuryAspect(game, this, Property.Religion, religionAspect));
             Aspects.Add(new JuryAspect(game, this, Property.Language, languageAspect));
             Aspects.Add(new JuryAspect(game, this, Property.Occupation, occupationAspect));
+        }
+
+        // Copy constructor
+        public Jury(Jury jury, Game game)
+            : base(game, jury.Properties.ToArray())
+        {
+            Id = jury.Id;
+            ActionPoints = jury.ActionPoints;
+
+            SwayTrack = new SwayTrack(jury.SwayTrack, this, game);
+
+            Aspects = new List<JuryAspect>();
+
+            foreach(JuryAspect aspect in jury.Aspects)
+            {
+                Aspects.Add(new JuryAspect(aspect, this, game));
+            }
+        }
+
+        public override bool CheckCloneEquality(BoardObject bo)
+        {
+            bool equal = base.CheckCloneEquality(bo);
+
+            Jury jury = (Jury)bo;
+
+            equal &= !object.ReferenceEquals(this, jury);
+
+            equal &= Id == jury.Id;
+            equal &= ActionPoints == jury.ActionPoints;
+            equal &= SwayTrack.CheckCloneEquality(jury.SwayTrack);
+            
+            for (int i = 0; i < Aspects.Count; ++i)
+            {
+                equal &= Aspects[i].CheckCloneEquality(jury.Aspects[i]);
+            }
+
+            return equal;
         }
 
         public void RevealAllTraits()

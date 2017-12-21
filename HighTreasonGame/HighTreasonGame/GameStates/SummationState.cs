@@ -11,6 +11,11 @@ namespace HighTreasonGame.GameStates
             : base(GameStateType.Summation, _game)
         {}
 
+        // Copy constructor
+        public SummationState(SummationState state, Game _game)
+            : base(state, _game)
+        {}
+
         public override void InitState()
         {
             foreach (var substate in substates.Values)

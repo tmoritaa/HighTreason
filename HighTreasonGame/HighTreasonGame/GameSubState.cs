@@ -8,7 +8,6 @@ namespace HighTreasonGame
     public abstract class GameSubState
     {
         protected GameState parentState;
-        protected object actionResponse;
 
         public GameSubState(GameState _parent)
         {
@@ -22,5 +21,15 @@ namespace HighTreasonGame
         public abstract void PrepareNextSubstate();
 
         public virtual void Init() { }
+
+        public virtual bool CheckCloneEquality(GameSubState substate)
+        {
+            bool equal = true;
+
+            equal &= !object.ReferenceEquals(this, substate);
+            equal &= parentState.StateType == substate.parentState.StateType;
+
+            return equal;
+        }
     }
 }

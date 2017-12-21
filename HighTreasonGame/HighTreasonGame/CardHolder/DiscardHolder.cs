@@ -9,5 +9,8 @@ namespace HighTreasonGame
     {
         public DiscardHolder() : base(HolderId.Discard)
         {}
+
+        public DiscardHolder(DiscardHolder holder) : base(holder)
+        {}
     }
 }

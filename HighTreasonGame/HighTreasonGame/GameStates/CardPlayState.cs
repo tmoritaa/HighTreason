@@ -7,11 +7,16 @@ namespace HighTreasonGame.GameStates
 {
     public abstract class CardPlayState : GameState
     {
-        public Action PlayerActionResponse = null;
+        public PlayerActionParams PlayerActionResponse = null;
+
         protected class PlayerActionChoiceSubstate : GameSubState
         {
             public PlayerActionChoiceSubstate(GameState parentState) : base(parentState)
             { }
+
+            // Copy constructor
+            public PlayerActionChoiceSubstate(PlayerActionChoiceSubstate substate, GameState parentState, Game game) : base(parentState)
+            {}
 
             public override void PreRun(Game game, Player curPlayer)
             {
@@ -47,7 +52,7 @@ namespace HighTreasonGame.GameStates
             {
                 if (action != null)
                 {
-                    ((CardPlayState)parentState).PlayerActionResponse = action;
+                    ((CardPlayState)parentState).PlayerActionResponse = (PlayerActionParams)action.ChoiceResult;
                 }
             }
 
@@ -55,7 +60,11 @@ namespace HighTreasonGame.GameStates
             {
                 if (((CardPlayState)parentState).PlayerActionResponse != null)
                 {
-                    PlayerActionParams actionParams = (PlayerActionParams)((CardPlayState)parentState).PlayerActionResponse.ChoiceResult;
+                    // TODO: for now, going to fix reference issues here, but later once HandleRequestAction and RunRest is combined, clean it up.
+                    ((CardPlayState)parentState).PlayerActionResponse = new PlayerActionParams(((CardPlayState)parentState).PlayerActionResponse, game);
+
+                    PlayerActionParams actionParams = ((CardPlayState)parentState).PlayerActionResponse;
+
                     FileLogger.Instance.Log(actionParams.ToString(curPlayer, game.CurState.StateType));
                 }
             }
@@ -64,7 +73,7 @@ namespace HighTreasonGame.GameStates
             {
                 if (((CardPlayState)parentState).PlayerActionResponse != null)
                 {
-                    PlayerActionParams actionParams = (PlayerActionParams)((CardPlayState)parentState).PlayerActionResponse.ChoiceResult;
+                    PlayerActionParams actionParams = ((CardPlayState)parentState).PlayerActionResponse;
                     if (actionParams.usage == PlayerActionParams.UsageType.Cancelled)
                     {
                         parentState.SetNextSubstate(typeof(PlayerActionChoiceSubstate));
@@ -84,10 +93,27 @@ namespace HighTreasonGame.GameStates
         protected class ObjectionSubstate : GameSubState
         {
             private bool objected = false;
-            private Action objectionResponse = null;
+            private BoardChoices objectionResponse = null;
 
             public ObjectionSubstate(GameState parentState) : base(parentState)
-            { }
+            {}
+
+            // Copy constructor
+            public ObjectionSubstate(ObjectionSubstate substate, GameState parentState, Game game) : base(parentState)
+            {
+                objected = substate.objected;
+            }
+
+            public override bool CheckCloneEquality(GameSubState substate)
+            {
+                bool equal = base.CheckCloneEquality(substate);
+
+                ObjectionSubstate os = (ObjectionSubstate)substate;
+
+                equal &= objected == os.objected;
+                
+                return equal;
+            }
 
             public override void PreRun(Game game, Player curPlayer)
             {
@@ -97,8 +123,11 @@ namespace HighTreasonGame.GameStates
 
             public override Action RequestAction(Game game, Player curPlayer)
             {
-                PlayerActionParams actionParams = (PlayerActionParams)((CardPlayState)parentState).PlayerActionResponse.ChoiceResult;
-                List<Card> attorneyCards = curPlayer.Hand.Cards.FindAll(c => c.Template.CanBeUsedToObject(curPlayer));
+                PlayerActionParams actionParams = ((CardPlayState)parentState).PlayerActionResponse;
+
+                Player objectingPlayer = game.GetOtherPlayer(curPlayer);
+
+                List<Card> attorneyCards = objectingPlayer.Hand.SelectableCards.FindAll(c => c.Template.CanBeUsedToObject(objectingPlayer));
                 if ((actionParams.usage != PlayerActionParams.UsageType.Event
                     || (game.CurState.StateType != GameState.GameStateType.TrialInChief && game.CurState.StateType != GameState.GameStateType.Summation)
                     || attorneyCards.Count == 0))
@@ -116,28 +145,40 @@ namespace HighTreasonGame.GameStates
                         (Func<Dictionary<Card, int>, bool, bool>)((Dictionary<Card, int> selected, bool isDone) => { return selected.Count == 1 || isDone; }),
                         true,
                         game,
-                        curPlayer,
+                        objectingPlayer,
                         "Select attorney card to object " + actionParams.card.Template.Name + ", or press done to pass");
             }
 
             public override void HandleRequestAction(Action action)
             {
-                objectionResponse = action;
+                if (action != null)
+                {
+                    objectionResponse = (BoardChoices)action.ChoiceResult;
+                }
             }
 
             public override void RunRest(Game game, Player curPlayer)
             {
                 if (objectionResponse != null)
                 {
-                    BoardChoices boardChoices = (BoardChoices)objectionResponse.ChoiceResult;
+                    // TODO: for now, going to fix reference issues here, but later once HandleRequestAction and RunRest is combined, clean it up.
+                    objectionResponse = new BoardChoices(objectionResponse, game);
+
+                    BoardChoices boardChoices = objectionResponse;
 
                     if (boardChoices.SelectedCards.Count > 0)
                     {
                         Card objectCard = boardChoices.SelectedCards.Keys.First();
 
-                        FileLogger.Instance.Log(curPlayer + " objected with " + objectCard.Template.Name + "\n");
+                        Player objectingPlayer = game.GetOtherPlayer(curPlayer);
+                        FileLogger.Instance.Log(objectingPlayer + " objected with " + objectCard.Template.Name + "\n");
 
                         game.Discards.MoveCard(objectCard);
+                        
+                        Card objectedCard= ((CardPlayState)parentState).PlayerActionResponse.card;
+                        objectedCard.BeingPlayed = false;
+                        game.Discards.MoveCard(objectedCard);
+
                         objected = true;
                     }
                 }
@@ -155,11 +196,27 @@ namespace HighTreasonGame.GameStates
 
         protected class PlayerActionResolutionSubstate : GameSubState
         {
-            public Action CardUsageResponse = null;
+            public BoardChoices CardUsageResponse = null;
             public bool notCancelled = false;
 
             public PlayerActionResolutionSubstate(GameState _parent) : base(_parent)
             {}
+
+            // Copy constructor
+            public PlayerActionResolutionSubstate(PlayerActionResolutionSubstate substate, GameState parentState, Game game) : base(parentState)
+            {
+                notCancelled = substate.notCancelled;
+            }
+
+            public override bool CheckCloneEquality(GameSubState substate)
+            {
+                bool equal = base.CheckCloneEquality(substate);
+
+                PlayerActionResolutionSubstate sub = (PlayerActionResolutionSubstate)substate;
+                equal &= notCancelled == sub.notCancelled;
+
+                return equal;
+            }
 
             public override void PreRun(Game game, Player curPlayer)
             {
@@ -169,12 +226,12 @@ namespace HighTreasonGame.GameStates
 
             public override Action RequestAction(Game game, Player curPlayer)
             {
-                PlayerActionParams playerAction = (PlayerActionParams)((CardPlayState)parentState).PlayerActionResponse.ChoiceResult;
+                PlayerActionParams playerAction = ((CardPlayState)parentState).PlayerActionResponse;
 
                 if (playerAction.usage == PlayerActionParams.UsageType.Event)
                 {
                     playerAction.card.BeingPlayed = true;
-                    CardTemplate.CardEffectPair effectPair = playerAction.card.GetEventEffectPair(game, (int)playerAction.misc[0]);
+                    CardTemplate.CardEffectPair effectPair = playerAction.card.GetEventEffectPair(game, playerAction.eventIdx);
 
                     return effectPair.CardChoice(game, curPlayer);
                 }
@@ -189,12 +246,15 @@ namespace HighTreasonGame.GameStates
 
             public override void HandleRequestAction(Action action)
             {
-                CardUsageResponse = action;
+                if (action != null)
+                {
+                    CardUsageResponse = (BoardChoices)action.ChoiceResult;
+                }
             }
 
             public override void RunRest(Game game, Player curPlayer)
             {
-                PlayerActionParams playerAction = (PlayerActionParams)((CardPlayState)parentState).PlayerActionResponse.ChoiceResult;
+                PlayerActionParams playerAction = ((CardPlayState)parentState).PlayerActionResponse;
 
                 bool actionPerformed = false;
                 bool cardPlayed = false;
@@ -207,7 +267,9 @@ namespace HighTreasonGame.GameStates
                 }
                 else if (CardUsageResponse != null)
                 {
-                    BoardChoices boardChoices = (BoardChoices)CardUsageResponse.ChoiceResult;
+                    // TODO: for now, going to fix reference issues here, but later once HandleRequestAction and RunRest is combined, clean it up.
+                    CardUsageResponse = new BoardChoices(CardUsageResponse, game);
+                    BoardChoices boardChoices = CardUsageResponse;
                     notCancelled = boardChoices.NotCancelled;
                     if (notCancelled)
                     {
@@ -216,7 +278,7 @@ namespace HighTreasonGame.GameStates
                         {
                             FileLogger.Instance.Log(boardChoices.ToStringForEvent());
 
-                            CardTemplate.CardEffectPair effectPair = playerAction.card.GetEventEffectPair(game, (int)playerAction.misc[0]);
+                            CardTemplate.CardEffectPair effectPair = playerAction.card.GetEventEffectPair(game, playerAction.eventIdx);
                             effectPair.CardEffect(game, curPlayer, boardChoices);
                             cardPlayed = true;
                         }
@@ -258,7 +320,6 @@ namespace HighTreasonGame.GameStates
                 {
                     parentState.SetNextSubstate(typeof(PlayerTurnCompleteSubstate));
                 }
-
             }
         }
 
@@ -268,6 +329,22 @@ namespace HighTreasonGame.GameStates
 
             public PlayerTurnCompleteSubstate(GameState _parent) : base(_parent)
             {
+            }
+
+            // Copy constructor
+            public PlayerTurnCompleteSubstate(PlayerTurnCompleteSubstate substate, GameState parentState, Game game) : base(parentState)
+            {
+                numPlayersFinished = substate.numPlayersFinished;
+            }
+
+            public override bool CheckCloneEquality(GameSubState substate)
+            {
+                bool equal = base.CheckCloneEquality(substate);
+
+                PlayerTurnCompleteSubstate sub = (PlayerTurnCompleteSubstate)substate;
+                equal &= numPlayersFinished == sub.numPlayersFinished;
+
+                return equal;
             }
 
             public override void Init()
@@ -342,6 +419,38 @@ namespace HighTreasonGame.GameStates
             : base(_stateType, _game)
         {}
 
+        // Copy constructor
+        public CardPlayState(CardPlayState state, Game _game)
+            : base(state, _game)
+        {
+            if (state.PlayerActionResponse != null)
+            {
+                PlayerActionResponse = new PlayerActionParams(state.PlayerActionResponse, _game);
+            }
+        }
+
+        public override bool CheckCloneEquality(GameState state)
+        {
+            bool equal = base.CheckCloneEquality(state);
+
+            if (PlayerActionResponse != null)
+            {
+                equal &= PlayerActionResponse.CheckCloneEquality(((CardPlayState)state).PlayerActionResponse);
+            }
+            else
+            {
+                equal &= PlayerActionResponse == ((CardPlayState)state).PlayerActionResponse;
+            }
+
+            if (!equal)
+            {
+                Console.WriteLine("PlayerActionResponse was not equal");
+                return equal;
+            }
+
+            return equal;
+        }
+
         public override void InitState()
         {
             base.InitState();
@@ -363,12 +472,40 @@ namespace HighTreasonGame.GameStates
             }
         }
 
+        protected override void cleanup()
+        {
+            PlayerActionResponse = null;
+        }
+
         protected override void initSubStates(GameState parent)
         {
             substates.Add(typeof(PlayerActionChoiceSubstate), new PlayerActionChoiceSubstate(this));
             substates.Add(typeof(ObjectionSubstate), new ObjectionSubstate(this));
             substates.Add(typeof(PlayerActionResolutionSubstate), new PlayerActionResolutionSubstate(this));
             substates.Add(typeof(PlayerTurnCompleteSubstate), new PlayerTurnCompleteSubstate(this));
+        }
+
+        protected override void copySubstates(GameState state, Game _game)
+        {
+            foreach (var kv in ((CardPlayState)state).substates)
+            {
+                if (kv.Key == typeof(PlayerActionChoiceSubstate))
+                {
+                    substates[kv.Key] = new PlayerActionChoiceSubstate((PlayerActionChoiceSubstate)kv.Value, this, _game);
+                }
+                else if (kv.Key == typeof(ObjectionSubstate))
+                {
+                    substates[kv.Key] = new ObjectionSubstate((ObjectionSubstate)kv.Value, this, _game);
+                }
+                else if (kv.Key == typeof(PlayerActionResolutionSubstate))
+                {
+                    substates[kv.Key] = new PlayerActionResolutionSubstate((PlayerActionResolutionSubstate)kv.Value, this, _game);
+                }
+                else if (kv.Key == typeof(PlayerTurnCompleteSubstate))
+                {
+                    substates[kv.Key] = new PlayerTurnCompleteSubstate((PlayerTurnCompleteSubstate)kv.Value, this, _game);
+                }
+            }
         }
     }
 }

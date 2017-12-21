@@ -12,26 +12,33 @@ namespace HighTreasonConsole
     {
         static void Main(string[] args)
         {
-            string path = "HighTreasonCardTexts.json";
+            bool cloneTest = false;
 
             if (args.Length > 0)
             {
-                path = args[0];
+                cloneTest = args[0].Equals("test");
+            }
+
+            string path = "HighTreasonCardTexts.json";
+
+            if (args.Length > 1)
+            {
+                path = args[1];
             }
 
             int numIterations = 1;
-            if (args.Length > 1)
+            if (args.Length > 2)
             {
-                numIterations = Int32.Parse(args[1]);
+                numIterations = Int32.Parse(args[2]);
             }
 
             ChoiceHandler[] handlers = new ChoiceHandler[] { new RandomAIChoiceHandler(), new RandomAIChoiceHandler() };
 
-            if (args.Length >= 4)
+            if (args.Length >= 5)
             {
                 for (int i = 0; i < 2; ++i)
                 {
-                    string playerAIStr = args[2 + i];
+                    string playerAIStr = args[3 + i];
 
                     ChoiceHandler handler = new RandomAIChoiceHandler();
                     switch (playerAIStr)
@@ -50,7 +57,7 @@ namespace HighTreasonConsole
 
             string jsonText = System.IO.File.ReadAllText(path);
 
-            foreach(var handler in handlers)
+            foreach (var handler in handlers)
             {
                 Console.WriteLine(handler);
             }
@@ -80,13 +87,46 @@ namespace HighTreasonConsole
                 HighTreasonGame.Action action = game.Start();
                 while (!game.GameEnd)
                 {
+                    if (cloneTest)
+                    {
+                        Game cloneGame = new Game(game);
+                        bool equal = cloneGame.CheckCloneEquality(game);
+
+                        if (!equal)
+                        {
+                            if (System.Diagnostics.Debugger.IsAttached)
+                            {
+                                System.Diagnostics.Debugger.Break();
+                            }
+                            else
+                            {
+                                Console.WriteLine("Clone test failed");
+                            }
+                        }
+
+                        game = cloneGame;
+                        game.NotifyGameEnd +=
+                            (Player.PlayerSide winningPlayerSide, bool winByNotEnoughGuilt, int finalScore) =>
+                            {
+                                if (winningPlayerSide == Player.PlayerSide.Prosecution)
+                                {
+                                    prosecutionWins += 1;
+                                }
+
+                                if (winByNotEnoughGuilt)
+                                {
+                                    notEnoughGuilt += 1;
+                                }
+                            };
+                    }
+
                     if (action != null)
                     {
                         action.RequestChoice();
                     }
                     action = game.Continue(action);
                 }
-                
+
                 Console.WriteLine("Game " + (i + 1) + " has ended");
             }
 
@@ -97,6 +137,9 @@ namespace HighTreasonConsole
                 numIterations - prosecutionWins,
                 notEnoughGuilt);
             FileLogger.Instance.Log(resultsStr);
+
+            Console.WriteLine("Press any key to complete");
+            Console.ReadLine();
         }
     }
 }

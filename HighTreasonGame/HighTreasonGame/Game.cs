@@ -56,7 +56,7 @@ namespace HighTreasonGame
             get; private set;
         }
 
-        public Game(ChoiceHandler[] playerChoiceHandlers, string cardInfoJson, GameState.GameStateType startState=GameState.GameStateType.JurySelection)
+        public Game(ChoiceHandler[] playerChoiceHandlers, string cardInfoJson, GameState.GameStateType startState = GameState.GameStateType.JurySelection)
         {
             StartState = startState;
 
@@ -81,6 +81,134 @@ namespace HighTreasonGame
             NotifyGameEnd += logEndOfGame;
 
             initStates();
+        }
+
+        // Copy constructor
+        public Game(Game game)
+        {
+            this.Board = new Board(game.Board, this);
+            this.Deck = new DeckHolder(game.Deck);
+            this.Discards = new DiscardHolder(game.Discards);
+            this.StartState = game.StartState;
+            this.OfficersRecalledPlayable = game.OfficersRecalledPlayable;
+            this.GameEnd = game.GameEnd;
+
+            foreach (Player p in game.players.Values)
+            {
+                players[p.Side] = new Player(p, this);
+            }
+
+            foreach (var kv in game.states)
+            {
+                switch (kv.Key)
+                {
+                    case GameState.GameStateType.JurySelection:
+                        this.states[kv.Key] = new JurySelectionState((JurySelectionState)kv.Value, this);
+                        break;
+                    case GameState.GameStateType.JuryDismissal:
+                        this.states[kv.Key] = new JuryDismissalState((JuryDismissalState)kv.Value, this);
+                        break;
+                    case GameState.GameStateType.TrialInChief:
+                        this.states[kv.Key] = new TrialInChiefState((TrialInChiefState)kv.Value, this);
+                        break;
+                    case GameState.GameStateType.Summation:
+                        this.states[kv.Key] = new SummationState((SummationState)kv.Value, this);
+                        break;
+                    case GameState.GameStateType.Deliberation:
+                        this.states[kv.Key] = new DeliberationState((DeliberationState)kv.Value, this);
+                        break;
+                }
+            }
+
+            this.CurState = this.states[game.CurState.StateType];
+
+            NotifyStateStart += logStartOfState;
+            NotifyGameEnd += logEndOfGame;
+        }
+
+        public bool CheckCloneEquality(Game game)
+        {
+            bool equal = true;
+
+            equal &= this.Board.CheckCloneEquality(game.Board);
+
+            if (!equal)
+            {
+                Console.WriteLine("Board was not equal");
+                return equal;
+            }
+
+            equal &= this.Deck.CheckCloneEquality(game.Deck);
+
+            if (!equal)
+            {
+                Console.WriteLine("Deck was not equal");
+                return equal;
+            }
+
+            equal &= this.Discards.CheckCloneEquality(game.Discards);
+
+            if (!equal)
+            {
+                Console.WriteLine("Discards was not equal");
+                return equal;
+            }
+
+            equal &= GetPlayerOfSide(Player.PlayerSide.Prosecution).CheckCloneEquality(game.GetPlayerOfSide(Player.PlayerSide.Prosecution));
+            equal &= GetPlayerOfSide(Player.PlayerSide.Defense).CheckCloneEquality(game.GetPlayerOfSide(Player.PlayerSide.Defense));
+
+            if (!equal)
+            {
+                Console.WriteLine("Players were not equal");
+                return equal;
+            }
+
+            equal &= this.StartState.GetType() == game.StartState.GetType();
+            equal &= this.OfficersRecalledPlayable == game.OfficersRecalledPlayable;
+            equal &= this.GameEnd == game.GameEnd;
+
+            foreach (var kv in states)
+            {
+                equal &= kv.Value.CheckCloneEquality(game.states[kv.Key]);
+                if (!equal)
+                {
+                    Console.WriteLine("State " + kv.Value.StateType + " was not equal");
+                    return equal;
+                }
+            }
+
+            equal &= this.CurState.StateType == game.CurState.StateType;
+
+            return equal;
+        }
+
+        public Card FindCard(Card card)
+        {
+            Card retCard = null;
+
+            switch (card.CardHolder.Id)
+            {
+                case CardHolder.HolderId.Deck:
+                    retCard = Deck.Cards.Find(c => c.Template.Name.Equals(card.Template.Name));
+                    break;
+                case CardHolder.HolderId.Discard:
+                    retCard = Discards.Cards.Find(c => c.Template.Name.Equals(card.Template.Name));
+                    break;
+                case CardHolder.HolderId.Summation:
+                    {
+                        Player player = this.GetPlayerOfSide(((PlayerCardHolder)card.CardHolder).Owner.Side);
+                        retCard = player.SummationDeck.Cards.Find(c => c.Template.Name.Equals(card.Template.Name));
+                    } break;
+                case CardHolder.HolderId.Hand:
+                    {
+                        Player player = this.GetPlayerOfSide(((PlayerCardHolder)card.CardHolder).Owner.Side);
+                        retCard = player.Hand.Cards.Find(c => c.Template.Name.Equals(card.Template.Name));
+                    } break;
+            }
+
+            System.Diagnostics.Debug.Assert(retCard != null, "FindCard should never return null.");
+
+            return retCard;
         }
 
         public Action Start()

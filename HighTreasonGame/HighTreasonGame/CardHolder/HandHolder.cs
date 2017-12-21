@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace HighTreasonGame
 {
-    public class HandHolder : CardHolder
+    public class HandHolder : PlayerCardHolder
     {
         public List<Card> SelectableCards
         {
@@ -15,7 +15,11 @@ namespace HighTreasonGame
             }
         }
 
-        public HandHolder() : base(HolderId.Hand)
+        public HandHolder(Player player) : base(HolderId.Hand, player)
+        {}
+
+        // Copy constructor
+        public HandHolder(HandHolder holder, Player player) : base(holder, player)
         {}
 
         public void SetupHand(List<Card> cards)

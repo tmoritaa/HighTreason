@@ -40,6 +40,22 @@ namespace HighTreasonGame
             Properties.Add(Property.Sway);
         }
 
+        // Copy constructor
+        public SwayTrack(SwayTrack track, Jury _owner, Game game)
+            : base(track.Value, track.MinValue, track.MaxValue, game, track.Properties.ToArray())
+        {
+            owner = _owner;
+        }
+
+        public override bool CheckCloneEquality(BoardObject track)
+        {
+            bool equal = base.CheckCloneEquality(track);
+
+            equal &= owner.Id == ((SwayTrack)track).owner.Id;
+
+            return equal;
+        }
+
         public override bool CanModifyByAction(int modValue)
         {
             return !IsLocked && base.CanModifyByAction(modValue);
