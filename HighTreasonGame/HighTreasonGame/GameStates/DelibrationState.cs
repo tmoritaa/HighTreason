@@ -54,16 +54,12 @@ namespace HighTreasonGame.GameStates
                 return null;
             }
 
-            public override void HandleRequestAction(Action action)
+            public override void HandleRequestAction(Action action, Game game, Player curPlayer)
             {
                 // Do nothing.
             }
-
-            public override void RunRest(Game game, Player curPlayer)
-            {
-            }
-
-            public override void PrepareNextSubstate()
+            
+            public override void SetNextSubstate(Game game, Player curPlayer)
             {
                 if (skipToGameEnd)
                 {
@@ -179,20 +175,11 @@ namespace HighTreasonGame.GameStates
                 }
             }
 
-            public override void HandleRequestAction(Action action)
+            public override void HandleRequestAction(Action action, Game game, Player curPlayer)
             {
                 if (action != null)
                 {
-                    ((DeliberationState)parentState).juryChoice = (BoardChoices)action.ChoiceResult;
-                }
-            }
-
-            public override void RunRest(Game game, Player curPlayer)
-            {
-                // TODO: for now, going to fix reference issues here, but later once HandleRequestAction and RunRest is combined, clean it up.
-                if (((DeliberationState)parentState).juryChoice != null)
-                {
-                    ((DeliberationState)parentState).juryChoice = new BoardChoices(((DeliberationState)parentState).juryChoice, game);
+                    ((DeliberationState)parentState).juryChoice = new BoardChoices((BoardChoices)action.ChoiceResult, game);
                 }
 
                 BoardChoices boardChoices = ((DeliberationState)parentState).juryChoice;
@@ -211,7 +198,7 @@ namespace HighTreasonGame.GameStates
                 }
             }
 
-            public override void PrepareNextSubstate()
+            public override void SetNextSubstate(Game game, Player curPlayer)
             {
                 if (((DeliberationState)parentState).playerSidePassed.Count >= 2)
                 {
@@ -253,9 +240,6 @@ namespace HighTreasonGame.GameStates
 
             public override Action RequestAction(Game game, Player curPlayer)
             {
-                // TODO: for now, going to fix reference issues here, but later once HandleRequestAction and RunRest is combined, clean it up.
-                ((DeliberationState)parentState).juryChoice = new BoardChoices(((DeliberationState)parentState).juryChoice, game);
-
                 Jury usedJury = (Jury)((DeliberationState)parentState).juryChoice.SelectedObjs.Keys.First();
 
                 int modValue = (curPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
@@ -281,13 +265,10 @@ namespace HighTreasonGame.GameStates
                     "Select usage for " + usedJury.ActionPoints + " deliberation points");
             }
 
-            public override void HandleRequestAction(Action action)
+            public override void HandleRequestAction(Action action, Game game, Player curPlayer)
             {
-                boardChoices = (BoardChoices)action.ChoiceResult;
-            }
+                boardChoices = new BoardChoices((BoardChoices)action.ChoiceResult, game);
 
-            public override void RunRest(Game game, Player curPlayer)
-            {
                 if (boardChoices.NotCancelled)
                 {
                     int modValue = (curPlayer.Side == Player.PlayerSide.Prosecution) ? 1 : -1;
@@ -314,7 +295,7 @@ namespace HighTreasonGame.GameStates
                 }
             }
 
-            public override void PrepareNextSubstate()
+            public override void SetNextSubstate(Game game, Player curPlayer)
             {
                 parentState.SetNextSubstate(typeof(DeliberationJuryChoiceSubstate));
             }
@@ -359,24 +340,19 @@ namespace HighTreasonGame.GameStates
                 }
             }
 
-            public override void HandleRequestAction(Action action)
-            {
-                // Do nothing.
-            }
-
             public override Action RequestAction(Game game, Player curPlayer)
             {
                 return null;
             }
 
-            public override void RunRest(Game game, Player curPlayer)
-            {
-                parentState.SignifyStateEnd();
-            }
-
-            public override void PrepareNextSubstate()
+            public override void HandleRequestAction(Action action, Game game, Player curPlayer)
             {
                 // Do nothing.
+            }
+
+            public override void SetNextSubstate(Game game, Player curPlayer)
+            {
+                parentState.SignifyStateEnd();
             }
         }
 

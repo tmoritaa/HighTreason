@@ -48,28 +48,19 @@ namespace HighTreasonGame.GameStates
                 }
             }
 
-            public override void HandleRequestAction(Action action)
+            public override void HandleRequestAction(Action action, Game game, Player curPlayer)
             {
                 if (action != null)
                 {
-                    ((CardPlayState)parentState).PlayerActionResponse = (PlayerActionParams)action.ChoiceResult;
-                }
-            }
+                    PlayerActionParams actionParams = new PlayerActionParams((PlayerActionParams)action.ChoiceResult, game);
 
-            public override void RunRest(Game game, Player curPlayer)
-            {
-                if (((CardPlayState)parentState).PlayerActionResponse != null)
-                {
-                    // TODO: for now, going to fix reference issues here, but later once HandleRequestAction and RunRest is combined, clean it up.
-                    ((CardPlayState)parentState).PlayerActionResponse = new PlayerActionParams(((CardPlayState)parentState).PlayerActionResponse, game);
-
-                    PlayerActionParams actionParams = ((CardPlayState)parentState).PlayerActionResponse;
+                    ((CardPlayState)parentState).PlayerActionResponse = actionParams;
 
                     FileLogger.Instance.Log(actionParams.ToString(curPlayer, game.CurState.StateType));
                 }
             }
 
-            public override void PrepareNextSubstate()
+            public override void SetNextSubstate(Game game, Player curPlayer)
             {
                 if (((CardPlayState)parentState).PlayerActionResponse != null)
                 {
@@ -149,23 +140,13 @@ namespace HighTreasonGame.GameStates
                         "Select attorney card to object " + actionParams.card.Template.Name + ", or press done to pass");
             }
 
-            public override void HandleRequestAction(Action action)
+            public override void HandleRequestAction(Action action, Game game, Player curPlayer)
             {
                 if (action != null)
                 {
-                    objectionResponse = (BoardChoices)action.ChoiceResult;
-                }
-            }
-
-            public override void RunRest(Game game, Player curPlayer)
-            {
-                if (objectionResponse != null)
-                {
-                    // TODO: for now, going to fix reference issues here, but later once HandleRequestAction and RunRest is combined, clean it up.
-                    objectionResponse = new BoardChoices(objectionResponse, game);
+                    objectionResponse = new BoardChoices((BoardChoices)action.ChoiceResult, game);
 
                     BoardChoices boardChoices = objectionResponse;
-
                     if (boardChoices.SelectedCards.Count > 0)
                     {
                         Card objectCard = boardChoices.SelectedCards.Keys.First();
@@ -174,22 +155,19 @@ namespace HighTreasonGame.GameStates
                         FileLogger.Instance.Log(objectingPlayer + " objected with " + objectCard.Template.Name + "\n");
 
                         game.Discards.MoveCard(objectCard);
-                        
-                        Card objectedCard= ((CardPlayState)parentState).PlayerActionResponse.card;
+
+                        Card objectedCard = ((CardPlayState)parentState).PlayerActionResponse.card;
                         objectedCard.BeingPlayed = false;
                         game.Discards.MoveCard(objectedCard);
 
                         objected = true;
                     }
                 }
-
-                return;
             }
 
-            public override void PrepareNextSubstate()
+            public override void SetNextSubstate(Game game, Player curPlayer)
             {
                 Type nextSubstateType = (objected) ? typeof(PlayerTurnCompleteSubstate) : typeof(PlayerActionResolutionSubstate);
-
                 parentState.SetNextSubstate(nextSubstateType);
             }
         }
@@ -244,16 +222,13 @@ namespace HighTreasonGame.GameStates
                 return null;
             }
 
-            public override void HandleRequestAction(Action action)
+            public override void HandleRequestAction(Action action, Game game, Player curPlayer)
             {
                 if (action != null)
                 {
-                    CardUsageResponse = (BoardChoices)action.ChoiceResult;
+                    CardUsageResponse = new BoardChoices((BoardChoices)action.ChoiceResult, game);
                 }
-            }
 
-            public override void RunRest(Game game, Player curPlayer)
-            {
                 PlayerActionParams playerAction = ((CardPlayState)parentState).PlayerActionResponse;
 
                 bool actionPerformed = false;
@@ -267,8 +242,6 @@ namespace HighTreasonGame.GameStates
                 }
                 else if (CardUsageResponse != null)
                 {
-                    // TODO: for now, going to fix reference issues here, but later once HandleRequestAction and RunRest is combined, clean it up.
-                    CardUsageResponse = new BoardChoices(CardUsageResponse, game);
                     BoardChoices boardChoices = CardUsageResponse;
                     notCancelled = boardChoices.NotCancelled;
                     if (notCancelled)
@@ -310,7 +283,7 @@ namespace HighTreasonGame.GameStates
                 }
             }
 
-            public override void PrepareNextSubstate()
+            public override void SetNextSubstate(Game game, Player curPlayer)
             {
                 if (!notCancelled)
                 {
@@ -360,10 +333,7 @@ namespace HighTreasonGame.GameStates
                 return null;
             }
 
-            public override void HandleRequestAction(Action action)
-            { }
-
-            public override void RunRest(Game game, Player curPlayer)
+            public override void HandleRequestAction(Action action, Game game, Player curPlayer)
             {
                 if (game.CurState.StateType == GameStateType.JurySelection)
                 {
@@ -402,7 +372,7 @@ namespace HighTreasonGame.GameStates
                 }
             }
 
-            public override void PrepareNextSubstate()
+            public override void SetNextSubstate(Game game, Player curPlayer)
             {
                 if (numPlayersFinished < 2)
                 {

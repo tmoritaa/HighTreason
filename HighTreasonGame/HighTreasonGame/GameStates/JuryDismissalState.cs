@@ -42,15 +42,9 @@ namespace HighTreasonGame.GameStates
                         "Select Jury to Dismiss");
             }
 
-            public override void HandleRequestAction(Action action)
+            public override void HandleRequestAction(Action action, Game game, Player curPlayer)
             {
-                boardChoices = (BoardChoices)action.ChoiceResult;
-            }
-
-            public override void RunRest(Game game, Player curPlayer)
-            {
-                // TODO: for now, going to fix reference issues here, but later once HandleRequestAction and RunRest is combined, clean it up.
-                boardChoices = new BoardChoices(boardChoices, game);
+                boardChoices = new BoardChoices((BoardChoices)action.ChoiceResult, game);
 
                 if (boardChoices.NotCancelled)
                 {
@@ -64,13 +58,15 @@ namespace HighTreasonGame.GameStates
                 if (game.Board.Juries.Count == GameConstants.NUM_JURY_AFTER_DISMISSAL)
                 {
                     shuffleDiscardBackToDeck(game);
-                    parentState.SignifyStateEnd();
                 }
             }
 
-            public override void PrepareNextSubstate()
+            public override void SetNextSubstate(Game game, Player curPlayer)
             {
-                // Do nothing.
+                if (game.Board.Juries.Count == GameConstants.NUM_JURY_AFTER_DISMISSAL)
+                {
+                    parentState.SignifyStateEnd();
+                }
             }
 
             private void shuffleDiscardBackToDeck(Game game)

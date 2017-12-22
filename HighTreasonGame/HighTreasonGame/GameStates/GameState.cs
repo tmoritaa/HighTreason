@@ -145,9 +145,8 @@ namespace HighTreasonGame
             Action response = action;
             while (!stateEnded)
             {
-                CurSubstate.HandleRequestAction(response);
-                CurSubstate.RunRest(game, curPlayer);
-                CurSubstate.PrepareNextSubstate();
+                CurSubstate.HandleRequestAction(response, game, curPlayer);
+                CurSubstate.SetNextSubstate(game, curPlayer);
 
                 if (stateEnded)
                 {
