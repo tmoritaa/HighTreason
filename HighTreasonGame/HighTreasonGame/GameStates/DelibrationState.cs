@@ -54,7 +54,7 @@ namespace HighTreasonGame.GameStates
                 return null;
             }
 
-            public override void HandleRequestAction(HTAction action, Game game, Player curPlayer)
+            public override void HandleRequestAction(object result, Game game, Player curPlayer)
             {
                 // Do nothing.
             }
@@ -173,11 +173,11 @@ namespace HighTreasonGame.GameStates
                 }
             }
 
-            public override void HandleRequestAction(HTAction action, Game game, Player curPlayer)
+            public override void HandleRequestAction(object result, Game game, Player curPlayer)
             {
-                if (action != null)
+                if (result != null)
                 {
-                    ((DeliberationState)parentState).juryChoice = new BoardChoices((BoardChoices)action.ChoiceResult, game);
+                    ((DeliberationState)parentState).juryChoice = new BoardChoices((BoardChoices)result, game);
                 }
 
                 BoardChoices boardChoices = ((DeliberationState)parentState).juryChoice;
@@ -261,9 +261,9 @@ namespace HighTreasonGame.GameStates
                     "Select usage for " + usedJury.ActionPoints + " deliberation points");
             }
 
-            public override void HandleRequestAction(HTAction action, Game game, Player curPlayer)
+            public override void HandleRequestAction(object result, Game game, Player curPlayer)
             {
-                boardChoices = new BoardChoices((BoardChoices)action.ChoiceResult, game);
+                boardChoices = new BoardChoices((BoardChoices)result, game);
 
                 if (boardChoices.NotCancelled)
                 {
@@ -341,7 +341,7 @@ namespace HighTreasonGame.GameStates
                 return null;
             }
 
-            public override void HandleRequestAction(HTAction action, Game game, Player curPlayer)
+            public override void HandleRequestAction(object result, Game game, Player curPlayer)
             {
                 // Do nothing.
             }

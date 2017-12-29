@@ -140,9 +140,9 @@ namespace HighTreasonGame
             return CurSubstate.RequestAction(game, curPlayer);
         }
 
-        public HTAction Continue(HTAction action)
+        public HTAction Continue(object result)
         {
-            HTAction response = action;
+            object response = result;
             while (!stateEnded)
             {
                 CurSubstate.HandleRequestAction(response, game, curPlayer);

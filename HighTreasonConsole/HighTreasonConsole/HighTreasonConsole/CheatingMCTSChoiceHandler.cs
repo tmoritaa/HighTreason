@@ -45,7 +45,7 @@ namespace HighTreasonConsole
                 var action = new HTAction(choice);
 
                 Game newGame = new Game(GameState, new ChoiceHandler[] { new FilterRandomAIChoiceHandler(), new FilterRandomAIChoiceHandler() });
-                HTAction outgoingAction = newGame.Continue(action); // TODO: not sure if we have to save the action generated from this continue.
+                HTAction outgoingAction = newGame.Continue(action?.ChoiceResult); // TODO: not sure if we have to save the action generated from this continue.
 
                 // TODO: node needs way to generate all possible choices.
                 return new Node(newGame, SearchPlayer, /*outgoingAction,*/ this, action);
@@ -99,14 +99,14 @@ namespace HighTreasonConsole
                         winningSide = winningPlayerSide;
                     };
 
-                var action = GameState.Continue(this.IncomingAction);
+                var action = GameState.Continue(this.IncomingAction?.ChoiceResult);
                 while (!GameState.GameEnd)
                 {
                     if (action != null)
                     {
                         action.RequestChoice();
                     }
-                    action = GameState.Continue(action);
+                    action = GameState.Continue(action?.ChoiceResult);
                 }
 
                 return SearchPlayer.Side == winningSide;

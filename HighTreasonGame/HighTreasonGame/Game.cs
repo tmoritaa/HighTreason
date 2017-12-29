@@ -219,9 +219,9 @@ namespace HighTreasonGame
             return CurState.Start();
         }
 
-        public HTAction Continue(HTAction action)
+        public HTAction Continue(object result)
         {
-            return CurState.Continue(action);
+            return CurState.Continue(result);
         }
 
         public void SetNextState(GameState.GameStateType stateType)

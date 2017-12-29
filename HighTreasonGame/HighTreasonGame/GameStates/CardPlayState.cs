@@ -46,11 +46,11 @@ namespace HighTreasonGame.GameStates
                 }
             }
 
-            public override void HandleRequestAction(HTAction action, Game game, Player curPlayer)
+            public override void HandleRequestAction(object result, Game game, Player curPlayer)
             {
-                if (action != null)
+                if (result != null)
                 {
-                    PlayerActionParams actionParams = new PlayerActionParams((PlayerActionParams)action.ChoiceResult, game);
+                    PlayerActionParams actionParams = new PlayerActionParams((PlayerActionParams)result, game);
 
                     ((CardPlayState)parentState).PlayerActionResponse = actionParams;
 
@@ -136,11 +136,11 @@ namespace HighTreasonGame.GameStates
                         "Select attorney card to object " + actionParams.card.Template.Name + ", or press done to pass");
             }
 
-            public override void HandleRequestAction(HTAction action, Game game, Player curPlayer)
+            public override void HandleRequestAction(object result, Game game, Player curPlayer)
             {
-                if (action != null)
+                if (result != null)
                 {
-                    objectionResponse = new BoardChoices((BoardChoices)action.ChoiceResult, game);
+                    objectionResponse = new BoardChoices((BoardChoices)result, game);
 
                     BoardChoices boardChoices = objectionResponse;
                     if (boardChoices.SelectedCards.Count > 0)
@@ -218,11 +218,11 @@ namespace HighTreasonGame.GameStates
                 return null;
             }
 
-            public override void HandleRequestAction(HTAction action, Game game, Player curPlayer)
+            public override void HandleRequestAction(object result, Game game, Player curPlayer)
             {
-                if (action != null)
+                if (result != null)
                 {
-                    CardUsageResponse = new BoardChoices((BoardChoices)action.ChoiceResult, game);
+                    CardUsageResponse = new BoardChoices((BoardChoices)result, game);
                 }
 
                 PlayerActionParams playerAction = ((CardPlayState)parentState).PlayerActionResponse;
@@ -329,7 +329,7 @@ namespace HighTreasonGame.GameStates
                 return null;
             }
 
-            public override void HandleRequestAction(HTAction action, Game game, Player curPlayer)
+            public override void HandleRequestAction(object result, Game game, Player curPlayer)
             {
                 if (game.CurState.StateType == GameStateType.JurySelection)
                 {

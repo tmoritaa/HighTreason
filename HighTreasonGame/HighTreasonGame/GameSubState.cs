@@ -16,7 +16,7 @@ namespace HighTreasonGame
 
         public abstract void PreRun(Game game, Player curPlayer);
         public abstract HTAction RequestAction(Game game, Player curPlayer);
-        public abstract void HandleRequestAction(HTAction action, Game game, Player curPlayer);
+        public abstract void HandleRequestAction(object result, Game game, Player curPlayer);
         public abstract void SetNextSubstate(Game game, Player curPlayer);
 
         public virtual void Init() { }

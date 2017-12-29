@@ -124,7 +124,7 @@ namespace HighTreasonConsole
                     {
                         action.RequestChoice();
                     }
-                    action = game.Continue(action);
+                    action = game.Continue(action?.ChoiceResult);
                 }
 
                 Console.WriteLine("Game " + (i + 1) + " has ended");

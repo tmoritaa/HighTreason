@@ -40,9 +40,9 @@ namespace HighTreasonGame.GameStates
                         "Select Jury to Dismiss");
             }
 
-            public override void HandleRequestAction(HTAction action, Game game, Player curPlayer)
+            public override void HandleRequestAction(object result, Game game, Player curPlayer)
             {
-                boardChoices = new BoardChoices((BoardChoices)action.ChoiceResult, game);
+                boardChoices = new BoardChoices((BoardChoices)result, game);
 
                 if (boardChoices.NotCancelled)
                 {
