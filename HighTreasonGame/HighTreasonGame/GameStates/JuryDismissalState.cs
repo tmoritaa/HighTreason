@@ -24,25 +24,26 @@ namespace HighTreasonGame.GameStates
                 boardChoices = null;
             }
 
-            public override Action RequestAction(Game game, Player curPlayer)
+            public override HTAction RequestAction(Game game, Player curPlayer)
             {
                 return
-                    new Action(
+                    new HTAction(
                         ChoiceHandler.ChoiceType.BoardObjects,
                         curPlayer.ChoiceHandler,
                         game.Board.Juries.Cast<BoardObject>().ToList(),
                         (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return true; }),
-                        (Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>>)((List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
-                        {
-                            return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
-                        }),
+                        (Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>>)
+                            ((List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
+                            {
+                                return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
+                            }),
                         (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 1; }),
                         game,
                         curPlayer,
                         "Select Jury to Dismiss");
             }
 
-            public override void HandleRequestAction(Action action, Game game, Player curPlayer)
+            public override void HandleRequestAction(HTAction action, Game game, Player curPlayer)
             {
                 boardChoices = new BoardChoices((BoardChoices)action.ChoiceResult, game);
 

@@ -23,39 +23,33 @@ namespace HighTreasonGame
                         {
                             List<BoardObject> newChoices = new List<BoardObject>(choices);
 
-                            int numRelig = 0;
-                            int numLang = 0;
-                            int numOccu = 0;
+                            Property[] props = new Property[] { Property.Religion, Property.Language, Property.Occupation };
+                            int[] numProps = new int[] { 0, 0, 0 };
                             
                             foreach (var pairs in selected)
                             {
                                 newChoices.Remove(pairs.Key);
                                 
-                                if (pairs.Key.Properties.Contains(Property.Religion))
+                                for (int i = 0; i < 3; ++i)
                                 {
-                                    numRelig += 1;
-                                }
-                                else if (pairs.Key.Properties.Contains(Property.Language))
-                                {
-                                    numLang += 1;
-                                }
-                                else if (pairs.Key.Properties.Contains(Property.Occupation))
-                                {
-                                    numOccu += 1;
+                                    if (pairs.Key.Properties.Contains(props[i]))
+                                    {
+                                        numProps[i] += 1;
+                                    }
                                 }
                             }
 
-                            if (numRelig >= 3)
+                            if (numProps[0] >= 3)
                             {
                                 newChoices = newChoices.Where(bo => !bo.Properties.Contains(Property.Religion)).ToList();
                             }
 
-                            if (numLang >= 3)
+                            if (numProps[1] >= 3)
                             {
                                 newChoices = newChoices.Where(bo => !bo.Properties.Contains(Property.Language)).ToList();
                             }
 
-                            if (numOccu >= 3)
+                            if (numProps[2] >= 3)
                             {
                                 newChoices = newChoices.Where(bo => !bo.Properties.Contains(Property.Occupation)).ToList();
                             }
@@ -73,7 +67,7 @@ namespace HighTreasonGame
                     {
                         List<BoardObject> bos = findAspectTracksWithProp(game).Cast<BoardObject>().ToList();
 
-                        return new Action(
+                        return new HTAction(
                             ChoiceHandler.ChoiceType.BoardObjects,
                             choosingPlayer.ChoiceHandler,
                             bos,

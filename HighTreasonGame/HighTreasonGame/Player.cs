@@ -66,11 +66,11 @@ namespace HighTreasonGame
         }
 
         // Copy constructor
-        public Player(Player player, Game _game)
+        public Player(Player player, Game _game, ChoiceHandler choiceHandler)
         {
             game = _game;
             Side = player.Side;
-            ChoiceHandler = player.ChoiceHandler;
+            ChoiceHandler = choiceHandler;
             SummationDeck = new SummationDeckHolder(player.SummationDeck, this);
             Hand = new HandHolder(player.Hand, this);
             PerformedMulligan = player.PerformedMulligan;

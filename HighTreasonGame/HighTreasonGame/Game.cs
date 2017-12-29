@@ -84,7 +84,7 @@ namespace HighTreasonGame
         }
 
         // Copy constructor
-        public Game(Game game)
+        public Game(Game game, ChoiceHandler[] playerChoiceHandlers)
         {
             this.Board = new Board(game.Board, this);
             this.Deck = new DeckHolder(game.Deck);
@@ -95,7 +95,9 @@ namespace HighTreasonGame
 
             foreach (Player p in game.players.Values)
             {
-                players[p.Side] = new Player(p, this);
+                ChoiceHandler choiceHandler = playerChoiceHandlers[(p.Side == Player.PlayerSide.Prosecution) ? 0 : 1];
+
+                players[p.Side] = new Player(p, this, choiceHandler);
             }
 
             foreach (var kv in game.states)
@@ -211,13 +213,13 @@ namespace HighTreasonGame
             return retCard;
         }
 
-        public Action Start()
+        public HTAction Start()
         {
             SetNextState(StartState);
             return CurState.Start();
         }
 
-        public Action Continue(Action action)
+        public HTAction Continue(HTAction action)
         {
             return CurState.Continue(action);
         }

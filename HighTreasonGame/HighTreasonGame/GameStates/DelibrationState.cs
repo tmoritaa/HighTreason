@@ -49,12 +49,12 @@ namespace HighTreasonGame.GameStates
                 handleInsanityTrackEffect(game);
             }
 
-            public override Action RequestAction(Game game, Player curPlayer)
+            public override HTAction RequestAction(Game game, Player curPlayer)
             {
                 return null;
             }
 
-            public override void HandleRequestAction(Action action, Game game, Player curPlayer)
+            public override void HandleRequestAction(HTAction action, Game game, Player curPlayer)
             {
                 // Do nothing.
             }
@@ -138,7 +138,7 @@ namespace HighTreasonGame.GameStates
                 }
             }
 
-            public override Action RequestAction(Game game, Player curPlayer)
+            public override HTAction RequestAction(Game game, Player curPlayer)
             {
                 List<Jury> lockedJuries;
                 if (curPlayer.Side == Player.PlayerSide.Prosecution)
@@ -154,7 +154,7 @@ namespace HighTreasonGame.GameStates
                 if (lockedJuries.Count > 0)
                 {
                     return
-                    new Action(
+                    new HTAction(
                         ChoiceHandler.ChoiceType.BoardObjects,
                         curPlayer.ChoiceHandler,
                         lockedJuries.Cast<BoardObject>().ToList(),
@@ -175,7 +175,7 @@ namespace HighTreasonGame.GameStates
                 }
             }
 
-            public override void HandleRequestAction(Action action, Game game, Player curPlayer)
+            public override void HandleRequestAction(HTAction action, Game game, Player curPlayer)
             {
                 if (action != null)
                 {
@@ -238,7 +238,7 @@ namespace HighTreasonGame.GameStates
                 boardChoices = null;
             }
 
-            public override Action RequestAction(Game game, Player curPlayer)
+            public override HTAction RequestAction(Game game, Player curPlayer)
             {
                 Jury usedJury = (Jury)((DeliberationState)parentState).juryChoice.SelectedObjs.Keys.First();
 
@@ -253,7 +253,7 @@ namespace HighTreasonGame.GameStates
                         && ((Track)htgo).CanModifyByAction(modValue);
                     });
 
-                return new Action(
+                return new HTAction(
                     ChoiceHandler.ChoiceType.BoardObjects,
                     curPlayer.ChoiceHandler,
                     choices,
@@ -265,7 +265,7 @@ namespace HighTreasonGame.GameStates
                     "Select usage for " + usedJury.ActionPoints + " deliberation points");
             }
 
-            public override void HandleRequestAction(Action action, Game game, Player curPlayer)
+            public override void HandleRequestAction(HTAction action, Game game, Player curPlayer)
             {
                 boardChoices = new BoardChoices((BoardChoices)action.ChoiceResult, game);
 
@@ -340,12 +340,12 @@ namespace HighTreasonGame.GameStates
                 }
             }
 
-            public override Action RequestAction(Game game, Player curPlayer)
+            public override HTAction RequestAction(Game game, Player curPlayer)
             {
                 return null;
             }
 
-            public override void HandleRequestAction(Action action, Game game, Player curPlayer)
+            public override void HandleRequestAction(HTAction action, Game game, Player curPlayer)
             {
                 // Do nothing.
             }

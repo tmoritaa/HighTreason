@@ -106,7 +106,7 @@ namespace HighTreasonGame
             return new CardTemplate.CardEffectPair(cardChoice, cardEffect);
         }
 
-        public Action PerformActionChoice(Game game, Player choosingPlayer)
+        public HTAction PerformActionChoice(Game game, Player choosingPlayer)
         {
             bool isSummation = game.CurState.StateType == GameState.GameStateType.Summation;
 
@@ -122,7 +122,7 @@ namespace HighTreasonGame
 
             int actionPtsForState = isSummation ? 2 : Template.ActionPts;
 
-            return new Action(
+            return new HTAction(
                 ChoiceHandler.ChoiceType.BoardObjects,
                 choosingPlayer.ChoiceHandler,
                 choices,

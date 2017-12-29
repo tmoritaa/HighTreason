@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HighTreasonGame
 {
-    public class Action
+    public class HTAction
     {
         public object ChoiceResult
         {
@@ -16,15 +16,25 @@ namespace HighTreasonGame
         private ChoiceHandler choiceHandler;
         private object[] choiceArgs;
 
-        public Action(ChoiceHandler.ChoiceType _choiceType, ChoiceHandler _handler, params object[] _choiceArgs)
+        private bool choiceRequestable = false;
+
+        public HTAction(ChoiceHandler.ChoiceType _choiceType, ChoiceHandler _handler, params object[] _choiceArgs)
         {
             choiceType = _choiceType;
             choiceHandler = _handler;
             choiceArgs = _choiceArgs;
+            choiceRequestable = true;
+        }
+
+        public HTAction(object choiceResult)
+        {
+            ChoiceResult = choiceResult;
         }
 
         public void RequestChoice()
         {
+            System.Diagnostics.Debug.Assert(choiceRequestable, "RequestChoice called with ChoiceRequestable being false. Should never happen.");
+
             switch (choiceType)
             {
                 case ChoiceHandler.ChoiceType.PlayerAction:
@@ -44,7 +54,7 @@ namespace HighTreasonGame
                             (bool)choiceArgs[4],
                             (Game)choiceArgs[5],
                             (Player)choiceArgs[6],
-                            (string)choiceArgs[7],
+                            (PlayerActionParams)choiceArgs[7],
                             out bc);
                         ChoiceResult = bc;
                     } break;
@@ -70,7 +80,7 @@ namespace HighTreasonGame
                             (Card)choiceArgs[0],
                             (Game)choiceArgs[1],
                             (Player)choiceArgs[2],
-                            (string)choiceArgs[3],
+                            (PlayerActionParams)choiceArgs[3],
                             out bc.PlayInfo);
 
                         ChoiceResult = bc;

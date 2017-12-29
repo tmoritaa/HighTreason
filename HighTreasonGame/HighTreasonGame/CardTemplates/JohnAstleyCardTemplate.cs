@@ -50,7 +50,7 @@ namespace HighTreasonGame
                                 && ((Track)htgo).CanModify(1));
                             });
 
-                        return new Action(
+                        return new HTAction(
                             ChoiceHandler.ChoiceType.BoardObjects,
                             choosingPlayer.ChoiceHandler,
                             options,

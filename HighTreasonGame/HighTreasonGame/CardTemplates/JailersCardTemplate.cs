@@ -38,7 +38,7 @@ namespace HighTreasonGame
                     {
                         List<Card> selectableCards = choosingPlayer.Hand.Cards;
 
-                        return new Action(
+                        return new HTAction(
                             ChoiceHandler.ChoiceType.Cards,
                             choosingPlayer.ChoiceHandler,
                             selectableCards,

@@ -49,7 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Action.cs" />
+    <Compile Include="HTAction.cs" />
     <Compile Include="BoardObjects\AspectTrack.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="BoardChoices.cs" />

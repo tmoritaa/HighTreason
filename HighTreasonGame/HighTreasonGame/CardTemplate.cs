@@ -9,7 +9,7 @@ namespace HighTreasonGame
 {
     public abstract class CardTemplate
     {
-        public delegate Action CardChoice(Game game, Player choosingPlayer);
+        public delegate HTAction CardChoice(Game game, Player choosingPlayer);
         public delegate void CardEffect(Game game, Player choosingPlayer, BoardChoices choices);
 
         public class CardEffectPair
@@ -156,28 +156,28 @@ namespace HighTreasonGame
 
         #region Choice Utility
 
-        protected Action doNothingChoice(Game game, Player choosingPlayer)
+        protected HTAction doNothingChoice(Game game, Player choosingPlayer)
         {
-            return new Action(
+            return new HTAction(
                 ChoiceHandler.ChoiceType.DoNothing,
                 choosingPlayer.ChoiceHandler,
                 new BoardChoices());
         }
 
-        protected Action handleMomentOfInsightChoice(Player.PlayerSide[] supportedSides, Game game, Player choosingPlayer)
+        protected HTAction handleMomentOfInsightChoice(Player.PlayerSide[] supportedSides, Game game, Player choosingPlayer)
         {
             if (!supportedSides.Contains(choosingPlayer.Side))
             {
                 BoardChoices choices = new BoardChoices();
                 choices.MoIInfo.Use = BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.NotChosen;
 
-                return new Action(
+                return new HTAction(
                     ChoiceHandler.ChoiceType.DoNothing,
                     choosingPlayer.ChoiceHandler,
                     choices);
             }
 
-            return new Action(
+            return new HTAction(
                 ChoiceHandler.ChoiceType.MoI,
                 choosingPlayer.ChoiceHandler,
                 game,
@@ -206,7 +206,7 @@ namespace HighTreasonGame
                             return valid && ((Track)htgo).CanModify(mod);
                         });
 
-                    return new Action(
+                    return new HTAction(
                         ChoiceHandler.ChoiceType.BoardObjects,
                         choosingPlayer.ChoiceHandler,
                         options,
@@ -249,7 +249,7 @@ namespace HighTreasonGame
                             return valid && (isReveal ? !((Jury.JuryAspect)htgo).IsRevealed : !((Jury.JuryAspect)htgo).IsVisibleToPlayer(choosingPlayer.Side));
                         });
 
-                    return new Action(
+                    return new HTAction(
                         ChoiceHandler.ChoiceType.BoardObjects,
                         choosingPlayer.ChoiceHandler,
                         options,
@@ -359,7 +359,7 @@ namespace HighTreasonGame
                     {
                         List<AspectTrack> tracks = findAspectTracksWithProp(game);
 
-                        return new Action(
+                        return new HTAction(
                             ChoiceHandler.ChoiceType.BoardObjects,
                             choosingPlayer.ChoiceHandler,
                             tracks.Cast<BoardObject>().ToList(),
@@ -402,7 +402,7 @@ namespace HighTreasonGame
                                     && bo.Properties.Contains(Property.Jury);
                             });
 
-                        return new Action(
+                        return new HTAction(
                             ChoiceHandler.ChoiceType.BoardObjects,
                             choosingPlayer.ChoiceHandler,
                             bos,
@@ -454,7 +454,7 @@ namespace HighTreasonGame
                                     && !((SwayTrack)bo).IsLocked;
                             });
 
-                        return new Action(
+                        return new HTAction(
                             ChoiceHandler.ChoiceType.BoardObjects,
                             choosingPlayer.ChoiceHandler,
                             bos,
@@ -503,7 +503,7 @@ namespace HighTreasonGame
                                     && bo.Properties.Contains(Property.Jury);
                             });
 
-                        return new Action(
+                        return new HTAction(
                             ChoiceHandler.ChoiceType.BoardObjects,
                             choosingPlayer.ChoiceHandler,
                             bos,
@@ -528,5 +528,82 @@ namespace HighTreasonGame
         }
 
         #endregion
+
+        /*
+        #region Combination Calculation Utility
+
+        public Func<IEnumerable<IEnumerable<BoardObject>>, IEnumerable<IEnumerable<BoardObject>>> LimitNumAspectFilterComb(int numCap)
+        {
+            return
+                (IEnumerable<IEnumerable<BoardObject>> allCombs) =>
+                {
+                    // Filter combinations to only ones with one of each aspect.
+                    List<List<BoardObject>> filteredCombs = new List<List<BoardObject>>();
+                    foreach (var objs in allCombs)
+                    {
+                        int[] numProps = new int[] { 0, 0, 0 };
+                        Property[] props = new Property[] { Property.Religion, Property.Occupation, Property.Language };
+
+                        bool filter = false;
+                        foreach (var obj in objs)
+                        {
+                            for (int i = 0; i < 3; ++i)
+                            {
+                                if (obj.Properties.Contains(props[i]))
+                                {
+                                    numProps[i] += 1;
+
+                                    if (numProps[i] > numCap)
+                                    {
+                                        filter = true;
+                                    }
+
+                                    break;
+                                }
+                            }
+
+                            if (filter)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (!filter)
+                        {
+                            filteredCombs.Add(new List<BoardObject>(objs));
+                        }
+
+                        filter = false;
+                    }
+
+                    return (IEnumerable<IEnumerable<BoardObject>>)filteredCombs;
+                };
+        }
+
+        public Func<List<BoardObject>, List<object>> genAttorneyAddSwayFilterCombFunc(Player choosingPlayer)
+        {
+            return
+                ((List<BoardObject> choices) =>
+                {
+                    List<BoardObject> selectables = new List<BoardObject>();
+                    foreach (var choice in choices)
+                    {
+                        SwayTrack track = (SwayTrack)choice;
+                        int targetValue = choosingPlayer.Side == Player.PlayerSide.Prosecution ? track.MaxValue : track.MinValue;
+                        int timesSelectable = Math.Abs(targetValue - track.Value);
+
+                        int itNum = Math.Min(ActionPts, timesSelectable);
+                        for (int i = 0; i < itNum; ++i)
+                        {
+                            selectables.Add(choice);
+                        }
+                    }
+
+                    return HTUtility.FindAllCombOfBoardObjs(selectables, ActionPts);
+                });
+        }
+
+        #endregion
+    */
     }
 }

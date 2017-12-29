@@ -134,15 +134,15 @@ namespace HighTreasonGame
             }
         }
 
-        public Action Start()
+        public HTAction Start()
         {
             CurSubstate.PreRun(game, curPlayer);
             return CurSubstate.RequestAction(game, curPlayer);
         }
 
-        public Action Continue(Action action)
+        public HTAction Continue(HTAction action)
         {
-            Action response = action;
+            HTAction response = action;
             while (!stateEnded)
             {
                 CurSubstate.HandleRequestAction(response, game, curPlayer);
@@ -154,7 +154,7 @@ namespace HighTreasonGame
                 }
 
                 CurSubstate.PreRun(game, curPlayer);
-                Action a = CurSubstate.RequestAction(game, curPlayer);
+                HTAction a = CurSubstate.RequestAction(game, curPlayer);
                 if (a != null)
                 {
                     return a;
