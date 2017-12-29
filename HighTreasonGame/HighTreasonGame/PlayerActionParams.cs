@@ -15,12 +15,19 @@ namespace HighTreasonGame
             Cancelled,
         }
 
-        public Card card;
         public UsageType usage;
+        public Card card;
         public int eventIdx = -1;
 
         public PlayerActionParams()
         {}
+
+        public PlayerActionParams(UsageType _usage, Card _card = null, int _eventIdx = -1)
+        {
+            usage = _usage;
+            card = _card;
+            eventIdx = _eventIdx;
+        }
 
         // Copy constructor
         public PlayerActionParams(PlayerActionParams actionParams, Game game)

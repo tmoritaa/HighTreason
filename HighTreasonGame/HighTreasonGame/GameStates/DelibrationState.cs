@@ -154,16 +154,14 @@ namespace HighTreasonGame.GameStates
                 if (lockedJuries.Count > 0)
                 {
                     return
-                    new HTAction(
-                        ChoiceHandler.ChoiceType.BoardObjects,
-                        curPlayer.ChoiceHandler,
+                    new HTAction(curPlayer.ChoiceHandler).InitForChooseBOs(
                         lockedJuries.Cast<BoardObject>().ToList(),
-                        (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return true; }),
-                        (Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>>)((List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
+                        (Dictionary<BoardObject, int> selected) => { return true; },
+                        (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
                         {
                             return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
-                        }),
-                        (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 1; }),
+                        },
+                        (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 1; },
                         game,
                         curPlayer,
                         "Select Jury for Deliberation");
@@ -253,9 +251,7 @@ namespace HighTreasonGame.GameStates
                         && ((Track)htgo).CanModifyByAction(modValue);
                     });
 
-                return new HTAction(
-                    ChoiceHandler.ChoiceType.BoardObjects,
-                    curPlayer.ChoiceHandler,
+                return new HTAction(curPlayer.ChoiceHandler).InitForChooseBOs(
                     choices,
                     HTUtility.GenActionValidateChoicesFunc(usedJury.ActionPoints, usedJury),
                     HTUtility.GenActionFilterChoicesFunc(usedJury.ActionPoints, usedJury),

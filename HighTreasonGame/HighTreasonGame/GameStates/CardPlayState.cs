@@ -35,9 +35,7 @@ namespace HighTreasonGame.GameStates
                 if (canPlay)
                 {
                     return
-                            new HTAction(
-                                ChoiceHandler.ChoiceType.PlayerAction,
-                                curPlayer.ChoiceHandler,
+                            new HTAction(curPlayer.ChoiceHandler).InitForPlayerAction(
                                 curPlayer.Hand.SelectableCards,
                                 game,
                                 curPlayer);
@@ -127,13 +125,11 @@ namespace HighTreasonGame.GameStates
                 }
 
                 return
-                    new HTAction(
-                        ChoiceHandler.ChoiceType.Cards,
-                        curPlayer.ChoiceHandler,
+                    new HTAction(curPlayer.ChoiceHandler).InitForChooseCards(
                         attorneyCards,
-                        (Func<Dictionary<Card, int>, bool>)((Dictionary<Card, int> selected) => { return true; }),
-                        (Func<List<Card>, Dictionary<Card, int>, List<Card>>)((List<Card> choices, Dictionary<Card, int> selected) => { return choices; }),
-                        (Func<Dictionary<Card, int>, bool, bool>)((Dictionary<Card, int> selected, bool isDone) => { return selected.Count == 1 || isDone; }),
+                        (Dictionary<Card, int> selected) => { return true; },
+                        (List<Card> choices, Dictionary<Card, int> selected) => { return choices; },
+                        (Dictionary<Card, int> selected, bool isDone) => { return selected.Count == 1 || isDone; },
                         true,
                         game,
                         objectingPlayer,

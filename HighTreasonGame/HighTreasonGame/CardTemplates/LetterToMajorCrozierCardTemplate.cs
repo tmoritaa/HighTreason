@@ -47,17 +47,14 @@ namespace HighTreasonGame
                                 && ((Track)htgo).CanModify(1));
                             });
 
-                        return new HTAction(
-                            ChoiceHandler.ChoiceType.BoardObjects,
-                            choosingPlayer.ChoiceHandler,
+                        return new HTAction(choosingPlayer.ChoiceHandler).InitForChooseBOs(
                             options,
-                            (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return true; }),
-                            (Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>>)
-                                ((List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
-                                {
-                                    return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
-                                }),
-                            (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 4; }),
+                            (Dictionary<BoardObject, int> selected) => { return true; },
+                            (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
+                            {
+                                return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
+                            },
+                            (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 4; },
                             game,
                             choosingPlayer,
                             this.CardInfo.SummationInfos[0].Description);

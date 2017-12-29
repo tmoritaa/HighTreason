@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CheatingMCTSChoiceHandler.cs" />
     <Compile Include="ConsolePlayerChoiceHandler.cs" />
     <Compile Include="FilterRandomAIChoiceHandler.cs" />
     <Compile Include="Program.cs" />

@@ -14,21 +14,81 @@ namespace HighTreasonGame
 
         private ChoiceHandler.ChoiceType choiceType;
         private ChoiceHandler choiceHandler;
+        //private PlayerActionParams usageContext;
         private object[] choiceArgs;
 
         private bool choiceRequestable = false;
 
-        public HTAction(ChoiceHandler.ChoiceType _choiceType, ChoiceHandler _handler, params object[] _choiceArgs)
+        public HTAction(ChoiceHandler _handler/*, PlayerActionParams _usageContext*/)
         {
-            choiceType = _choiceType;
             choiceHandler = _handler;
-            choiceArgs = _choiceArgs;
-            choiceRequestable = true;
+            //usageContext = _usageContext;
         }
 
         public HTAction(object choiceResult)
         {
             ChoiceResult = choiceResult;
+        }
+
+        public HTAction InitForPlayerAction(List<Card> choices, Game game, Player choosingPlayer)
+        {
+            choiceType = ChoiceHandler.ChoiceType.PlayerAction;
+            initChoiceArgs(choices, game, choosingPlayer);
+            return this;
+        }
+
+        public HTAction InitForChooseCards(
+            List<Card> choices, 
+            Func<Dictionary<Card, int>, bool> validateChoices,
+            Func<List<Card>, Dictionary<Card, int>, List<Card>> filterChoices,
+            Func<Dictionary<Card, int>, bool, bool> choicesComplete,
+            bool stoppable,
+            Game game,
+            Player choosingPlayer,
+            string desc)
+        {
+            choiceType = ChoiceHandler.ChoiceType.Cards;
+            initChoiceArgs(choices, validateChoices, filterChoices, choicesComplete, stoppable, game, choosingPlayer, desc);
+            return this;
+        }
+
+        public HTAction InitForChooseBOs(
+            List<BoardObject> choices,
+            Func<Dictionary<BoardObject, int>, bool> validateChoices,
+            Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices,
+            Func<Dictionary<BoardObject, int>, bool> choicesComplete,
+            Game game,
+            Player choosingPlayer,
+            string desc)
+        {
+            choiceType = ChoiceHandler.ChoiceType.BoardObjects;
+            initChoiceArgs(choices, validateChoices, filterChoices, choicesComplete, game, choosingPlayer, desc);
+            return this;
+        }
+
+        public HTAction InitForCardEffect(
+            Card cardToPlay,
+            Game game,
+            Player choosingPlayer,
+            string desc)
+        {
+            choiceType = ChoiceHandler.ChoiceType.CardEffect;
+            initChoiceArgs(cardToPlay, game, choosingPlayer, desc);
+            return this;
+        }
+
+        public HTAction InitForMoI(Game game, Player choosingPlayer)
+        {
+            choiceType = ChoiceHandler.ChoiceType.MoI;
+            initChoiceArgs(game, choosingPlayer);
+            return this;
+        }
+
+        public HTAction InitForDoNothing(object result)
+        {
+            choiceType = ChoiceHandler.ChoiceType.DoNothing;
+            initChoiceArgs(result);
+            return this;
         }
 
         public void RequestChoice()
@@ -54,7 +114,7 @@ namespace HighTreasonGame
                             (bool)choiceArgs[4],
                             (Game)choiceArgs[5],
                             (Player)choiceArgs[6],
-                            (PlayerActionParams)choiceArgs[7],
+                            (string)choiceArgs[7],
                             out bc);
                         ChoiceResult = bc;
                     } break;
@@ -80,7 +140,7 @@ namespace HighTreasonGame
                             (Card)choiceArgs[0],
                             (Game)choiceArgs[1],
                             (Player)choiceArgs[2],
-                            (PlayerActionParams)choiceArgs[3],
+                            (string)choiceArgs[3],
                             out bc.PlayInfo);
 
                         ChoiceResult = bc;
@@ -101,6 +161,12 @@ namespace HighTreasonGame
                         ChoiceResult = choiceArgs[0];
                     } break;
             }
+        }
+
+        private void initChoiceArgs(params object[] args)
+        {
+            choiceArgs = args;
+            choiceRequestable = true;
         }
     }
 }

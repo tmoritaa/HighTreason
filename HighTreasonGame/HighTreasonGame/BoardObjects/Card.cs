@@ -122,9 +122,7 @@ namespace HighTreasonGame
 
             int actionPtsForState = isSummation ? 2 : Template.ActionPts;
 
-            return new HTAction(
-                ChoiceHandler.ChoiceType.BoardObjects,
-                choosingPlayer.ChoiceHandler,
+            return new HTAction(choosingPlayer.ChoiceHandler).InitForChooseBOs(
                 choices,
                 HTUtility.GenActionValidateChoicesFunc(actionPtsForState, null),
                 HTUtility.GenActionFilterChoicesFunc(actionPtsForState, null),

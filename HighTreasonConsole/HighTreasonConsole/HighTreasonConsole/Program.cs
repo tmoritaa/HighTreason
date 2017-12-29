@@ -84,12 +84,12 @@ namespace HighTreasonConsole
                         }
                     };
 
-                HighTreasonGame.Action action = game.Start();
+                HTAction action = game.Start();
                 while (!game.GameEnd)
                 {
                     if (cloneTest)
                     {
-                        Game cloneGame = new Game(game);
+                        Game cloneGame = new Game(game, new ChoiceHandler[] { new FilterRandomAIChoiceHandler(), new FilterRandomAIChoiceHandler() });
                         bool equal = cloneGame.CheckCloneEquality(game);
 
                         if (!equal)

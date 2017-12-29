@@ -27,17 +27,14 @@ namespace HighTreasonGame.GameStates
             public override HTAction RequestAction(Game game, Player curPlayer)
             {
                 return
-                    new HTAction(
-                        ChoiceHandler.ChoiceType.BoardObjects,
-                        curPlayer.ChoiceHandler,
+                    new HTAction(curPlayer.ChoiceHandler).InitForChooseBOs(
                         game.Board.Juries.Cast<BoardObject>().ToList(),
-                        (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return true; }),
-                        (Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>>)
-                            ((List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
-                            {
-                                return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
-                            }),
-                        (Func<Dictionary<BoardObject, int>, bool>)((Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 1; }),
+                        (Dictionary<BoardObject, int> selected) => { return true; },
+                        (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
+                        {
+                            return remainingChoices.Where(obj => !selected.ContainsKey(obj)).ToList();
+                        },
+                        (Dictionary<BoardObject, int> selected) => { return selected.Keys.Count == 1; },
                         game,
                         curPlayer,
                         "Select Jury to Dismiss");
