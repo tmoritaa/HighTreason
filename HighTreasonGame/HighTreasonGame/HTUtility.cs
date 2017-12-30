@@ -213,7 +213,7 @@ namespace HighTreasonGame
                             if (actionPts == 3)
                             {
                                 List<object> objs = convertIEnumIEnumToBoardChoices((IEnumerable<IEnumerable<BoardObject>>) new List<List<BoardObject>>() { multAspectTrackCombList });
-                                resCombs.Add(objs);
+                                resCombs.AddRange(objs);
                             }
                             else
                             {
@@ -223,7 +223,7 @@ namespace HighTreasonGame
                                     BoardChoices bcs = (BoardChoices)obj;
                                     bcs.SelectedObjs.Add(track, 2);
                                 }
-                                resCombs.Add(objs);
+                                resCombs.AddRange(objs);
                             }
                         }
                     }

@@ -39,6 +39,12 @@ namespace HighTreasonGame
                         List<Card> selectableCards = choosingPlayer.Hand.Cards;
 
                         return new HTAction(choosingPlayer.ChoiceHandler).InitForChooseCards(
+                            (List<Card> choices) =>
+                            {
+                                List<object> resCombs = HTUtility.FindAllCombOfCards(choices, 2);
+                                resCombs.AddRange(HTUtility.FindAllCombOfCards(choices, 1));
+                                return resCombs;
+                            },
                             selectableCards,
                             (Dictionary<Card, int> selected) =>
                             {

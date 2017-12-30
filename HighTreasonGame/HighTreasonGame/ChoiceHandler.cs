@@ -13,7 +13,7 @@ namespace HighTreasonGame
             MoI,
             BoardObjects,
             Cards,
-            CardEffect,
+            //CardEffect,
             DoNothing,
         }
 
@@ -27,8 +27,8 @@ namespace HighTreasonGame
             PlayerType = playerType;
         }
 
-        public abstract void ChoosePlayerAction(List<Card> cards, Game game, Player choosingPlayer, out PlayerActionParams outCardUsage);
-        public abstract bool ChooseMomentOfInsightUse(Game game, Player choosingPlayer, out BoardChoices.MomentOfInsightInfo outMoIInfo);
+        public abstract void ChoosePlayerAction(List<Card> cards, Game game, Player choosingPlayer, HTAction action, out PlayerActionParams outCardUsage);
+        public abstract bool ChooseMomentOfInsightUse(Game game, Player choosingPlayer, HTAction action, out BoardChoices.MomentOfInsightInfo outMoIInfo);
         public abstract void ChooseBoardObjects(List<BoardObject> choices, 
             Func<Dictionary<BoardObject, int>, bool> validateChoices, 
             Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices,
@@ -36,6 +36,7 @@ namespace HighTreasonGame
             Game game,
             Player choosingPlayer,
             string description,
+            HTAction action,
             out BoardChoices boardChoice);
         public abstract void ChooseCards(List<Card> choices,
             Func<Dictionary<Card, int>, bool> validateChoices,
@@ -45,7 +46,8 @@ namespace HighTreasonGame
             Game game,
             Player choosingPlayer,
             string description,
+            HTAction action,
             out BoardChoices boardChoice);
-        public abstract void ChooseCardEffect(Card cardToPlay, Game game, Player choosingPlayer, string description, out BoardChoices.CardPlayInfo cardPlayInfo);
+        public abstract void ChooseCardEffect(Card cardToPlay, Game game, Player choosingPlayer, string description, HTAction action, out BoardChoices.CardPlayInfo cardPlayInfo);
     }
 }

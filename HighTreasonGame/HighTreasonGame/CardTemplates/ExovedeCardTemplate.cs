@@ -35,7 +35,8 @@ namespace HighTreasonGame
                             }
 
                             return newChoices;
-                        }),
+                        },
+                        LimitNumAspectFilterComb(1)),
                     revealAllAspects));
 
             SelectionEvents.Add(

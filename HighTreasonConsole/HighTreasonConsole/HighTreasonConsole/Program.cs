@@ -49,6 +49,9 @@ namespace HighTreasonConsole
                         case "filter-random":
                             handler = new FilterRandomAIChoiceHandler();
                             break;
+                        case "cheating-mcts":
+                            handler = new CheatingMCTSChoiceHandler();
+                            break;
                     }
 
                     handlers[i] = handler;

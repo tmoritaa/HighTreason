@@ -13,6 +13,8 @@ namespace HighTreasonGame
 
         private StreamWriter file;
 
+        private bool on = true;
+
         public static FileLogger Instance
         {
             get
@@ -32,6 +34,11 @@ namespace HighTreasonGame
             file = new StreamWriter(filePath);
         }
 
+        public void SetLogOn(bool b)
+        {
+            on = b;
+        }
+
         public void SetPath(string str)
         {
             file.Close();
@@ -44,8 +51,11 @@ namespace HighTreasonGame
 
         public void Log(string str)
         {
-            file.WriteLine(str);
-            file.Flush();
+            if (on)
+            {
+                file.WriteLine(str);
+                file.Flush();
+            }
         }
 
         public void Close()

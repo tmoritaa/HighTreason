@@ -155,6 +155,10 @@ namespace HighTreasonGame.GameStates
                 {
                     return
                     new HTAction(curPlayer.ChoiceHandler).InitForChooseBOs(
+                        (List<BoardObject> choices) =>
+                        {
+                            return HTUtility.FindAllCombOfBoardObjs(choices, 1);
+                        },
                         lockedJuries.Cast<BoardObject>().ToList(),
                         (Dictionary<BoardObject, int> selected) => { return true; },
                         (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
@@ -252,6 +256,7 @@ namespace HighTreasonGame.GameStates
                     });
 
                 return new HTAction(curPlayer.ChoiceHandler).InitForChooseBOs(
+                    HTUtility.GenActionCalcCombFunc(usedJury.ActionPoints, curPlayer),
                     choices,
                     HTUtility.GenActionValidateChoicesFunc(usedJury.ActionPoints, usedJury),
                     HTUtility.GenActionFilterChoicesFunc(usedJury.ActionPoints, usedJury),

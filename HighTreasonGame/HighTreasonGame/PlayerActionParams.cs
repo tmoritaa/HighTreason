@@ -25,6 +25,15 @@ namespace HighTreasonGame
         public PlayerActionParams(UsageType _usage, Card _card = null, int _eventIdx = -1)
         {
             usage = _usage;
+
+            if ((usage == UsageType.Event || usage == UsageType.Action) && _card == null)
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    System.Diagnostics.Debugger.Break();
+                }
+            }
+
             card = _card;
             eventIdx = _eventIdx;
         }
@@ -33,8 +42,11 @@ namespace HighTreasonGame
         public PlayerActionParams(PlayerActionParams actionParams, Game game)
         {
             usage = actionParams.usage;
-            card = game.FindCard(actionParams.card);
-            eventIdx = actionParams.eventIdx;
+            if (actionParams.card != null)
+            {
+                card = game.FindCard(actionParams.card);
+                eventIdx = actionParams.eventIdx;
+            }
         }
 
         public bool CheckCloneEquality(PlayerActionParams actionParams)

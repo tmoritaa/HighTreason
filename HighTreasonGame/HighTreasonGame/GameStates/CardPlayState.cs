@@ -126,6 +126,12 @@ namespace HighTreasonGame.GameStates
 
                 return
                     new HTAction(curPlayer.ChoiceHandler).InitForChooseCards(
+                        (List<Card> choices) =>
+                        {
+                            List<object> resCombs = HTUtility.FindAllCombOfCards(choices, 1);
+                            resCombs.Add(new BoardChoices());
+                            return resCombs;
+                        },
                         attorneyCards,
                         (Dictionary<Card, int> selected) => { return true; },
                         (List<Card> choices, Dictionary<Card, int> selected) => { return choices; },

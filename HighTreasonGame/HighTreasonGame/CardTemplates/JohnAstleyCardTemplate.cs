@@ -51,6 +51,10 @@ namespace HighTreasonGame
                             });
 
                         return new HTAction(choosingPlayer.ChoiceHandler).InitForChooseBOs(
+                            (List<BoardObject> choices) =>
+                            {
+                                return HTUtility.FindAllCombOfBoardObjs(choices, 3);
+                            },
                             options,
                             (Dictionary<BoardObject, int> selected) => { return true; },
                             (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>

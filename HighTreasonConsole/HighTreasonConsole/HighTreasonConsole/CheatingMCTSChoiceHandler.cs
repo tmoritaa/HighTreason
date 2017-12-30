@@ -12,43 +12,71 @@ namespace HighTreasonConsole
     {
         private class Node
         {
-            public Game GameState = null;
-            public HTAction IncomingAction = null;
-
-            private List<object> possibleChoices = new List<object>();
-
-            public int NumVisits = 0;
-            public int NumWins = 0;
-
-            public Node Parent;
-            public List<Node> children = new List<Node>();
-
-            public Player SearchPlayer;
-
-            public Node(Game game, Player player/*, HTAction outGoingAction*/, Node parent = null, HTAction action = null)
+            public int NumVisits
             {
-                GameState = game;
-                SearchPlayer = player;
-                Parent = parent;
-                IncomingAction = action;
+                get; private set;
+            }
 
-                // TODO: node needs way to generate all possible choices.
-                //possibleChoices = outGoingAction.GetPossibleChoices();
+            public int NumWins
+            {
+                get; private set;
+            }
+
+            public Node Parent
+            {
+                get; private set;
+            }
+
+            private Game gameState = null;
+            private object incomingResult = null;
+            private HTAction outGoingAction = null;
+            private List<object> possibleChoices = new List<object>();
+            private List<Node> children = new List<Node>();
+            private Player searchPlayer;
+
+            public Node(Game game, Player player, HTAction _outGoingAction, Node parent = null, object actionResult = null)
+            {
+                gameState = game;
+                searchPlayer = player;
+                Parent = parent;
+
+                if (Parent != null)
+                {
+                    Parent.AddChild(this);
+                }
+
+                NumVisits = 0;
+                NumWins = 0;
+
+                incomingResult = actionResult;
+                outGoingAction = _outGoingAction;
+                possibleChoices = outGoingAction.generateAllPossibleChoices();
+            }
+
+            public void AddChild(Node child)
+            {
+                children.Add(child);
             }
 
             public Node Expand()
             {
                 int idx = GlobalRandom.GetRandomNumber(0, possibleChoices.Count);
                 object choice = possibleChoices[idx];
+
+                if (choice.GetType() != typeof(PlayerActionParams) && choice.GetType() != typeof(BoardChoices))
+                {
+                    if (System.Diagnostics.Debugger.IsAttached)
+                    {
+                        System.Diagnostics.Debugger.Break();
+                    }
+                }
+
                 possibleChoices.RemoveAt(idx);
 
-                var action = new HTAction(choice);
+                Game newGame = new Game(gameState, new ChoiceHandler[] { new FilterRandomAIChoiceHandler(), new FilterRandomAIChoiceHandler() });
+                HTAction outgoingAction = newGame.Continue(choice);
 
-                Game newGame = new Game(GameState, new ChoiceHandler[] { new FilterRandomAIChoiceHandler(), new FilterRandomAIChoiceHandler() });
-                HTAction outgoingAction = newGame.Continue(action?.ChoiceResult); // TODO: not sure if we have to save the action generated from this continue.
-
-                // TODO: node needs way to generate all possible choices.
-                return new Node(newGame, SearchPlayer, /*outgoingAction,*/ this, action);
+                return new Node(newGame, searchPlayer, outgoingAction, this, choice);
             }
 
             public bool CanExpand()
@@ -58,7 +86,7 @@ namespace HighTreasonConsole
 
             public bool IsTerminal()
             {
-                return GameState.GameEnd;
+                return gameState.GameEnd;
             }
 
             public Node BestUCTChild()
@@ -86,6 +114,14 @@ namespace HighTreasonConsole
                     }
                 }
 
+                if (bestNode == null)
+                {
+                    if (System.Diagnostics.Debugger.IsAttached)
+                    {
+                        System.Diagnostics.Debugger.Break();
+                    }
+                }
+
                 return bestNode;
             }
 
@@ -93,23 +129,24 @@ namespace HighTreasonConsole
             {
                 Player.PlayerSide winningSide = Player.PlayerSide.Prosecution;
 
-                GameState.NotifyGameEnd =
+                gameState.NotifyGameEnd =
                     (Player.PlayerSide winningPlayerSide, bool winByNotEnoughGuilt, int finalScore) =>
                     {
                         winningSide = winningPlayerSide;
                     };
 
-                var action = GameState.Continue(this.IncomingAction?.ChoiceResult);
-                while (!GameState.GameEnd)
+                Game game = new Game(gameState, new ChoiceHandler[] { new FilterRandomAIChoiceHandler(), new FilterRandomAIChoiceHandler() });
+                HTAction action = outGoingAction;
+                while (!game.GameEnd)
                 {
                     if (action != null)
                     {
                         action.RequestChoice();
                     }
-                    action = GameState.Continue(action?.ChoiceResult);
+                    action = game.Continue(action?.ChoiceResult);
                 }
 
-                return SearchPlayer.Side == winningSide;
+                return searchPlayer.Side == winningSide;
             }
 
             public void Backpropagate(bool won)
@@ -124,7 +161,7 @@ namespace HighTreasonConsole
                 }
             }
 
-            public HTAction PickActionForBestChild()
+            public object PickActionForBestChild()
             {
                 int bestVal = -1;
                 Node bestNode = null;
@@ -138,23 +175,31 @@ namespace HighTreasonConsole
                     }
                 }
 
-                return bestNode.IncomingAction;
+                return bestNode.incomingResult;
             }
         }
 
         public CheatingMCTSChoiceHandler() : base(Player.PlayerType.AI)
         {}
 
-        private HTAction StartMCTS(Game game, Player searchPlayer)
+        private object PerformMCTS(Game game, Player searchPlayer, HTAction action)
         {
-            Node root = new Node(new Game(game, new ChoiceHandler[] { new FilterRandomAIChoiceHandler(), new FilterRandomAIChoiceHandler() }), searchPlayer);
+            FileLogger.Instance.SetLogOn(false);
 
-            for (int i = 0; i < 10000; ++i){
+            Node root = new Node(
+                new Game(game, new ChoiceHandler[] { new FilterRandomAIChoiceHandler(), new FilterRandomAIChoiceHandler() }), 
+                searchPlayer,
+                action);
+
+            for (int i = 0; i < 1000; ++i){
+                Console.WriteLine("MCTS iteration=" + i);
                 Node node = findNodeToExpand(root);
 
                 bool gameWon = node.PlayoutGame();
                 node.Backpropagate(gameWon);
             }
+
+            FileLogger.Instance.SetLogOn(true);
 
             return root.PickActionForBestChild();
         }
@@ -177,31 +222,34 @@ namespace HighTreasonConsole
             return expandNode;
         }
 
-        public override void ChoosePlayerAction(List<Card> cards, Game game, Player choosingPlayer, out PlayerActionParams outCardUsage)
+        public override void ChoosePlayerAction(List<Card> cards, Game game, Player choosingPlayer, HTAction action, out PlayerActionParams outCardUsage)
         {
-            HTAction action = StartMCTS(game, choosingPlayer);
-
-            outCardUsage = (PlayerActionParams)action.ChoiceResult;
+            object choiceResult = PerformMCTS(game, choosingPlayer, action);
+            outCardUsage = (PlayerActionParams)choiceResult;
         }
 
-        public override void ChooseBoardObjects(List<BoardObject> choices, Func<Dictionary<BoardObject, int>, bool> validateChoices, Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices, Func<Dictionary<BoardObject, int>, bool> choicesComplete, Game game, Player choosingPlayer, string description, out BoardChoices boardChoice)
+        public override void ChooseBoardObjects(List<BoardObject> choices, Func<Dictionary<BoardObject, int>, bool> validateChoices, Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices, Func<Dictionary<BoardObject, int>, bool> choicesComplete, Game game, Player choosingPlayer, string description, HTAction action, out BoardChoices boardChoice)
+        {
+            object choiceResult = PerformMCTS(game, choosingPlayer, action);
+            boardChoice = (BoardChoices)choiceResult;
+        }
+
+        public override void ChooseCardEffect(Card cardToPlay, Game game, Player choosingPlayer, string description, HTAction action, out BoardChoices.CardPlayInfo cardPlayInfo)
         {
             throw new NotImplementedException();
         }
 
-        public override void ChooseCardEffect(Card cardToPlay, Game game, Player choosingPlayer, string description, out BoardChoices.CardPlayInfo cardPlayInfo)
+        public override void ChooseCards(List<Card> choices, Func<Dictionary<Card, int>, bool> validateChoices, Func<List<Card>, Dictionary<Card, int>, List<Card>> filterChoices, Func<Dictionary<Card, int>, bool, bool> choicesComplete, bool stoppable, Game game, Player choosingPlayer, string description, HTAction action, out BoardChoices boardChoice)
         {
-            throw new NotImplementedException();
+            object choiceResult = PerformMCTS(game, choosingPlayer, action);
+            boardChoice = (BoardChoices)choiceResult;
         }
 
-        public override void ChooseCards(List<Card> choices, Func<Dictionary<Card, int>, bool> validateChoices, Func<List<Card>, Dictionary<Card, int>, List<Card>> filterChoices, Func<Dictionary<Card, int>, bool, bool> choicesComplete, bool stoppable, Game game, Player choosingPlayer, string description, out BoardChoices boardChoice)
+        public override bool ChooseMomentOfInsightUse(Game game, Player choosingPlayer, HTAction action, out BoardChoices.MomentOfInsightInfo outMoIInfo)
         {
-            throw new NotImplementedException();
-        }
-
-        public override bool ChooseMomentOfInsightUse(Game game, Player choosingPlayer, out BoardChoices.MomentOfInsightInfo outMoIInfo)
-        {
-            throw new NotImplementedException();
+            object choiceResult = PerformMCTS(game, choosingPlayer, action);
+            outMoIInfo = ((BoardChoices)choiceResult).MoIInfo;
+            return true;
         }
     }
 }

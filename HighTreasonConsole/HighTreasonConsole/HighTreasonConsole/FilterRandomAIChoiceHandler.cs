@@ -14,7 +14,7 @@ namespace HighTreasonConsole
         {
         }
 
-        public override void ChoosePlayerAction(List<Card> cards, Game game, Player choosingPlayer, out PlayerActionParams outCardUsage)
+        public override void ChoosePlayerAction(List<Card> cards, Game game, Player choosingPlayer, HTAction action, out PlayerActionParams outCardUsage)
         {
             outCardUsage = new PlayerActionParams();
 

@@ -87,23 +87,32 @@ namespace HighTreasonGame
             CardTemplate.CardChoice cardChoice = null;
             CardTemplate.CardEffect cardEffect = null;
 
+            List<CardTemplate.CardEffectPair> pairs = GetEventEffectPairs(game);
+            cardChoice = pairs[idx].CardChoice;
+            cardEffect = pairs[idx].CardEffect;
+
+            return new CardTemplate.CardEffectPair(cardChoice, cardEffect);
+        }
+
+        public List<CardTemplate.CardEffectPair> GetEventEffectPairs(Game game)
+        {
+            GameState.GameStateType curStateType = game.CurState.StateType;
+
+            List<CardTemplate.CardEffectPair> pairs = new List<CardTemplate.CardEffectPair>();
             if (curStateType == GameState.GameStateType.JurySelection)
             {
-                cardChoice = Template.SelectionEvents[idx].CardChoice;
-                cardEffect = Template.SelectionEvents[idx].CardEffect;
+                pairs = Template.SelectionEvents;
             }
             else if (curStateType == GameState.GameStateType.TrialInChief)
             {
-                cardChoice = Template.TrialEvents[idx].CardChoice;
-                cardEffect = Template.TrialEvents[idx].CardEffect;
+                pairs = Template.TrialEvents;
             }
             else if (curStateType == GameState.GameStateType.Summation)
             {
-                cardChoice = Template.SummationEvents[idx].CardChoice;
-                cardEffect = Template.SummationEvents[idx].CardEffect;
+                pairs = Template.SummationEvents;
             }
 
-            return new CardTemplate.CardEffectPair(cardChoice, cardEffect);
+            return pairs;
         }
 
         public HTAction PerformActionChoice(Game game, Player choosingPlayer)
@@ -123,6 +132,7 @@ namespace HighTreasonGame
             int actionPtsForState = isSummation ? 2 : Template.ActionPts;
 
             return new HTAction(choosingPlayer.ChoiceHandler).InitForChooseBOs(
+                HTUtility.GenActionCalcCombFunc(actionPtsForState, choosingPlayer),
                 choices,
                 HTUtility.GenActionValidateChoicesFunc(actionPtsForState, null),
                 HTUtility.GenActionFilterChoicesFunc(actionPtsForState, null),

@@ -28,6 +28,10 @@ namespace HighTreasonGame.GameStates
             {
                 return
                     new HTAction(curPlayer.ChoiceHandler).InitForChooseBOs(
+                        (List<BoardObject> choices) =>
+                        {
+                            return HTUtility.FindAllCombOfBoardObjs(choices, 1);
+                        },
                         game.Board.Juries.Cast<BoardObject>().ToList(),
                         (Dictionary<BoardObject, int> selected) => { return true; },
                         (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>

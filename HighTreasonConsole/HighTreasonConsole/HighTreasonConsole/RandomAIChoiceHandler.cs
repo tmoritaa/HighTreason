@@ -16,7 +16,7 @@ namespace HighTreasonConsole
         {
         }
 
-        public override void ChoosePlayerAction(List<Card> cards, Game game, Player choosingPlayer, out PlayerActionParams outCardUsage)
+        public override void ChoosePlayerAction(List<Card> cards, Game game, Player choosingPlayer, HTAction action, out PlayerActionParams outCardUsage)
         {
             outCardUsage = new PlayerActionParams();
 
@@ -75,7 +75,7 @@ namespace HighTreasonConsole
             }
         }
 
-        public override void ChooseBoardObjects(List<BoardObject> choices, Func<Dictionary<BoardObject, int>, bool> validateChoices, Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices, Func<Dictionary<BoardObject, int>, bool> choicesComplete, Game game, Player choosingPlayer, string description, out BoardChoices boardChoice)
+        public override void ChooseBoardObjects(List<BoardObject> choices, Func<Dictionary<BoardObject, int>, bool> validateChoices, Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices, Func<Dictionary<BoardObject, int>, bool> choicesComplete, Game game, Player choosingPlayer, string description, HTAction action, out BoardChoices boardChoice)
         {
             boardChoice = new BoardChoices();
 
@@ -128,7 +128,7 @@ namespace HighTreasonConsole
             boardChoice.SelectedObjs = selected;
         }
 
-        public override void ChooseCards(List<Card> choices, Func<Dictionary<Card, int>, bool> validateChoices, Func<List<Card>, Dictionary<Card, int>, List<Card>> filterChoices, Func<Dictionary<Card, int>, bool, bool> choicesComplete, bool stoppable, Game game, Player choosingPlayer, string description, out BoardChoices boardChoice)
+        public override void ChooseCards(List<Card> choices, Func<Dictionary<Card, int>, bool> validateChoices, Func<List<Card>, Dictionary<Card, int>, List<Card>> filterChoices, Func<Dictionary<Card, int>, bool, bool> choicesComplete, bool stoppable, Game game, Player choosingPlayer, string description, HTAction action, out BoardChoices boardChoice)
         {
             boardChoice = new BoardChoices();
 
@@ -181,7 +181,7 @@ namespace HighTreasonConsole
             boardChoice.SelectedCards = selected;
         }
 
-        public override void ChooseCardEffect(Card card, Game game, Player choosingPlayer, string description, out BoardChoices.CardPlayInfo cardPlayInfo)
+        public override void ChooseCardEffect(Card card, Game game, Player choosingPlayer, string description, HTAction action, out BoardChoices.CardPlayInfo cardPlayInfo)
         {
             cardPlayInfo = new BoardChoices.CardPlayInfo();
 
@@ -203,7 +203,7 @@ namespace HighTreasonConsole
             cardPlayInfo.eventIdx = idx;
         }
 
-        public override bool ChooseMomentOfInsightUse(Game game, Player choosingPlayer, out BoardChoices.MomentOfInsightInfo outMoIInfo)
+        public override bool ChooseMomentOfInsightUse(Game game, Player choosingPlayer, HTAction action, out BoardChoices.MomentOfInsightInfo outMoIInfo)
         {
             outMoIInfo = new BoardChoices.MomentOfInsightInfo();
 

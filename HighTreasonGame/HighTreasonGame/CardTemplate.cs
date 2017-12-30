@@ -199,6 +199,10 @@ namespace HighTreasonGame
                         });
 
                     return new HTAction(choosingPlayer.ChoiceHandler).InitForChooseBOs(
+                        (List<BoardObject> choices) =>
+                        {
+                            return HTUtility.FindAllCombOfBoardObjs(choices, numChoices);
+                        },
                         options,
                         (Dictionary<BoardObject, int> selected) => { return true; },
                         (List<BoardObject> remainingChoices, Dictionary<BoardObject, int> selected) =>
@@ -217,7 +221,8 @@ namespace HighTreasonGame
             bool isReveal,
             string desc,
             Func<Dictionary<BoardObject, int>, bool> validateChoices = null,
-            Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices = null)
+            Func<List<BoardObject>, Dictionary<BoardObject, int>, List<BoardObject>> filterChoices = null,
+            Func<IEnumerable<IEnumerable<BoardObject>>, IEnumerable<IEnumerable<BoardObject>>> calcCombFilter = null)
         {
             return
                 (Game game, Player choosingPlayer) =>
@@ -239,6 +244,10 @@ namespace HighTreasonGame
                         });
 
                     return new HTAction(choosingPlayer.ChoiceHandler).InitForChooseBOs(
+                        (List<BoardObject> choices) =>
+                        {
+                            return HTUtility.FindAllCombOfBoardObjs(choices, numChoices, calcCombFilter);
+                        },
                         options,
                         validateChoices != null ? validateChoices :
                         (Dictionary<BoardObject, int> selected) => { return true; },
@@ -346,6 +355,10 @@ namespace HighTreasonGame
                         List<AspectTrack> tracks = findAspectTracksWithProp(game);
 
                         return new HTAction(choosingPlayer.ChoiceHandler).InitForChooseBOs(
+                            (List<BoardObject> choices) =>
+                            {
+                                return HTUtility.FindAllCombOfBoardObjs(choices, 1);
+                            },
                             tracks.Cast<BoardObject>().ToList(),
                             (Dictionary<BoardObject, int> selected) => { return true; },
                             (List<BoardObject> choices, Dictionary<BoardObject, int> selected) =>
@@ -384,6 +397,7 @@ namespace HighTreasonGame
                             });
 
                         return new HTAction(choosingPlayer.ChoiceHandler).InitForChooseBOs(
+                            genAttorneyAddSwayFilterCombFunc(choosingPlayer),
                             bos,
                             (Dictionary<BoardObject, int> selected) =>
                             {
@@ -430,6 +444,7 @@ namespace HighTreasonGame
                             });
 
                         return new HTAction(choosingPlayer.ChoiceHandler).InitForChooseBOs(
+                            genAttorneyAddSwayFilterCombFunc(choosingPlayer),
                             bos,
                             (Dictionary<BoardObject, int> selected) =>
                             {
@@ -474,6 +489,10 @@ namespace HighTreasonGame
                             });
 
                         return new HTAction(choosingPlayer.ChoiceHandler).InitForChooseBOs(
+                            (List<BoardObject> choices) =>
+                            {
+                                return HTUtility.FindAllCombOfBoardObjs(choices, 1);
+                            },
                             bos,
                             (Dictionary<BoardObject, int> selected) => { return true; },
                             (List<BoardObject> choicesLeft, Dictionary<BoardObject, int> selected) => { return choicesLeft; },
@@ -492,7 +511,6 @@ namespace HighTreasonGame
 
         #endregion
 
-        /*
         #region Combination Calculation Utility
 
         public Func<IEnumerable<IEnumerable<BoardObject>>, IEnumerable<IEnumerable<BoardObject>>> LimitNumAspectFilterComb(int numCap)
@@ -566,7 +584,15 @@ namespace HighTreasonGame
                 });
         }
 
+        public Func<List<BoardObject>, List<object>> genDoNothingCombFunc(Player choosingPlayer)
+        {
+            return
+                ((List<BoardObject> choices) =>
+                {
+                    return new List<object>() { new BoardChoices() };
+                });
+        }
+
         #endregion
-    */
     }
 }

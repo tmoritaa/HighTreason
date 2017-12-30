@@ -39,23 +39,17 @@ namespace HighTreasonGame
                                 }
                             }
 
-                            if (numProps[0] >= 3)
+                            for (int i = 0; i < 3; ++i)
                             {
-                                newChoices = newChoices.Where(bo => !bo.Properties.Contains(Property.Religion)).ToList();
-                            }
-
-                            if (numProps[1] >= 3)
-                            {
-                                newChoices = newChoices.Where(bo => !bo.Properties.Contains(Property.Language)).ToList();
-                            }
-
-                            if (numProps[2] >= 3)
-                            {
-                                newChoices = newChoices.Where(bo => !bo.Properties.Contains(Property.Occupation)).ToList();
+                                if (numProps[i] >= 3)
+                                {
+                                    newChoices = newChoices.Where(bo => !bo.Properties.Contains(props[i])).ToList();
+                                }
                             }
 
                             return newChoices;
-                        }),
+                        },
+                        LimitNumAspectFilterComb(3)),
                     revealAllAspects));
         }
 
@@ -68,6 +62,10 @@ namespace HighTreasonGame
                         List<BoardObject> bos = findAspectTracksWithProp(game).Cast<BoardObject>().ToList();
 
                         return new HTAction(choosingPlayer.ChoiceHandler).InitForChooseBOs(
+                            (List<BoardObject> choices) =>
+                            {
+                                return HTUtility.FindAllCombOfBoardObjs(choices, 3, LimitNumAspectFilterComb(1));
+                            },
                             bos,
                             (Dictionary<BoardObject, int> selected) => { return true; },
                             (List<BoardObject> choices, Dictionary<BoardObject, int> selected) =>
