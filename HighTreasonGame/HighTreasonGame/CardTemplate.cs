@@ -158,7 +158,7 @@ namespace HighTreasonGame
 
         protected HTAction doNothingChoice(Game game, Player choosingPlayer)
         {
-            return new HTAction(choosingPlayer.ChoiceHandler).InitForDoNothing(new BoardChoices());
+            return new HTAction(choosingPlayer.ChoiceHandler).InitForDoNothing(new BoardChoices(), choosingPlayer);
         }
 
         protected HTAction handleMomentOfInsightChoice(Player.PlayerSide[] supportedSides, Game game, Player choosingPlayer)
@@ -168,7 +168,7 @@ namespace HighTreasonGame
                 BoardChoices choices = new BoardChoices();
                 choices.MoIInfo.Use = BoardChoices.MomentOfInsightInfo.MomentOfInsightUse.NotChosen;
 
-                return new HTAction(choosingPlayer.ChoiceHandler).InitForDoNothing(new BoardChoices());
+                return new HTAction(choosingPlayer.ChoiceHandler).InitForDoNothing(new BoardChoices(), choosingPlayer);
             }
 
             return new HTAction(choosingPlayer.ChoiceHandler).InitForMoI(

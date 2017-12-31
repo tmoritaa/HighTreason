@@ -50,7 +50,11 @@ namespace HighTreasonConsole
 
                 incomingResult = actionResult;
                 outGoingAction = _outGoingAction;
-                possibleChoices = outGoingAction.generateAllPossibleChoices();
+
+                if (!gameState.GameEnd)
+                {
+                    possibleChoices = outGoingAction.generateAllPossibleChoices(10);
+                }
             }
 
             public void AddChild(Node child)
@@ -74,9 +78,16 @@ namespace HighTreasonConsole
                 possibleChoices.RemoveAt(idx);
 
                 Game newGame = new Game(gameState, new ChoiceHandler[] { new FilterRandomAIChoiceHandler(), new FilterRandomAIChoiceHandler() });
-                HTAction outgoingAction = newGame.Continue(choice);
 
-                return new Node(newGame, searchPlayer, outgoingAction, this, choice);
+                HTAction action = newGame.Continue(choice);
+                while ((action == null || action.CurPlayer.Side != searchPlayer.Side) && !newGame.GameEnd)
+                {
+                    action?.RequestChoice();
+
+                    action = newGame.Continue(action?.ChoiceResult);
+                }
+
+                return new Node(newGame, searchPlayer, action, this, choice);
             }
 
             public bool CanExpand()
@@ -192,7 +203,6 @@ namespace HighTreasonConsole
                 action);
 
             for (int i = 0; i < 1000; ++i){
-                Console.WriteLine("MCTS iteration=" + i);
                 Node node = findNodeToExpand(root);
 
                 bool gameWon = node.PlayoutGame();

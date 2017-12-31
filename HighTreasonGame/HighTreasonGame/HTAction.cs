@@ -12,6 +12,11 @@ namespace HighTreasonGame
             get; private set;
         }
 
+        public Player CurPlayer
+        {
+            get; private set;
+        }
+
         private ChoiceHandler.ChoiceType choiceType;
         private ChoiceHandler choiceHandler;
         private Func<List<BoardObject>, List<object>> allBOChoiceGenFunc;
@@ -28,6 +33,7 @@ namespace HighTreasonGame
         public HTAction InitForPlayerAction(List<Card> choices, Game game, Player choosingPlayer)
         {
             choiceType = ChoiceHandler.ChoiceType.PlayerAction;
+            CurPlayer = choosingPlayer;
             initChoiceArgs(choices, game, choosingPlayer);
             return this;
         }
@@ -44,6 +50,7 @@ namespace HighTreasonGame
             string desc)
         {
             choiceType = ChoiceHandler.ChoiceType.Cards;
+            CurPlayer = choosingPlayer;
             allCardChoiceGenFunc = _allCardChoiceGenFunc;
             initChoiceArgs(choices, validateChoices, filterChoices, choicesComplete, stoppable, game, choosingPlayer, desc);
             return this;
@@ -60,6 +67,7 @@ namespace HighTreasonGame
             string desc)
         {
             choiceType = ChoiceHandler.ChoiceType.BoardObjects;
+            CurPlayer = choosingPlayer;
             allBOChoiceGenFunc = _allBOChoiceGenFunc;
             initChoiceArgs(choices, validateChoices, filterChoices, choicesComplete, game, choosingPlayer, desc);
             return this;
@@ -79,13 +87,15 @@ namespace HighTreasonGame
         public HTAction InitForMoI(Game game, Player choosingPlayer)
         {
             choiceType = ChoiceHandler.ChoiceType.MoI;
+            CurPlayer = choosingPlayer;
             initChoiceArgs(game, choosingPlayer);
             return this;
         }
 
-        public HTAction InitForDoNothing(object result)
+        public HTAction InitForDoNothing(object result, Player choosingPlayer)
         {
             choiceType = ChoiceHandler.ChoiceType.DoNothing;
+            CurPlayer = choosingPlayer;
             initChoiceArgs(result);
             return this;
         }
@@ -166,7 +176,7 @@ namespace HighTreasonGame
             }
         }
 
-        public List<object> generateAllPossibleChoices()
+        public List<object> generateAllPossibleChoices(int k)
         {
             List<object> results = new List<object>();
             switch (choiceType)
@@ -195,22 +205,41 @@ namespace HighTreasonGame
                             }
                         }
 
-                        if (game.CurState.StateType == GameState.GameStateType.TrialInChief)
-                        {
-                            results.Add(new PlayerActionParams(PlayerActionParams.UsageType.Mulligan));
-                        }
+                        // TODO: disable for now.
+                        //if (game.CurState.StateType == GameState.GameStateType.TrialInChief)
+                        //{
+                        //    results.Add(new PlayerActionParams(PlayerActionParams.UsageType.Mulligan));
+                        //}
                     }
                     break;
                 case ChoiceHandler.ChoiceType.Cards:
                     {
                         List<Card> cards = (List<Card>)choiceArgs[0];
-                        results.AddRange(allCardChoiceGenFunc(cards));
+
+                        if (cards.Count > 0)
+                        {
+                            results.AddRange(allCardChoiceGenFunc(cards));
+                        }
+                        else
+                        {
+                            results.Add(new BoardChoices());
+                        }
+                        
                     }
                     break;
                 case ChoiceHandler.ChoiceType.BoardObjects:
                     {
                         List<BoardObject> bos = (List<BoardObject>)choiceArgs[0];
-                        results.AddRange(allBOChoiceGenFunc(bos));
+
+                        if (bos.Count > 0)
+                        {
+                            results.AddRange(allBOChoiceGenFunc(bos));
+                        }
+                        else
+                        {
+                            results.Add(new BoardChoices());
+                        }
+                        
                     }
                     break;
                 case ChoiceHandler.ChoiceType.MoI:
@@ -242,7 +271,28 @@ namespace HighTreasonGame
                     break;
             }
 
-            return results;
+            List<object> finalResult = new List<object>();
+            for (int i = 0; i < k; ++i)
+            {
+                if (results.Count == 0)
+                {
+                    break;
+                }
+
+                int idx = GlobalRandom.GetRandomNumber(0, results.Count);
+                finalResult.Add(results[idx]);
+                results.RemoveAt(idx);
+            }
+
+            if (finalResult.Count == 0)
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    System.Diagnostics.Debugger.Break();
+                }
+            }
+
+            return finalResult;
         }
 
         private void initChoiceArgs(params object[] args)

@@ -242,7 +242,7 @@ namespace HighTreasonGame
                 return new List<object>();
             }
 
-            var combs = HTUtility.getCombination(choices, count);
+            var combs = HTUtility.getCombination(choices, Math.Min(count, choices.Count));
 
             if (filterFunc != null)
             {
@@ -259,7 +259,7 @@ namespace HighTreasonGame
                 return new List<object>();
             }
 
-            var combs = HTUtility.getCombination(choices, count);
+            var combs = HTUtility.getCombination(choices, Math.Min(count, choices.Count));
 
             return convertIEnumIEnumToBoardChoices(combs);
         }
