@@ -193,7 +193,12 @@ namespace HighTreasonGame
 
                             for (int i = 0; i < pairs.Count; ++i)
                             {
-                                if (pairs[i].Selectable(game, player))
+                                CardInfo.EffectInfo effectInfo = card.GetCardInfoEffectInfo(game, i);
+
+                                CardInfo.EffectInfo.EffectType playerSide = (player.Side == Player.PlayerSide.Prosecution) ? CardInfo.EffectInfo.EffectType.Prosecution : CardInfo.EffectInfo.EffectType.Defense;
+
+                                if (pairs[i].Selectable(game, player) && 
+                                    (game.CurState.StateType == GameState.GameStateType.JurySelection || effectInfo.Type == CardInfo.EffectInfo.EffectType.Neutral || effectInfo.Type == playerSide))
                                 {
                                     results.Add(new PlayerActionParams(PlayerActionParams.UsageType.Event, card, i));
                                 }

@@ -202,7 +202,8 @@ namespace HighTreasonConsole
                 searchPlayer,
                 action);
 
-            for (int i = 0; i < 1000; ++i){
+            for (int i = 0; i < 1000; ++i) {
+                Console.WriteLine("MCTS it=" + i);
                 Node node = findNodeToExpand(root);
 
                 bool gameWon = node.PlayoutGame();

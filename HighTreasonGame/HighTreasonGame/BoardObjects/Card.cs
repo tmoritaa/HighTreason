@@ -115,6 +115,27 @@ namespace HighTreasonGame
             return pairs;
         }
 
+        public CardInfo.EffectInfo GetCardInfoEffectInfo(Game game, int idx)
+        {
+            GameState.GameStateType curStateType = game.CurState.StateType;
+
+            CardInfo.EffectInfo effectInfo = null;
+            if (curStateType == GameState.GameStateType.JurySelection)
+            {
+                effectInfo = Template.CardInfo.JurySelectionInfos[idx];
+            }
+            else if (curStateType == GameState.GameStateType.TrialInChief)
+            {
+                effectInfo = Template.CardInfo.TrialInChiefInfos[idx];
+            }
+            else if (curStateType == GameState.GameStateType.Summation)
+            {
+                effectInfo = Template.CardInfo.SummationInfos[idx];
+            }
+
+            return effectInfo;
+        }
+
         public HTAction PerformActionChoice(Game game, Player choosingPlayer)
         {
             bool isSummation = game.CurState.StateType == GameState.GameStateType.Summation;

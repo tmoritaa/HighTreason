@@ -29,13 +29,16 @@ namespace HighTreasonGame
         {
             TrialEvents.Add(
                 new CardEffectPair(
-                    genAspectTrackForModCardChoice(new HashSet<Property>() { Property.Religion }, 1, 2, false, this.CardInfo.TrialInChiefInfos[0].Description),
+                    genAspectTrackForModCardChoice(new HashSet<Property>() { Property.Religion }, 1, -2, false, this.CardInfo.TrialInChiefInfos[0].Description),
                     (Game game, Player choosingPlayer, BoardChoices boardChoices) =>
                     {
                         game.Board.GetInsanityTrack().AddToValue(1);
                         findAspectTracksWithProp(game, Property.English).ForEach(t => t.AddToValue(-2));
 
-                        ((AspectTrack)boardChoices.SelectedObjs.Keys.First()).AddToValue(-2);
+                        if (boardChoices.SelectedObjs.Count > 0)
+                        {
+                            ((AspectTrack)boardChoices.SelectedObjs.Keys.First()).AddToValue(-2);
+                        }
                     }));
         }
 
