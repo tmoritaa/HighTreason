@@ -25,6 +25,6 @@ public class AspectTrackElement : TrackElement
     {
         base.updateUI();
 
-        numUsedText.text = aspectTrack.TimesAffectedByAction.ToString();
+        numUsedText.text = aspectTrack.TimesAffectedByAction + "/3";
     }
 }
